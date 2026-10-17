@@ -25,6 +25,7 @@ It can be deployed to any static host as is.
 | Play / pause | `Space` or PLAY |
 | Master volume | Slider next to the speaker; click the speaker or press `M` to mute everything |
 | Part volume | Hover a performer and use its slider (0–125%). Each part remembers its level |
+| Record | REC starts recording (and playback). The timer pauses with the mix. Click it again to save the file: WebM/Opus, or M4A in Safari |
 | Tempo | Slider or − / + (80–180 BPM), or the `-` and `=` keys. Above 130 BPM the parts overclock: they glow, shake, sweat and finally smoke |
 
 | Group | Parts | Keys |
@@ -56,6 +57,7 @@ js/
   dom.js, util.js     shared elements and helpers
   transport.js        look-ahead sequencer, play/pause, tempo
   mixer.js            per-part gain, mute/solo, master and part volume
+  recorder.js         records the master output and saves it as an audio file
   audio/              AudioContext + bus (engine.js), synth voices (synth.js)
   parts/              the 20 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
   bonus/              trios (combos.js), bonus music, monitor scenes, the show itself

@@ -4,6 +4,7 @@ import { BONUS_MUSIC, fanfare } from "./bonus/music.js";
 import { app, bpmEl, bpmIn, playBtn } from "./dom.js";
 import { BPM_MAX, BPM_MIN, CHORDS, clock, LOOP } from "./music.js";
 import { byId } from "./parts/index.js";
+import { syncRec } from "./recorder.js";
 import { liveCombos, slots, state } from "./state.js";
 
 // Step events for the visuals, in audio-clock order.
@@ -39,6 +40,7 @@ export function setRunning(on) {
     audio.ctx.resume();
     if (!state.transportOn) { state.transportOn = true; resetTransport(); }
   } else audio.ctx.suspend();
+  syncRec(on);
   playBtn.classList.toggle("on", on);
   playBtn.setAttribute("aria-label", on ? "Pause" : "Play");
   app.classList.toggle("live", on);

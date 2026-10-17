@@ -8,3 +8,5 @@ export const bpmIn = $("#bpmIn");
 export const barEls = [...document.querySelectorAll("#bars i")];
 export const volIn = $("#volIn");
 export const muteAll = $("#muteAll");
+export const recBtn = $("#rec");
+export const recTime = $("#recTime");

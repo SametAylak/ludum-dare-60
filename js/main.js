@@ -3,6 +3,7 @@ import { audio } from "./audio/engine.js";
 import { applyGains, initMixer } from "./mixer.js";
 import { clock } from "./music.js";
 import { byId } from "./parts/index.js";
+import { initRecorder, updateRec } from "./recorder.js";
 import { slots, state } from "./state.js";
 import { initTransport, setBpm, sq, vq } from "./transport.js";
 import { drawConfetti } from "./ui/confetti.js";
@@ -22,6 +23,7 @@ initHud();
 initScope();
 initTransport();
 initGaze();
+initRecorder();
 
 function frame() {
   requestAnimationFrame(frame);
@@ -33,6 +35,7 @@ function frame() {
   updateSlotStates();
   drawScope();
   updateHud();
+  updateRec();
   drawConfetti();
 }
 
