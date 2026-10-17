@@ -1,8 +1,9 @@
 // Look-ahead sequencer, play/pause and tempo.
 import { audio, ensureAudio } from "./audio/engine.js";
-import { BONUS_MUSIC, fanfare } from "./bonus/music.js";
+import { scheduleBonusMusic } from "./bonus/music.js";
+import { resetShow } from "./bonus/show.js";
 import { app, bpmEl, bpmIn, playBtn } from "./dom.js";
-import { BPM_MAX, BPM_MIN, CHORDS, clock, LOOP } from "./music.js";
+import { BPM_MAX, BPM_MIN, clock, LOOP } from "./music.js";
 import { byId } from "./parts/index.js";
 import { syncRec } from "./recorder.js";
 import { liveCombos, slots, state } from "./state.js";
@@ -11,6 +12,7 @@ import { liveCombos, slots, state } from "./state.js";
 export const sq = [];
 export const vq = [];
 export function resetTransport() {
+  resetShow();
   state.step = 0; state.nextTime = audio.ctx.currentTime + .06; state.curStep = -1;
   sq.length = 0; vq.length = 0;
   slots.forEach(s => { s.start = 0; });
@@ -25,8 +27,9 @@ function tick() {
 function scheduleStep(n, t) {
   const s = n % LOOP;
   sq.push({ n, t });
-  if (state.pendingFanfare && s % 16 === 0) { fanfare(t, CHORDS[s >> 4]); state.pendingFanfare = false; }
-  if (state.bonusMus && n >= state.bonusMus.from && n < state.bonusMus.to && liveCombos.has(state.bonusMus.id)) BONUS_MUSIC[state.bonusMus.id](s, t, audio.fxBus);
+  const bonus = state.bonusMus;
+  if (bonus && n >= bonus.start && n < bonus.to && liveCombos.has(bonus.c.id))
+    scheduleBonusMusic(bonus.c, n - bonus.start, s, t);
   for (const sl of slots) {
     if (!sl.id || n < sl.start || !sl.g) continue;
     const uid = sl.uid, i = sl.i;

@@ -37,7 +37,11 @@ It can be deployed to any static host as is.
 
 New parts join on the next bar so everything stays in time. All parts play over the same 4-bar progression (Am, F, C, G), so any combination fits.
 
-Some trios of parts unlock bonus disks. There are four to find. Hitting one sets off a short show: a fanfare, an extra music layer for two loops, and a themed animation on a pop-up monitor while the three parts take the spotlight.
+Some trios unlock bonus disks. There are five to find. Each brings two animated guests in from the sides, lowers a mirrored disco ball, and turns the stage into a dance floor. A transmission card introduces the guests before becoming a small live monitor, with eight bars of bonus music and a countdown. The show follows the song clock, including pause and tempo changes. Removing or muting a required part ends it. Simultaneous discoveries play in order.
+
+Click a bonus disk for its trio, or replay a discovered show while its trio is audible. The new **Cosmic Telegraph** show uses **Teletype + Vacuum Tube + Oscilloscope** (`T`, `G`, `V`): an alien telegraph operator and a lunar gramophone trade Morse-code melodies over a disco groove. Boot Sequence, Dial-up Nights, Mainframe Opera and LAN Party each have their own guest pairing and lighting colors. Reduced-motion mode keeps the lighting static and disables guest dancing and confetti.
+
+The guests also change the music. Their entrance filters the band into a rising drum roll, followed by a short gap and a disco drop with bass, claps and stereo call-and-response. A breakdown leads into a second drop with extra harmonies. Telegraph guests play keyed synth melodies, gramophones play brass stabs, radios sing through formant filters, and reel machines play FM notes with tape-style echoes. Their movements and lighting follow the scheduled notes. The band mix returns automatically when the show finishes or is cancelled; individual volume and mute settings stay intact.
 
 ## How it works
 
@@ -60,8 +64,10 @@ js/
   recorder.js         records the master output and saves it as an audio file
   audio/              AudioContext + bus (engine.js), synth voices (synth.js)
   parts/              the 20 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
-  bonus/              trios (combos.js), bonus music, monitor scenes, the show itself
+  bonus/              trios, music, monitor scenes, SVG guests, stage lighting, show timing
   ui/                 stage slots, palette, header, HUD, performer animation, waveform, confetti
 ```
 
 To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function.
+
+Run the bonus arrangement checks with `node tests/bonus-score.test.mjs`. They verify the two drops, the gaps before them, both guest phrases, and chord-compatible melodies for all five shows.

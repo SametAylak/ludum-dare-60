@@ -6,6 +6,23 @@ const BGC = "#06170e";
 const frac = x => x - Math.floor(x);
 const tri = x => 1 - Math.abs(2 * frac(x) - 1);
 const SCENES = {
+  cosmic(g, pos, beat) {
+    g.fillText("CQ / ANDROMEDA / 1844", 12, 8);
+    for (let i = 0; i < 20; i++) g.fillRect((i * 97 + 13) % 320, (i * 59 + 33) % 130 + 25, 2, 2);
+    const y = 75 + Math.sin(beat * 2) * 5;
+    g.beginPath(); g.ellipse(160, y, 35, 27, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = BGC;
+    g.beginPath(); g.ellipse(147, y, 8, 12, -.35, 0, Math.PI * 2); g.fill();
+    g.beginPath(); g.ellipse(173, y, 8, 12, .35, 0, Math.PI * 2); g.fill();
+    g.fillRect(154, y + 17, 12, 2); g.fillStyle = PH;
+    for (let i = 0; i < 3; i++) {
+      const r = 42 + frac(beat / 4 + i / 3) * 65;
+      g.globalAlpha = 1 - frac(beat / 4 + i / 3);
+      g.beginPath(); g.ellipse(160, y, r, r * .6, 0, 0, Math.PI * 2); g.stroke();
+    }
+    g.globalAlpha = 1;
+    g.fillText(pos < 64 ? "... . -. -.. / ..-. ..- -. -.-" : "EARTH, YOU HAVE A GREAT BEAT.", 12, 152);
+  },
   boot(g, pos, beat) {
     const mem = Math.min(640, Math.floor(pos * 24));
     g.fillText("BEIGEBOX BIOS v4.51", 12, 8);

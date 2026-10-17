@@ -36,7 +36,7 @@ function frame() {
   drawScope();
   updateHud();
   updateRec();
-  drawConfetti();
+  drawConfetti(state.running);
 }
 
 const hot = window.claude && window.claude.hot;

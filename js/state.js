@@ -5,7 +5,7 @@ export const state = {
   step: 0, nextTime: 0,      // scheduler position, ahead of the audio
   curStep: -1, curT: 0,      // what the listener hears now, and when it started
   uidN: 0,
-  scene: null, pendingFanfare: false, bonusMus: null,   // bonus show
+  scene: null, bonusMus: null,
   notice: null,
 };
 export const slots = Array.from({ length: 7 }, (_, i) => ({ i, id: null, muted: false, solo: false, start: 0, uid: 0, g: null, s: null, audible: false }));

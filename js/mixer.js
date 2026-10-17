@@ -19,7 +19,7 @@ export const volOf = id => partVol[id] ?? 100;
 export const masterGain = () => masterMuted ? 0 : (masterVol / 100) ** 2 * 1.25;
 export function makeNodes(sl) {
   const p = byId[sl.id];
-  sl.g = audio.ctx.createGain(); sl.g.gain.value = 0; sl.g.connect(audio.master);
+  sl.g = audio.ctx.createGain(); sl.g.gain.value = 0; sl.g.connect(audio.bandFilter);
   if (p.send) { sl.s = audio.ctx.createGain(); sl.s.gain.value = p.send; sl.g.connect(sl.s); sl.s.connect(audio.delayIn); }
 }
 export function dropNodes(sl) {

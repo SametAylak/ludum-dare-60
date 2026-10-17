@@ -1,40 +1,137 @@
-// The fanfare and each bonus's extra music layer.
+// The guests take over for a build, a drop, a breakdown and a bigger second drop.
 import { audio } from "../audio/engine.js";
-import { fm, noise, pulseWave, tone, voice } from "../audio/synth.js";
+import { fm, kick, noise, pulseWave, tone, voice } from "../audio/synth.js";
 import { CHORDS, clock, mtof } from "../music.js";
+import { guestNote, sectionAt } from "./score.js";
 
-// Each bonus adds its own layer for two loops after the fanfare.
-const ARP8 = [0, 1, 2, 3, 4, 3, 2, 1];
-const CHOIR = [[76, 72], [77, 81], [79, 76], [74, 79]];
-const LAN_LEAD = [
-  [[0, 76, 2], [2, 81, 2], [4, 84, 2], [6, 81, 2], [8, 88, 3], [11, 84, 1], [12, 81, 4]],
-  [[0, 77, 2], [2, 81, 2], [4, 84, 2], [6, 81, 2], [8, 89, 3], [11, 84, 1], [12, 81, 4]],
-  [[0, 76, 2], [2, 79, 2], [4, 84, 2], [6, 79, 2], [8, 88, 3], [11, 84, 1], [12, 79, 4]],
-  [[0, 74, 2], [2, 79, 2], [4, 83, 2], [6, 86, 2], [8, 91, 4], [12, 86, 2], [14, 83, 2]],
-];
-export const BONUS_MUSIC = {
-  boot(s, t, d) {   // fast BIOS arpeggio, with a POST beep at the top of the loop
-    const ch = CHORDS[s >> 4], b = s & 15, ns = [...ch.n, ch.n[0] + 12, ch.n[1] + 12];
-    tone(d, t, { wave: pulseWave(.125), f: mtof(ns[ARP8[b % 8]] + 12), vol: .04, hold: clock.SPB * .4, r: .02 });
-    if (s === 0) tone(d, t, { f: 1046, vol: .08, hold: .12, r: .03 });
+const cues = [];
+const lastHits = [{ t: -Infinity, strength: 0 }, { t: -Infinity, strength: 0 }];
+const BASS = { 0: 0, 3: 0, 6: 12, 8: 0, 10: 7, 14: 12 };
+
+export function startBonusAudio() {
+  cues.length = 0;
+  lastHits.forEach(hit => { hit.t = -Infinity; hit.strength = 0; });
+  const t = audio.ctx.currentTime;
+  audio.fxBus.gain.cancelScheduledValues(t);
+  audio.fxBus.gain.setTargetAtTime(1, t, .025);
+}
+
+export function stopBonusAudio() {
+  cues.length = 0;
+  if (!audio.ctx) return;
+  const t = audio.ctx.currentTime;
+  for (const [param, value] of [[audio.fxBus.gain, 0], [audio.bandGain.gain, 1], [audio.bandFilter.frequency, 20000]]) {
+    param.cancelScheduledValues(t);
+    param.setTargetAtTime(value, t, .04);
+  }
+}
+
+export function guestEnergy(now) {
+  while (cues.length && cues[0].t <= now) {
+    const cue = cues.shift();
+    lastHits[cue.side] = cue;
+  }
+  return lastHits.map(hit => hit.strength * Math.exp(-Math.max(0, now - hit.t) / .16));
+}
+
+const INSTRUMENTS = {
+  telegraph(d, t, note) {
+    const f = mtof(note.midi), hold = clock.SPB * note.length;
+    tone(d, t, { wave: pulseWave(.25), f, vol: .14 * note.velocity, hold, r: .045, lp: 3600 });
+    fm(d, t, { f: f * 2, ratio: 2, index: .7, vol: .035 * note.velocity, r: .11 });
+    noise(d, t, { f: 2600, Q: 3, vol: .025 * note.velocity, r: .014 });
   },
-  dial(s, t, d) {   // glassy FM bells on eighths
-    const ch = CHORDS[s >> 4], b = s & 15, ns = [...ch.n, ch.n[0] + 12];
-    if (b % 2 === 0) fm(d, t, { f: mtof(ns[[2, 1, 0, 1, 2, 3, 2, 1][b >> 1]] + 24), ratio: 3.5, index: 2.5, vol: .035, r: .45 });
+  gramophone(d, t, note) {
+    const f = mtof(note.midi), hold = clock.SPB * note.length;
+    for (const detune of [-8, 8]) tone(d, t, { type: "sawtooth", f: f * .97, f2: f, glide: .035,
+      detune, vol: .11 * note.velocity, a: .012, hold, r: .12, lp: 2100, q: 1.8 });
+    tone(d, t, { type: "triangle", f: f * 2, vol: .06 * note.velocity, hold: hold * .65, r: .13 });
+    if (note.accent) noise(d, t, { f: 4200, vol: .035, r: .06 });
   },
-  main(s, t, d) {   // soprano line over a low choir
-    const bar = s >> 4, b = s & 15;
-    if (b === 0 || b === 8) voice(d, t, { f: mtof(CHOIR[bar][b >> 3]), vowel: "a", vol: .13, a: .06, hold: clock.SPB * 7, r: .2, vib: .018 });
-    if (b === 0) voice(d, t, { f: mtof(CHORDS[bar].root + 12), vowel: "o", vol: .07, a: .2, hold: clock.SPB * 14, r: .3, scoop: 1 });
+  radio(d, t, note) {
+    voice(d, t, { f: mtof(note.midi), vowel: note.accent ? "a" : "o", vol: .2 * note.velocity,
+      a: .015, hold: clock.SPB * note.length, r: .1, scoop: note.accent ? .82 : 1.08, vib: .009 });
+    fm(d, t, { f: mtof(note.midi + 12), ratio: 1, index: 1.5, vol: .035 * note.velocity, r: .22 });
   },
-  lan(s, t, d) {    // chiptune victory lead with offbeat hats
-    const b = s & 15;
-    for (const [st, n, len] of LAN_LEAD[s >> 4]) if (st === b)
-      tone(d, t, { wave: pulseWave(.125), f: mtof(n), vol: .05, hold: clock.SPB * len * .7, r: .04, vib: .008, vibRate: 7 });
-    if (b % 4 === 2) noise(d, t, { type: "highpass", f: 8000, vol: .06, r: .025 });
+  reel(d, t, note) {
+    const f = mtof(note.midi);
+    fm(d, t, { f, ratio: 1, index: 3.5, vol: .22 * note.velocity, hold: clock.SPB * note.length * .4, r: .22 });
+    tone(d, t, { type: "triangle", f: f / 2, vol: .065 * note.velocity, hold: clock.SPB * .4, r: .13 });
+    fm(d, t + clock.SPB * .75, { f, ratio: 1, index: 1.6, vol: .04 * note.velocity, r: .17 });
   },
 };
-export function fanfare(t, ch) {
-  const ns = [...ch.n, ch.n[0] + 12, ch.n[1] + 12, ch.n[2] + 12, ch.n[0] + 24, ch.n[2] + 12];
-  ns.forEach((n, i) => tone(audio.fxBus, t + i * clock.SPB * .5, { wave: pulseWave(.125), f: mtof(n + 12), vol: .05, hold: clock.SPB * .3, r: .06 }));
+
+function clap(t, volume) {
+  for (const offset of [0, .012, .024]) noise(audio.fxBus, t + offset, { f: 1550, Q: .7, vol: volume, r: offset ? .065 : .025 });
+  noise(audio.fxBus, t, { type: "highpass", f: 5200, vol: volume * .4, r: .1 });
+}
+
+function impact(t, root, peak) {
+  kick(audio.fxBus, t, peak ? .66 : .6);
+  noise(audio.fxBus, t, { type: "highpass", f: 6100, f2: 1800, vol: .14, r: clock.SPB * 5 });
+  tone(audio.fxBus, t, { f: mtof(root + 12), f2: mtof(root - 12), glide: .22, vol: .22, r: .38 });
+}
+
+function build(position, songStep, t) {
+  const step = position & 15, ch = CHORDS[(songStep >> 4) & 3];
+  const intensity = position >= 108 ? .8 + (position - 108) * .05 : (position - 16) / 16;
+  if (position === 16 || position === 108) {
+    const duration = clock.SPB * (position === 16 ? 13 : 3.5);
+    noise(audio.fxBus, t, { f: 650, f2: 6500, Q: .6, vol: .12, a: duration * .85, r: duration * .15 });
+    tone(audio.fxBus, t, { type: "sawtooth", f: mtof(ch.n[0]), f2: mtof(ch.n[0] + 24),
+      glide: duration, vol: .035, a: duration * .8, r: duration * .2, lp: 2400 });
+  }
+  if (step % 2 === 0 || intensity > .6) {
+    noise(audio.fxBus, t, { f: 1600 + intensity * 1800, vol: .035 + intensity * .06, r: .055 });
+    tone(audio.fxBus, t, { type: "triangle", f: 190 + intensity * 160, vol: .04, r: .045 });
+  }
+  if (intensity > .8) noise(audio.fxBus, t + clock.SPB * .5, { f: 3800, vol: .04, r: .025 });
+}
+
+function rhythm(combo, position, songStep, t) {
+  const b = position & 15, ch = CHORDS[(songStep >> 4) & 3];
+  const peak = position >= 112, downbeat = position === 32 || position === 112;
+  if (downbeat) impact(t, ch.root, peak);
+  else if (b % 4 === 0) kick(audio.fxBus, t, .46);
+  if (b === 4 || b === 12) clap(t, .07);
+  if (b % 2 === 0) noise(audio.fxBus, t, { type: "highpass", f: 7300, vol: b % 4 === 2 ? .075 : .035, r: b % 4 === 2 ? .1 : .025 });
+  if (peak && b % 2) noise(audio.fxBus, t, { type: "highpass", f: 8500, vol: .024, r: .018 });
+  if (BASS[b] !== undefined) {
+    const f = mtof(ch.root + BASS[b]), hold = clock.SPB * (b === 0 || b === 8 ? 1.3 : .65);
+    tone(audio.fxBus, t, { type: "sawtooth", f, vol: .15, hold, r: .075, lp: peak ? 1100 : 750, q: 1.4 });
+    tone(audio.fxBus, t, { f: f / 2, vol: .2, hold, r: .09 });
+  }
+  if (b === 2 || b === 10) for (const n of ch.n) {
+    const d = b === 2 ? audio.fxRight : audio.fxLeft;
+    fm(d, t, { f: mtof(n + 12), ratio: 1, index: 1.6, vol: .032, hold: clock.SPB * .45, r: .12 });
+  }
+  if (position === 32 || position === 112) for (const side of [0, 1]) {
+    voice(side ? audio.fxRight : audio.fxLeft, t + clock.SPB * (side ? 2 : 0), {
+      f: mtof(ch.n[side] + (combo.id === "main" ? 12 : 0)), vowel: side ? "a" : "o", vol: .1,
+      hold: clock.SPB, r: .13, scoop: .8, vib: .015 });
+    cues.push({ side, t: t + clock.SPB * (side ? 2 : 0), strength: 1 });
+  }
+  if ((position >= 92 && position < 96 || position >= 156) && b % 2 === 0) {
+    noise(audio.fxBus, t, { f: 2100, vol: .075, r: .07 });
+    tone(audio.fxBus, t, { f: 180 - (b - 12) * 20, f2: 65, glide: .08, vol: .12, r: .1 });
+  }
+}
+
+export function scheduleBonusMusic(combo, position, songStep, t) {
+  const section = sectionAt(position), b = position & 15;
+  const pumping = ["drop", "groove", "peak", "finale"].includes(section.id);
+  audio.bandGain.gain.setTargetAtTime(section.band * (pumping ? [.52, .76, .94, 1][b % 4] : 1), t, .018);
+  audio.bandFilter.frequency.setTargetAtTime(section.cutoff, t, .06);
+  if (section.id === "build" || section.id === "lift") build(position, songStep, t);
+  if (pumping) rhythm(combo, position, songStep, t);
+  for (const side of [0, 1]) {
+    const note = guestNote(combo, side, position, songStep);
+    if (!note) continue;
+    const out = side ? audio.fxRight : audio.fxLeft;
+    const play = INSTRUMENTS[combo.guests[side]];
+    play(out, t, note);
+    if (note.harmony !== null) play(out, t, { ...note, midi: note.harmony, velocity: note.velocity * .4, accent: false });
+    cues.push({ side, t, strength: note.velocity });
+  }
+  cues.sort((a, b) => a.t - b.t);
 }

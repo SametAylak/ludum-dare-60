@@ -40,18 +40,30 @@
   <main class="stage">
     <div class="lights" aria-hidden="true"><i></i><i></i></div>
     <canvas id="scope" aria-hidden="true"></canvas>
+    <div class="retro-show" id="retroShow" hidden aria-hidden="true">
+      <canvas id="partyScene"></canvas>
+      <div class="guest guest-left" id="guestLeft"></div>
+      <div class="guest guest-right" id="guestRight"></div>
+      <div class="party-marquee"><span>LIVE FROM THE ANALOG UNIVERSE</span><b id="partyMessage"></b></div>
+    </div>
     <div class="hud">
       <p class="hint" id="hint" aria-live="polite"></p>
-      <div class="disks" id="disks"><span>BONUS</span></div>
+      <div class="disks" id="disks" aria-label="Bonus discoveries"><span>BONUS</span></div>
     </div>
-    <div class="flashfx" id="flashfx" aria-hidden="true"></div>
-    <div class="unlock" id="unlock" hidden>
+    <div class="unlock" id="unlock" hidden role="status">
       <div class="rays"></div>
       <svg class="bdisk" viewBox="0 0 24 24" aria-hidden="true"><path class="bd-body" d="M3 3h15l3 3v15H3z"/><rect class="bd-sh" x="7" y="3" width="9" height="6"/><rect class="bd-sl" x="12.5" y="4" width="2" height="4"/><rect class="bd-lb" x="6" y="12.5" width="12" height="8.5" rx=".5"/><path class="bd-ln" d="M8 15h8M8 17.5h6"/></svg>
       <p class="u-kicker"></p>
       <h2 class="u-name"></h2>
+      <p class="u-guests"></p>
+      <div class="u-countdown"><span>INCOMING TRANSMISSION</span><i></i><i></i><i></i><i></i></div>
     </div>
-    <div class="bonus" id="bonus" hidden><div class="screen"><canvas id="bscene" width="320" height="180"></canvas><pre id="term"></pre></div></div>
+    <div class="bonus" id="bonus" hidden>
+      <div class="bonus-topline"><span class="bonus-live">ON AIR</span><span id="bonusCounter"></span></div>
+      <div class="bonus-broadcast"><div class="screen"><canvas id="bscene" width="320" height="180"></canvas></div>
+        <div class="bonus-copy"><h2 id="bonusTitle"></h2><pre id="term"></pre></div></div>
+      <div class="bonus-timeline"><i id="bonusProgress"></i></div>
+    </div>
     <div class="shelf" id="shelf"></div>
   </main>
 
