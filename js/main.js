@@ -12,6 +12,7 @@ import { initDeck, updateKeys } from "./ui/deck.js";
 import { initGaze } from "./ui/gaze.js";
 import { initHeader } from "./ui/header.js";
 import { initHud, updateHud } from "./ui/hud.js";
+import { initOnboard, updateOnboard } from "./ui/onboard.js";
 import { fire, onStep, updateSlotStates } from "./ui/performers.js";
 import { drawScope, initScope } from "./ui/scope.js";
 import { initStage, renderSlot } from "./ui/stage.js";
@@ -27,6 +28,7 @@ initTransport();
 initGaze();
 initRecorder();
 loadSamples();
+initOnboard();
 
 function frame() {
   requestAnimationFrame(frame);
@@ -39,6 +41,7 @@ function frame() {
   drawScope();
   updateHud();
   updateRec();
+  updateOnboard();
 }
 
 const hot = window.claude && window.claude.hot;

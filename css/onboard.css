@@ -1,0 +1,27 @@
+/* ---------- first-run coach marks ---------- */
+/* a pill-white speech bubble pointing at a pulsing ring around whatever the current tip is about */
+.coach{position:fixed;z-index:40;left:0;top:0;width:min(300px, calc(100vw - 24px));padding:12px 14px 10px;border-radius:14px;background:#fff;color:var(--ink);
+  box-shadow:0 5px 0 rgba(0,0,0,.35), 0 14px 30px rgba(0,0,0,.35);--ax:50%}
+.coach::before{content:"";position:absolute;left:var(--ax);top:-7px;width:14px;height:14px;margin-left:-7px;background:#fff;transform:rotate(45deg);border-radius:2px}
+.coach.up::before{top:auto;bottom:-7px}
+.coach p{margin:0 0 8px;font-weight:600;font-size:15px;line-height:1.3}
+.coach-row{display:flex;align-items:center;gap:8px}
+.coach-n{flex:1;font-size:12px;font-weight:600;color:var(--ghost)}
+.coach button{border:none;cursor:pointer;font-weight:600;font-size:13px}
+.coach-skip{padding:4px 6px;background:none;color:var(--ghost)}
+.coach-skip:hover{color:var(--ink)}
+.coach-go{padding:6px 14px;border-radius:999px;background:var(--c-mel);color:#fff;box-shadow:0 3px 0 rgba(0,0,0,.25)}
+@keyframes coachIn{from{opacity:0;transform:translateY(6px) scale(.96)}}
+.coach.in{animation:coachIn .28s cubic-bezier(.3,1.4,.5,1)}
+@keyframes coachRing{0%,100%{box-shadow:0 0 0 3px #fff, 0 0 0 3px rgba(255,255,255,.5)}50%{box-shadow:0 0 0 3px #fff, 0 0 0 12px rgba(255,255,255,0)}}
+.coach-on{animation:coachRing 1.4s ease-in-out infinite;border-radius:16px}
+.rb.coach-on,.tools .coach-on{border-radius:50%}
+.coach-on.tempo,.coach-on.vol,.recb.coach-on{border-radius:999px}
+.slot.has .tools:has(.coach-on){opacity:1;pointer-events:auto;transform:translate(-50%, -60%)}
+@keyframes coachRingIn{0%,100%{box-shadow:inset 0 0 0 3px #fff}50%{box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)}}
+.deck.coach-on{border-radius:0;animation-name:coachRingIn}
+@media (prefers-reduced-motion: reduce){
+  .coach.in{animation:none}
+  .coach-on,.deck.coach-on{animation:none;box-shadow:0 0 0 3px #fff}
+  .deck.coach-on{box-shadow:inset 0 0 0 3px #fff}
+}
