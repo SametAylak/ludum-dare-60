@@ -82,7 +82,7 @@ export const VOICES = [
       <rect class="k" x="13" y="30" width="66" height="62" rx="6"/>
       <rect class="scr" x="17" y="34" width="58" height="54" rx="5"/>
       <path class="grid" d="M17 61 H75 M46 34 V88 M17 47 H75 M17 75 H75 M31 34 V88 M60 34 V88"/>
-      <g class="eyes"><rect class="ph" x="32" y="42" width="8" height="10" rx="1"/><rect class="ph" x="52" y="42" width="8" height="10" rx="1"/></g>
+      <g class="eyes"><g class="look" data-m="3"><rect class="ph" x="32" y="42" width="8" height="10" rx="1"/><rect class="ph" x="52" y="42" width="8" height="10" rx="1"/></g></g>
       <path class="mouth wave" d="M22 70 Q27 65 32 70 T42 70 T52 70 T62 70 T72 70"/>
       <circle class="k" cx="96" cy="44" r="8"/><path class="kt" d="M96 44 L96 37"/>
       <circle class="k" cx="96" cy="68" r="6.5"/><path class="kt" d="M96 68 L101 64"/>

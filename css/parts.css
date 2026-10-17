@@ -9,6 +9,7 @@
 .art .tt{fill:#c8c299} .art .ibm{fill:#7f94a7} .art .cg{fill:#9d9da2} .art .lab{fill:var(--c-mel)} .art .osc{fill:#8fa4ae}
 .art .tan{fill:#c9a878} .art .tan2{fill:#b38e5c} .art .glass{fill:rgba(190,225,255,.14)} .art .scr2{fill:#1c1a18}
 .art .hole{fill:#c8c1b0} .art .hi{fill:rgba(255,255,255,.55);stroke:none}
+.art .look{transition:transform .12s ease-out}
 .art .ew{fill:#fff} .art .ep{fill:var(--ink)} .art .es{fill:#fff}
 .art .mouth{fill:#5a2424}
 .art .mouth.ph{fill:var(--phos)}

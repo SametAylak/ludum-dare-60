@@ -7,6 +7,7 @@ import { slots, state } from "./state.js";
 import { initTransport, setBpm, sq, vq } from "./transport.js";
 import { drawConfetti } from "./ui/confetti.js";
 import { initDeck, updateKeys } from "./ui/deck.js";
+import { initGaze } from "./ui/gaze.js";
 import { initHeader } from "./ui/header.js";
 import { initHud, updateHud } from "./ui/hud.js";
 import { fire, onStep, updateSlotStates } from "./ui/performers.js";
@@ -20,6 +21,7 @@ initMixer();
 initHud();
 initScope();
 initTransport();
+initGaze();
 
 function frame() {
   requestAnimationFrame(frame);

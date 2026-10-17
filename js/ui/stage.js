@@ -6,6 +6,7 @@ import { byId, CATS, PARTS } from "../parts/index.js";
 import { FILL_ORDER, slots, state } from "../state.js";
 import { resetTransport, setRunning } from "../transport.js";
 import { updateKeys } from "./deck.js";
+import { aim } from "./gaze.js";
 import { $, fillRange, reduce } from "../util.js";
 
 export const shelf = $("#shelf");
@@ -59,6 +60,7 @@ export function renderSlot(sl, pop) {
   sl.wrap.innerHTML = p ? artSvg(p) : emptySvg();
   sl.svg = p ? sl.wrap.firstElementChild : null;
   sl.tag.textContent = p ? p.name : "";
+  if (p) aim();
   if (p) { sl.volIn.value = volOf(p.id); fillRange(sl.volIn); sl.volIn.setAttribute("aria-label", `${p.name} volume`); }
   sl.char.setAttribute("aria-label", p ? `${p.name}. Press to mute or unmute.` : `Empty slot ${sl.i + 1}`);
   if (pop && p && !reduce) sl.svg.animate([

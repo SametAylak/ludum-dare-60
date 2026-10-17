@@ -50,7 +50,7 @@ export const EFFECTS = [
       <rect class="bd" x="14" y="13" width="92" height="78" rx="9"/>
       <rect class="scr" x="20" y="18" width="80" height="66" rx="12"/>
       <rect class="flash" x="20" y="18" width="80" height="66" rx="12"/>
-      <g class="eyes"><rect class="ph" x="38" y="36" width="11" height="15" rx="1"/><rect class="ph" x="71" y="36" width="11" height="15" rx="1"/></g>
+      <g class="eyes"><g class="look" data-m="4"><rect class="ph" x="38" y="36" width="11" height="15" rx="1"/><rect class="ph" x="71" y="36" width="11" height="15" rx="1"/></g></g>
       ${M(60, 64, 22, 5, "ph")}
       <rect class="hi" x="26" y="23" width="16" height="5" rx="2.5"/>
       <circle class="bd" cx="88" cy="98" r="3"/>${L(100, 98, 3, "lg steady")}`,
