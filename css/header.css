@@ -1,0 +1,45 @@
+/* ---------- header ---------- */
+.top{position:relative;z-index:4;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 18px;padding:12px var(--gut-r) 4px var(--gut-l)}
+.logo{margin:0;font-weight:700;font-size:34px;letter-spacing:-.01em;line-height:1;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.3)}
+.logo b{font-weight:700}
+.logo b:nth-child(1){color:var(--c-beat)} .logo b:nth-child(2){color:var(--c-fx)} .logo b:nth-child(3){color:var(--c-mel)}
+.ctl{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.rb{width:42px;height:42px;padding:0;border:none;border-radius:50%;background:#fff;color:var(--sky-2);display:grid;place-items:center;cursor:pointer;
+  box-shadow:0 4px 0 rgba(0,0,0,.35);transition:transform .1s, background .15s}
+.rb:hover{transform:scale(1.08)}
+.rb:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.rb svg{width:20px;height:20px;fill:currentColor}
+.rb .st,.tools .st,.tb .st{fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.rb.big{width:54px;height:54px;background:var(--c-mel);color:#fff}
+.rb.big svg{width:26px;height:26px}
+.rb .i-pause,.rb.on .i-play{display:none}
+.rb.on .i-pause{display:block}
+.tempo,.vol{display:flex;align-items:center;gap:8px;padding:5px 7px;border-radius:999px;background:rgba(8,9,30,.4)}
+.vol{padding-right:12px}
+#muteAll[aria-pressed="true"]{background:var(--amber);color:var(--ink)}
+#muteAll .i-off,#muteAll[aria-pressed="true"] .i-on{display:none}
+#muteAll[aria-pressed="true"] .i-off{display:block}
+/* volume sliders: white fill up to --f */
+.rng{-webkit-appearance:none;appearance:none;height:8px;margin:0;border-radius:99px;cursor:pointer;
+  background:linear-gradient(90deg, #fff var(--f, 80%), rgba(255,255,255,.2) var(--f, 80%))}
+.rng::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--sky-2);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.rng::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--sky-2);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+#volIn{width:clamp(70px, 8vw, 110px)}
+.tb{width:28px;height:28px;padding:0;border:none;border-radius:50%;background:#fff;color:var(--sky-2);display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 0 rgba(0,0,0,.35)}
+.tb svg{width:14px;height:14px}
+.tb:active{transform:translateY(2px);box-shadow:none}
+/* track runs cool to hot; overclocking starts at 130 BPM, halfway along */
+#bpmIn{-webkit-appearance:none;appearance:none;width:clamp(80px, 11vw, 140px);height:8px;margin:0;border-radius:99px;cursor:pointer;
+  background:linear-gradient(90deg, var(--c-beat), #fff 45%, var(--amber) 62%, var(--red))}
+#bpmIn::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--sky-2);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+#bpmIn::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:#fff;border:3px solid var(--sky-2);box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.readout{display:flex;align-items:baseline;gap:5px;font-weight:600;font-size:11px;letter-spacing:.14em;color:var(--muted)}
+#bpm{display:inline-block;min-width:3ch;text-align:right;font-size:24px;letter-spacing:0;color:#fff;font-variant-numeric:tabular-nums;transition:color .3s}
+.ocb{display:none;align-self:center;width:16px;height:16px;fill:var(--amber)}
+.app.oc1 .ocb{display:block}
+.app.oc1 #bpm{color:var(--amber)}
+.app.oc2 #bpm{color:var(--red);text-shadow:0 0 10px rgba(255,75,58,.7)}
+.app.oc2 .ocb{fill:var(--red);filter:drop-shadow(0 0 4px var(--red))}
+.bars{display:flex;gap:5px;margin-right:4px}
+.bars i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.16);transition:background .1s}
+.bars i.on{background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}

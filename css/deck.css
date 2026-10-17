@@ -1,0 +1,18 @@
+/* ---------- palette ---------- */
+.deck{--kw:clamp(44px, calc((100vw - 260px) / 20), 74px);position:relative;z-index:3;
+  background:linear-gradient(var(--bar-2), var(--bar));box-shadow:0 -10px 30px rgba(0,0,0,.35);
+  padding:12px var(--gut-r) 18px var(--gut-l);display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px}
+.group{display:flex;flex-direction:column;align-items:center;gap:8px}
+.group h2{margin:0;font-weight:600;font-size:11px;letter-spacing:.22em;color:var(--cat)}
+.keys{display:flex;gap:8px}
+.key{position:relative;width:var(--kw);aspect-ratio:1;padding:0;border:none;border-radius:50%;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle at 50% 30%, rgba(255,255,255,.4), transparent 62%), var(--cat);
+  box-shadow:0 4px 0 rgba(0,0,0,.45), inset 0 -4px 0 rgba(0,0,0,.18);
+  transition:transform .12s, opacity .2s, filter .2s, box-shadow .12s}
+.key:hover{transform:translateY(-3px) scale(1.06)}
+.key svg{position:absolute;left:17%;top:14%;width:66%;height:auto}
+.key .lg{position:absolute;right:-4px;bottom:-4px;min-width:19px;height:19px;padding:0 4px;border-radius:10px;background:#fff;color:var(--sky-2);
+  font-weight:700;font-size:11px;line-height:19px;text-align:center;box-shadow:0 2px 0 rgba(0,0,0,.4)}
+.key.used{filter:grayscale(1) brightness(.6);opacity:.45;transform:none;box-shadow:inset 0 3px 0 rgba(0,0,0,.3)}
+.ghost{position:fixed;z-index:50;pointer-events:none;width:96px;transform:translate(-50%, -70%) rotate(-6deg);filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+.ghost svg{width:100%;height:auto;display:block}

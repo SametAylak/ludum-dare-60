@@ -1,0 +1,26 @@
+/* Layout: Incredibox-style stage. Soft spotlit backdrop, seven full-body performers standing on a floor, round icon palette in a dark bar below. */
+:root{
+  --sky-1:#4a4fae; --sky-2:#2a2c6a; --sky-3:#15163a;
+  --floor:#2b2d6c; --floor-2:#1b1c47;
+  --bar:#101129; --bar-2:#1a1b3d;
+  --beige:#dcd2b6; --beige-hi:#efe7cf; --beige-lo:#b9ad8d; --ink:#26221d;
+  --metal:#a3a9b0; --metal-hi:#c9ced4;
+  --screen:#06170e; --phos:#5cf58e; --amber:#ffb12b; --red:#ff4b3a;
+  --text:#f4f2ff; --muted:#a6a9db;
+  --ghost:#5b5e9c; --ghost-2:#474a86; --ghost-ln:#34366c;
+  --c-beat:#38c6ea; --c-fx:#a5d83a; --c-mel:#ff9636; --c-voc:#ff5d9e;
+  --f-display:"Fredoka", "Trebuchet MS", system-ui, sans-serif;
+  --f-screen:"VT323", "Courier New", monospace;
+  --gut-l:max(16px, env(safe-area-inset-left, 0px)); --gut-r:max(16px, env(safe-area-inset-right, 0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--sky-3);color:var(--text);font-family:var(--f-display);font-size:14px;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+.app{min-height:100%;display:grid;grid-template-rows:auto 1fr auto;
+  background:
+    radial-gradient(ellipse 60% 55% at 50% 40%, rgba(120,128,255,.32), transparent 70%),
+    linear-gradient(var(--sky-2), var(--sky-3) 85%);}

@@ -1,0 +1,23 @@
+/* ---------- breakpoints and reduced motion ---------- */
+@media (max-width:1240px){ .deck{--kw:clamp(44px, calc((100vw - 160px) / 10), 64px)} }
+@media (max-width:760px){
+  .shelf{grid-template-columns:repeat(8, minmax(0,1fr));row-gap:6px}
+  .slot{grid-column:span 2}
+  .slot:nth-child(5){grid-column:2 / span 2}
+  .bonus{top:8px}
+}
+@media (max-width:640px){
+  .deck{--kw:min(58px, calc((100vw - 72px) / 5))}
+  .logo{font-size:28px}
+  .rb{width:38px;height:38px}
+  .rb.big{width:46px;height:46px}
+  .hud{grid-template-columns:1fr}
+  .hint,.disks{grid-column:1;justify-self:center}
+  #term{font-size:16px}
+  .bdisk{width:90px;height:90px}
+}
+@media (prefers-reduced-motion: reduce){
+  .slot .art .eyes,.slot.on .art .spin,.slot.on .art .glow,.slot.on .art .lp,.slot .fig.empty .idle,.app .lights i,.slot .art-wrap{animation:none !important}
+  .oc{display:none}
+  .unlock .rays,.unlock .bdisk,.bonus{animation:none}
+}
