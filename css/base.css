@@ -41,6 +41,18 @@ button{font:inherit;color:inherit}
 .btn.on .led{background:var(--phos);box-shadow:0 0 8px var(--phos)}
 #turbo.on .led{background:var(--amber);box-shadow:0 0 8px var(--amber)}
 .readout{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-size:9px;letter-spacing:.12em;color:var(--muted)}
+.vol{cursor:pointer;margin-left:8px}
+.vol .fader{width:86px}
+
+/* volume faders: dark groove filled to the level (--fill), beige mixer cap */
+.fader{-webkit-appearance:none;appearance:none;display:block;width:min(100%, 92px);height:16px;margin:0;background:transparent;cursor:pointer;--fill:66%}
+.fader::-webkit-slider-runnable-track{height:5px;border-radius:3px;border:1px solid #0d0a07;background:linear-gradient(90deg, var(--cat, var(--phos)) var(--fill), #1c140e 0)}
+.fader::-moz-range-track{height:5px;border-radius:3px;border:1px solid #0d0a07;background:linear-gradient(90deg, var(--cat, var(--phos)) var(--fill), #1c140e 0)}
+.fader::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:10px;height:16px;margin-top:-6.5px;border-radius:2px;border:1px solid var(--ink);
+  background:linear-gradient(var(--beige-hi) 0 45%, var(--ink) 45% 55%, var(--beige-lo) 55%)}
+.fader::-moz-range-thumb{width:8px;height:14px;border-radius:2px;border:1px solid var(--ink);
+  background:linear-gradient(var(--beige-hi) 0 45%, var(--ink) 45% 55%, var(--beige-lo) 55%)}
+.fader:focus-visible{outline:2px dashed var(--phos);outline-offset:2px}
 .seg{font-family:var(--f-screen);font-size:26px;line-height:1;color:var(--red);background:#170807;border:2px solid #000;border-radius:4px;
   padding:1px 7px;text-shadow:0 0 6px rgba(255,75,58,.75);min-width:3.4ch;text-align:center;font-variant-numeric:tabular-nums}
 .bars{display:flex;gap:3px}

@@ -3,7 +3,7 @@
 import { state, on } from "../state.js";
 import { BPM } from "../config.js";
 import { PARTS } from "../parts/index.js";
-import { setRunning, setTurbo } from "../audio/engine.js";
+import { setRunning, setTurbo, setMasterVolume } from "../audio/engine.js";
 import { togglePart, shuffle, clearAll } from "./stage.js";
 
 let barEls = [];
@@ -16,6 +16,7 @@ export function initHeader() {
   turboBtn.addEventListener("click", () => setTurbo(!state.turbo));
   document.getElementById("shuffle").addEventListener("click", shuffle);
   document.getElementById("clear").addEventListener("click", clearAll);
+  initMasterVolume(document.getElementById("master"));
 
   on("power", () => {
     playBtn.classList.toggle("on", state.running);
@@ -33,6 +34,24 @@ export function initHeader() {
     if (e.repeat) return;
     const p = PARTS.find(p => p.key === e.key.toUpperCase());
     if (p) togglePart(p.id);
+  });
+}
+
+// Master fader; the level is remembered in this browser.
+function initMasterVolume(input) {
+  const STORE = "beigebox.volume";
+  const apply = v => {
+    input.value = v;
+    input.style.setProperty("--fill", v + "%");
+    input.title = `Master volume ${v}%`;
+    setMasterVolume(v / 100);
+  };
+  let saved = null;
+  try { saved = localStorage.getItem(STORE); } catch (e) {}
+  apply(saved !== null && !isNaN(+saved) ? Math.max(0, Math.min(100, +saved)) : 80);
+  input.addEventListener("input", () => {
+    apply(+input.value);
+    try { localStorage.setItem(STORE, input.value); } catch (e) {}
   });
 }
 

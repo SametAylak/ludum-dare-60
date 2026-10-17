@@ -1,6 +1,6 @@
 // The seven desk slots: rendering, placing/removing parts, mute/solo, and hit animations.
 
-import { slots, state, FILL_ORDER, nextUid, emit } from "../state.js";
+import { slots, state, FILL_ORDER, nextUid, emit, partVol } from "../state.js";
 import { PARTS, CATS, byId, artSvg } from "../parts/index.js";
 import { ensureAudio, makeNodes, dropNodes, updateGains, resetTransport, setRunning } from "../audio/engine.js";
 import { reduceMotion } from "../config.js";
@@ -13,12 +13,21 @@ export function initStage(shelf) {
     el.className = "slot"; el.dataset.i = sl.i;
     el.innerHTML = `<div class="char" tabindex="0" role="button"><div class="drop"><span>SLOT ${sl.i + 1}</span><small>DROP A PART</small></div><div class="art-wrap"></div><div class="boot">BOOTING<i></i></div></div>
       <div class="plank"></div>
-      <div class="meta"><div class="tag"><span></span></div><div class="tools"><button type="button" data-a="mute" aria-pressed="false">MUTE</button><button type="button" data-a="solo" aria-pressed="false">SOLO</button><button type="button" data-a="del" aria-label="Remove part">✕</button></div></div>`;
+      <div class="meta"><div class="tag"><span></span></div><input class="fader" type="range" min="0" max="150" step="1" value="100"><div class="tools"><button type="button" data-a="mute" aria-pressed="false">MUTE</button><button type="button" data-a="solo" aria-pressed="false">SOLO</button><button type="button" data-a="del" aria-label="Remove part">✕</button></div></div>`;
     shelf.appendChild(el);
     Object.assign(sl, {
       el, char: $(".char", el), wrap: $(".art-wrap", el), tag: $(".tag span", el), bar: $(".boot i", el),
-      muteBtn: $('[data-a="mute"]', el), soloBtn: $('[data-a="solo"]', el),
+      muteBtn: $('[data-a="mute"]', el), soloBtn: $('[data-a="solo"]', el), fader: $(".fader", el),
     });
+  });
+
+  shelf.addEventListener("input", e => {
+    if (!e.target.classList.contains("fader")) return;
+    const sl = slots[+e.target.closest(".slot").dataset.i];
+    if (!sl.id) return;
+    state.vols[sl.id] = e.target.value / 100;
+    showVol(sl);
+    updateGains();
   });
 
   shelf.addEventListener("click", e => {
@@ -50,10 +59,20 @@ export function renderSlot(sl, pop) {
   sl.svg = p ? sl.wrap.firstElementChild : null;
   sl.tag.textContent = p ? p.name : "";
   sl.char.setAttribute("aria-label", p ? `${p.name}. Press to mute or unmute.` : `Empty slot ${sl.i + 1}`);
+  sl.fader.setAttribute("aria-label", p ? `${p.name} volume` : "Volume");
+  showVol(sl);
   if (pop && p && !reduceMotion) sl.svg.animate([
     { transform: "translateY(-30px) scale(.7)", opacity: 0 },
     { transform: "translateY(4px) scale(1.04)", opacity: 1, offset: .7 },
     { transform: "none", opacity: 1 }], { duration: 380, easing: "cubic-bezier(.2,.8,.3,1.2)" });
+}
+
+// Syncs a slot's fader position, fill and tooltip with its part's stored level.
+function showVol(sl) {
+  const v = sl.id ? Math.round(partVol(sl.id) * 100) : 100;
+  sl.fader.value = v;
+  sl.fader.style.setProperty("--fill", (v / 150 * 100).toFixed(1) + "%");
+  sl.fader.title = `Volume ${v}%`;
 }
 
 // Applies mute/solo to the audio and the slot styling, then tells listeners the lineup changed.

@@ -22,6 +22,8 @@ It also runs as-is on GitHub Pages.
 | Add a part | Drag a key onto a slot, click a key, or press its letter |
 | Remove a part | Click its key again, or the ✕ under it |
 | Mute / solo | Click the part, or use the MUTE / SOLO buttons under it |
+| Part volume | Fader under each part (0–150%); remembered per part while the page is open |
+| Master volume | VOL fader in the header; remembered in this browser |
 | Play / pause | `Space` or PLAY |
 | Faster tempo | TURBO (110 → 128 BPM) |
 

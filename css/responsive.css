@@ -1,7 +1,7 @@
 /* ---------- responsive + motion ---------- */
 @media (max-width:1240px){ .deck{--kw:clamp(50px, calc((100vw - 150px) / 10), 70px)} }
 @media (max-width:760px){
-  .stage{--meta:58px}
+  .stage{--meta:78px}
   .shelf{grid-template-columns:repeat(8, minmax(0,1fr));margin-top:-26px}
   .slot{grid-column:span 2}
   .slot:nth-child(5){grid-column:2 / span 2}

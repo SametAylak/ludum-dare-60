@@ -16,7 +16,11 @@ export const state = {
   curStep: -1,         // step currently audible
   uid: 0,
   notice: null,        // { text, until } transient message for the terminal
+  masterVol: .8,       // 0..1 master output level
+  vols: {},            // part id -> 0..1.5 level set by its fader (default 1)
 };
+
+export const partVol = id => state.vols[id] ?? 1;
 
 export const slots = Array.from({ length: 7 }, (_, i) => ({
   i, id: null, muted: false, solo: false, start: 0, uid: 0,

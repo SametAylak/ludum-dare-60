@@ -1,5 +1,5 @@
 /* ---------- stage ---------- */
-.stage{--meta:62px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:0;padding-top:clamp(6px, 3vh, 40px);overflow:hidden}
+.stage{--meta:82px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:0;padding-top:clamp(6px, 3vh, 40px);overflow:hidden}
 .floor{position:relative;z-index:2}
 .floor::after{content:"";position:absolute;left:0;right:0;top:calc(100% - 12px - var(--meta));height:100vh;z-index:0;
   border-top:2px solid var(--desk-edge);background:linear-gradient(var(--desk-hi), var(--desk) 10px)}
@@ -34,7 +34,7 @@
 .boot i{display:block;height:7px;margin-top:2px;border:1px solid var(--phos);background:linear-gradient(90deg, var(--phos) var(--p, 0%), rgba(0,0,0,.5) 0)}
 .slot.wait .boot{display:block}
 .plank{height:12px;border-top:2px solid var(--desk-edge);background:linear-gradient(var(--desk-hi), var(--desk))}
-.meta{height:var(--meta);background:var(--desk);display:flex;flex-direction:column;align-items:center;gap:6px;padding:7px 4px 0;min-width:0}
+.meta{height:var(--meta);background:var(--desk);display:flex;flex-direction:column;align-items:center;gap:5px;padding:7px 4px 0;min-width:0}
 .tag{display:flex;align-items:center;gap:5px;max-width:100%;font-family:var(--f-display);font-size:10px;letter-spacing:.05em;color:var(--ink);
   background:var(--beige-hi);border:2px solid var(--ink);border-radius:3px;padding:1px 6px;white-space:nowrap;overflow:hidden}
 .tag::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--cat);border:1px solid var(--ink)}
@@ -44,7 +44,7 @@
 .tools{display:flex;gap:4px;opacity:0;transition:opacity .15s}
 .slot.has:hover .tools,.slot.has:focus-within .tools{opacity:1}
 @media (hover:none){.slot.has .tools{opacity:1}}
-.slot:not(.has) .tools{visibility:hidden}
+.slot:not(.has) :is(.tools,.fader){visibility:hidden}
 .tools button{font-family:var(--f-display);font-size:9px;letter-spacing:.04em;padding:3px 5px;background:#2f241b;color:var(--beige);border:1px solid #1c140e;border-radius:3px;cursor:pointer}
 .tools button[aria-pressed="true"]{background:var(--amber);color:var(--ink)}
 .tools button:hover{background:#45362a}

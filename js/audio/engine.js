@@ -2,7 +2,7 @@
 
 import { ctx, setContext, tone, pulseWave } from "./synth.js";
 import { SPB, LOOP, CHORDS, mtof, setBpm, BPM_NORMAL, BPM_TURBO } from "../config.js";
-import { slots, state, sq, vq, emit } from "../state.js";
+import { slots, state, sq, vq, emit, partVol } from "../state.js";
 import { byId } from "../parts/index.js";
 
 let master, analyser, delayIn, delay, fxBus;
@@ -16,7 +16,7 @@ export function ensureAudio() {
   setContext(new (window.AudioContext || window.webkitAudioContext)());
   const comp = ctx.createDynamicsCompressor();
   comp.threshold.value = -12; comp.knee.value = 8; comp.ratio.value = 5; comp.attack.value = .004; comp.release.value = .2;
-  master = ctx.createGain(); master.gain.value = .8;
+  master = ctx.createGain(); master.gain.value = state.masterVol;
   analyser = ctx.createAnalyser(); analyser.fftSize = 2048;
   master.connect(comp); comp.connect(analyser); analyser.connect(ctx.destination);
 
@@ -55,9 +55,14 @@ export function updateGains() {
   const anySolo = slots.some(s => s.id && s.solo);
   for (const sl of slots) {
     sl.audible = !!sl.id && !sl.muted && (!anySolo || sl.solo);
-    if (sl.g) sl.g.gain.setTargetAtTime(sl.audible ? byId[sl.id].gain : 0, ctx.currentTime, .015);
+    if (sl.g) sl.g.gain.setTargetAtTime(sl.audible ? byId[sl.id].gain * partVol(sl.id) : 0, ctx.currentTime, .015);
   }
   return anySolo;
+}
+
+export function setMasterVolume(v) {
+  state.masterVol = v;
+  if (master) master.gain.setTargetAtTime(v, ctx.currentTime, .02);
 }
 
 export function resetTransport() {
