@@ -5,12 +5,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 - `pnpm install` then `pnpm dev` — serves the game with Vite at http://localhost:5173 (hot reload). Any static server works (`python3 -m http.server 8000`); `file://` does not, because the code is ES modules.
-- `node tests/bonus-score.test.mjs` — the only test suite (Node's built-in `node:test`). Run a single test with `node --test-name-pattern="<regex>" tests/bonus-score.test.mjs`.
+- `pnpm test` — runs `tests/bonus-score.test.mjs` and `tests/boot-score.test.mjs` with Node's built-in `node:test`. Run one test with `node --import ./tests/strudel-node.mjs --test --test-name-pattern="<regex>" tests/<file>`; the `--import` hook is needed whenever a test loads Strudel.
 - There is no build step, bundler config, linter or formatter. The repo is deployed as-is to a static host.
 
 ## What this is
 
-Beigebox: an Incredibox-style browser music game (Ludum Dare entry) where retro computer parts are performers. Plain HTML/CSS/vanilla JS modules, no framework, no runtime dependencies. All sound is synthesized live with Web Audio — there are no audio files. The README has the controls, part/key table and bonus trios.
+Beigebox: an Incredibox-style browser music game (Ludum Dare entry) where retro computer parts are performers. Plain HTML/CSS/vanilla JS modules, no framework. The only runtime dependency is Strudel (`@strudel/core`, `@strudel/mini`), used by Boot Sequence's score. Sound is synthesized live with Web Audio, apart from two recorded voices in `audio/` and Boot Sequence's sampled kit in `samples/` (`js/audio/samples.js`). The README has the controls, part/key table and bonus trios.
 
 ## Architecture
 
@@ -28,6 +28,8 @@ Beigebox: an Incredibox-style browser music game (Ludum Dare entry) where retro 
 **Parts.** `js/parts/{beats,effects,melody,voices}.js` each export an array of part objects (`id`, `cat`, `key`, `name`, `gain`, `art()` SVG string, optional `alt`, optional `outfit {back, front}`, `play(...)`). `parts/index.js` merges them into `PARTS`/`byId`. SVG helpers (eyes `E`, mouth `M`, LED `L`, `anim`) live in `parts/art.js`; costume pieces in `parts/outfits.js`. Animation keys passed in `hit` kinds (e.g. `"bump alt"`, `"led"`) are interpreted by `ui/performers.js` and CSS classes.
 
 **Bonus shows** (`js/bonus/`). `combos.js` defines the five trios and guests. When all three parts of a trio are audible, `show.js` queues a show that runs on the song clock (step counts, so it follows pause and tempo): `INTRO_STEPS` card → `MUSIC_STEPS` of guest music → outro (`SHOW_STEPS` total). `score.js` is pure (no DOM/audio) — section layout (`sectionAt`) and guest note generation (`guestNote`) — which is why it's the part under test. `music.js` turns the score into sound, `scenes.js`/`guests.js`/`atmosphere.js` draw the monitor, SVG guests and lighting. Muting/removing a required part cancels the show.
+
+**Boot Sequence** is the exception: `js/bonus/boot/` holds its own Strudel score (`patterns.js`), a longer section layout (`score.js`, `TIMING`), instruments (`voices.js`) and music on its own bus (`music.js`, using `audio/bonus-bus.js` and the `audio/robot.js` vocoder). `show.js` picks the timing and sections per show, and the old `music.js` hands Boot's steps to it, keeping only the recorded speech.
 
 **Overclock.** `setBpm` in `transport.js` sets CSS vars `--oc`/`--spd` and classes `oc1`–`oc3` on the app root; the heat visuals are pure CSS (`css/overclock.css`).
 

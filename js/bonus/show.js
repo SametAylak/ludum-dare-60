@@ -6,6 +6,7 @@ import { drawAtmosphere, endAtmosphere, startAtmosphere } from "./atmosphere.js"
 import { guestName } from "./guests.js";
 import { guestEnergy, startBonusAudio, stopBonusAudio } from "./music.js";
 import { INTRO_STEPS, MUSIC_STEPS, sectionAt, SHOW_STEPS } from "./score.js";
+import { sectionAt as bootSectionAt, TIMING as BOOT_TIMING } from "./boot/score.js";
 import { app } from "../dom.js";
 import { clock } from "../music.js";
 import { byId } from "../parts/index.js";
@@ -19,13 +20,16 @@ const bg = $("#bscene").getContext("2d");
 const countdown = [...unlockEl.querySelectorAll(".u-countdown i")];
 let termCache = "", counterCache = "";
 const pending = [];
-const CARD_END = INTRO_STEPS, MUSIC_END = CARD_END + MUSIC_STEPS;
+// Boot Sequence plays its own, longer arrangement (bonus/boot/); the other shows share score.js.
+const TIMING = { intro: INTRO_STEPS, music: MUSIC_STEPS, outro: 8, show: SHOW_STEPS };
+const timingFor = c => c.id === "boot" ? BOOT_TIMING : TIMING;
+const sectionFor = (c, position) => c.id === "boot" ? bootSectionAt(position) : sectionAt(position);
 
 function startScene(c, n) {
   const idx = COMBOS.indexOf(c), first = !unlocked.has(c.id);
-  state.scene = { c, n, idx, first, section: "arrival" };
-  state.bonusMus = { c, start: n, to: n + SHOW_STEPS };
-  startBonusAudio();
+  state.scene = { c, n, idx, first, section: "arrival", time: timingFor(c) };
+  state.bonusMus = { c, start: n, to: n + state.scene.time.show };
+  startBonusAudio(c);
   if (first) { unlocked.add(c.id); saveBonus(); }
   for (const el of [unlockEl, bonusEl]) el.style.setProperty("--c", DISK_COLORS[idx]);
   $(".u-kicker", unlockEl).textContent = first ? "SECRET FREQUENCY FOUND" : "BACK ON THE AIR";
@@ -89,22 +93,22 @@ export function updateShow() {
   if (!state.scene) return false;
   const scene = state.scene;
   const fraction = Math.max(0, Math.min(1, (audio.ctx.currentTime - state.curT) / clock.SPB));
-  const rel = state.curStep + fraction - scene.n;
+  const rel = state.curStep + fraction - scene.n, { intro, music, outro, show } = scene.time;
   if (!comboLive(scene.c)) { liveCombos.delete(scene.c.id); endScene(); return false; }
-  if (rel >= SHOW_STEPS || rel < 0) { endScene(); return false; }
-  const performing = rel >= CARD_END, ending = Math.max(0, rel - MUSIC_END);
-  const section = sectionAt(rel);
+  if (rel >= show || rel < 0) { endScene(); return false; }
+  const performing = rel >= intro, ending = Math.max(0, rel - intro - music);
+  const section = sectionFor(scene.c, rel);
   app.classList.toggle("party-paused", !state.running);
   retroShow.parentElement.style.setProperty("--beat-time", `${clock.SPB * 4}s`);
   slots.forEach(s => s.el.classList.toggle("star", scene.c.parts.includes(s.id)));
   diskEls.forEach((el, i) => el.classList.toggle("playing", i === scene.idx));
-  drawAtmosphere(rel, state.running, ending, guestEnergy(audio.ctx.currentTime), section);
+  drawAtmosphere(rel, state.running, ending, guestEnergy(audio.ctx.currentTime), section, scene.time);
   unlockEl.hidden = performing;
   if (!performing) {
-    const enter = Math.min(1, rel / 3), exit = Math.max(0, (rel - CARD_END + 4) / 4);
+    const enter = Math.min(1, rel / 3), exit = Math.max(0, (rel - intro + 4) / 4);
     unlockEl.style.opacity = String(enter * (1 - exit));
     unlockEl.style.transform = `translate(-50%, -50%) scale(${reduce ? 1 : .92 + enter * .08 - exit * .06})`;
-    countdown.forEach((el, i) => el.classList.toggle("on", rel >= 16 + i * 4));
+    countdown.forEach((el, i) => el.classList.toggle("on", rel >= intro - 16 + i * 4));
   }
   bonusEl.hidden = !performing;
   if (scene.section !== section.id) {
@@ -113,15 +117,16 @@ export function updateShow() {
     $(".u-countdown span").textContent = section.label;
   }
   if (performing) {
-    const pos = Math.min(128, rel - CARD_END);
-    bonusEl.style.opacity = String(1 - ending / 8);
-    drawScene(bg, scene.c.id, reduce ? Math.floor(pos / 4) * 4 : pos);
+    const pos = Math.min(music, rel - intro);
+    bonusEl.style.opacity = String(1 - ending / outro);
+    drawScene(bg, scene.c.id, reduce ? Math.floor(pos / 4) * 4 : pos, music);
     const typed = scene.c.lines.filter(l => l && !l.startsWith("***")).join("\n").slice(0, Math.floor(pos * 4));
     const out = typed.split("\n").slice(-2).join("\n") + (Math.floor(rel / 4) % 2 ? "_" : " ");
     if (out !== termCache) { termCache = out; term.textContent = out; }
-    const label = state.running ? ending ? "SIGNING OFF" : `BAR ${Math.min(8, Math.floor(pos / 16) + 1)} / 8` : "PAUSED";
+    const bars = music / 16;
+    const label = state.running ? ending ? "SIGNING OFF" : `BAR ${Math.min(bars, Math.floor(pos / 16) + 1)} / ${bars}` : "PAUSED";
     if (label !== counterCache) { counterCache = label; counter.textContent = label; }
-    progress.style.transform = `scaleX(${Math.max(0, 1 - pos / 128)})`;
+    progress.style.transform = `scaleX(${Math.max(0, 1 - pos / music)})`;
   }
   return true;
 }

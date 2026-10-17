@@ -79,7 +79,7 @@ const VOW = {
   i: [[300, 1], [2200, .35], [3000, .25]],
 };
 export function voice(dest, t, o) {
-  const { f, vowel = "a", vol = .3, a = .03, hold = .2, r = .12, scoop = .94, vib = .012, vibRate = 5.2 } = o;
+  const { f, vowel = "a", vowelEnd = vowel, vol = .3, a = .03, hold = .2, r = .12, scoop = .94, vib = .012, vibRate = 5.2 } = o;
   const osc = audio.ctx.createOscillator(); osc.type = "sawtooth";
   osc.frequency.setValueAtTime(f * scoop, t);
   osc.frequency.exponentialRampToValueAtTime(f, t + .07);
@@ -90,8 +90,10 @@ export function voice(dest, t, o) {
   lg.gain.setValueAtTime(0, t);
   lg.gain.linearRampToValueAtTime(f * vib, t + Math.max(.08, (end - t) * .6));
   l.connect(lg); lg.connect(osc.frequency);
-  for (const [ff, amp] of VOW[vowel]) {
+  for (const [i, [ff, amp]] of VOW[vowel].entries()) {
     const bp = audio.ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = ff; bp.Q.value = ff / 90;
+    bp.frequency.setValueAtTime(ff, t);
+    bp.frequency.exponentialRampToValueAtTime(VOW[vowelEnd][i][0], t + a + hold * .8);
     const fg = audio.ctx.createGain(); fg.gain.value = amp * 3.5;
     osc.connect(bp); bp.connect(fg); fg.connect(g);
   }

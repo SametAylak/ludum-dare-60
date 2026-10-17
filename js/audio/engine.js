@@ -2,6 +2,7 @@
 import { applyGains, makeNodes, masterGain } from "../mixer.js";
 import { clock } from "../music.js";
 import { slots } from "../state.js";
+import { loadSamples } from "./samples.js";
 
 export const audio = { ctx: null, master: null, analyser: null, delayIn: null, delay: null,
   bandFilter: null, bandGain: null, fxBus: null, fxLeft: null, fxRight: null };
@@ -40,6 +41,7 @@ export function ensureAudio() {
   audio.fxBus.connect(fxHighpass); fxHighpass.connect(fs); fs.connect(audio.delayIn);
   slots.forEach(s => { if (s.id) makeNodes(s); });
   applyGains();
+  loadSamples();
 }
 
 // Download and decode a recorded sample at page load. An offline context decodes without a click,

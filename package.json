@@ -3,9 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --import ./tests/strudel-node.mjs --test tests/bonus-score.test.mjs tests/boot-score.test.mjs"
   },
   "devDependencies": {
     "vite": "^8.3.4"
+  },
+  "dependencies": {
+    "@strudel/core": "^1.2.6",
+    "@strudel/mini": "^1.2.6"
   }
 }

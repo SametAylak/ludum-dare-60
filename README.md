@@ -2,7 +2,7 @@
 
 An Incredibox-style music game where old computer parts are the band. Drag a hard drive, floppy drive, modem, CRT monitor or speech chip onto the desk and each one adds its own loop to the mix.
 
-Every band sound is synthesized live with the Web Audio API. The only audio files are the two recorded voices used by some bonus shows, in `audio/`.
+Every band sound is synthesized live with the Web Audio API. The only audio files are the two recorded voices used by some bonus shows, in `audio/`, and Boot Sequence's CC0 drum kit, in `samples/`.
 
 ## Play
 
@@ -42,6 +42,8 @@ New parts join on the next bar so everything stays in time. All parts play over 
 
 Some trios unlock bonus disks. There are five to find. Each brings two animated guests in from the sides, lowers a mirrored disco ball, and turns the stage into a dance floor. A transmission card introduces the guests before becoming a small live monitor, with eight bars of bonus music and a countdown. The show follows the song clock, including pause and tempo changes. Removing or muting a required part ends it. Simultaneous discoveries play in order.
 
+Boot Sequence plays a longer show of its own: sixteen bars of robot house, written in [Strudel](https://strudel.cc) mini-notation in `js/bonus/boot/`. A vocoder robot sings "the machines are alive" over disk-seek bleeps and a sampled kit. A second robot stutters the show's name, a talk-box guitar answers in the chorus, and the machine loses power before the last chorus, then an acid bass slides in for the peak.
+
 Click a bonus disk for its trio, or replay a discovered show while its trio is audible. Each show has its own guest pairing and lighting colors. Reduced-motion mode stops the crowd from dancing.
 
 <details>
@@ -74,6 +76,7 @@ Two shows use recordings. Boot Sequence opens with a spoken transmission about a
 ```
 index.html            markup only
 audio/                recorded voices used by the bonus shows (WAV)
+samples/              Boot Sequence's drum kit and hits (Sonic Pi, CC0)
 css/                  base, header, stage, bonus, parts, overclock, deck, responsive
 js/
   main.js             entry point: init + frame loop
@@ -86,9 +89,10 @@ js/
   audio/              AudioContext + bus (engine.js), synth voices (synth.js)
   parts/              the 20 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
   bonus/              trios, music, monitor scenes, SVG guests, stage lighting, show timing
+    boot/             Boot Sequence's own score (Strudel), arrangement and instruments
   ui/                 stage slots, palette, header, HUD, performer animation, waveform
 ```
 
 To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function.
 
-Run the bonus arrangement checks with `node tests/bonus-score.test.mjs`. They verify the two drops, the gaps before them, both guest phrases, and chord-compatible melodies for all five shows.
+Run the bonus arrangement checks with `pnpm test`. They verify the two drops, the gaps before them, both guest phrases, and chord-compatible melodies for all five shows, plus Boot Sequence's own arrangement.

@@ -4,10 +4,13 @@ import { fm, kick, noise, pulseWave, tone, voice } from "../audio/synth.js";
 import { CHORDS, clock, mtof } from "../music.js";
 import { COMBOS } from "./combos.js";
 import { guestNote, sectionAt } from "./score.js";
+import { bootEnergy, scheduleBoot, startBoot, stopBoot } from "./boot/music.js";
 
 const cues = [];
 const lastHits = [{ t: -Infinity, strength: 0 }, { t: -Infinity, strength: 0 }];
 const BASS = { 0: 0, 3: 0, 6: 12, 8: 0, 10: 7, 14: 12 };
+// Boot Sequence hands its music to bonus/boot/ and keeps only the recorded transmission here.
+let boot = false;
 
 // Shows with a `sample` in combos.js add a recorded voice on top of the guests.
 // "hook": an 8-bar vocal hook recorded at 125 BPM covers the drop through the finale.
@@ -49,7 +52,9 @@ function speak(combo, t) {
   src.onended = () => { if (speech.src === src) speech.src = null; };
 }
 
-export function startBonusAudio() {
+export function startBonusAudio(combo) {
+  boot = combo.id === "boot";
+  if (boot) startBoot();
   cues.length = 0;
   hook.on = false;
   speech.due = true;
@@ -65,16 +70,20 @@ export function stopBonusAudio() {
   speech.due = false;
   if (!audio.ctx) return;
   const t = audio.ctx.currentTime;
+  if (boot) stopBoot(t);
+  // Boot Sequence hands the band back more slowly, so the end of its show is a fade rather than a cut.
   for (const [param, value] of [[audio.fxBus.gain, 0], [audio.bandGain.gain, 1], [audio.bandFilter.frequency, 20000]]) {
     param.cancelScheduledValues(t);
-    param.setTargetAtTime(value, t, .04);
+    param.setTargetAtTime(value, t, boot && param !== audio.fxBus.gain ? .2 : .04);
   }
   // Stop a cut-off transmission after the fade, so it can't resurface when the next show opens the bus.
   speech.src?.stop(t + .2);
   speech.src = null;
+  boot = false;
 }
 
 export function guestEnergy(now) {
+  if (boot) return bootEnergy(now);
   while (cues.length && cues[0].t <= now) {
     const cue = cues.shift();
     lastHits[cue.side] = cue;
@@ -166,6 +175,10 @@ function rhythm(combo, position, songStep, t) {
 }
 
 export function scheduleBonusMusic(combo, position, songStep, t) {
+  if (boot) {
+    if (speech.due) speak(combo, t);
+    return scheduleBoot(position, songStep, t);
+  }
   const section = sectionAt(position), b = position & 15;
   const pumping = ["drop", "groove", "peak", "finale"].includes(section.id);
   audio.bandGain.gain.setTargetAtTime(section.band * (pumping ? [.52, .76, .94, 1][b % 4] : 1), t, .018);
