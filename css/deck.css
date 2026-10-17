@@ -1,0 +1,23 @@
+/* ---------- keyboard deck (palette) ---------- */
+.deck{--kw:clamp(50px, calc((100vw - 236px) / 20), 96px);position:relative;z-index:3;
+  background:linear-gradient(var(--deck), var(--deck-lo));border-top:3px solid var(--ink);box-shadow:0 -8px 24px rgba(0,0,0,.35);
+  padding-block:12px 18px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-wrap:wrap;justify-content:center;gap:12px 28px}
+.group{display:flex;flex-direction:column;gap:7px}
+.group h2{margin:0;display:flex;align-items:center;gap:7px;font-family:var(--f-display);font-weight:400;font-size:10px;letter-spacing:.18em;color:var(--deck-ink)}
+.group h2::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--cat);border:1px solid var(--ink)}
+.keys{display:flex;gap:6px}
+.key{position:relative;width:var(--kw);aspect-ratio:1/1.06;padding:0;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:var(--cat);border:2px solid var(--ink);border-radius:8px;
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.22), inset 0 2px 0 rgba(255,255,255,.35), 0 3px 0 var(--ink);
+  transition:transform .08s, box-shadow .08s, filter .15s}
+.key:hover{filter:brightness(1.07)}
+.key .face{position:absolute;inset:4px 5px 9px;border-radius:6px;background:linear-gradient(rgba(255,255,255,.3), rgba(255,255,255,.06))}
+.key svg{position:absolute;left:18%;top:15%;width:64%;height:auto}
+.key .lg{position:absolute;top:4px;left:7px;font-family:var(--f-display);font-size:10px;color:var(--ink);line-height:1}
+.key .nm{position:absolute;left:2px;right:2px;bottom:9px;font-family:var(--f-display);font-size:7.5px;letter-spacing:.02em;color:var(--ink);text-align:center;white-space:nowrap;overflow:hidden;line-height:1}
+.key .kled{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:50%;background:rgba(0,0,0,.3)}
+.key.used{transform:translateY(3px);box-shadow:inset 0 -3px 0 rgba(0,0,0,.22), inset 0 2px 0 rgba(255,255,255,.3), 0 0 0 var(--ink)}
+.key.used .kled{background:var(--phos);box-shadow:0 0 6px var(--phos)}
+.ghost{position:fixed;z-index:50;pointer-events:none;width:96px;transform:translate(-50%, -70%) rotate(-6deg);filter:drop-shadow(0 10px 14px rgba(0,0,0,.5))}
+.ghost svg{width:100%;height:auto;display:block}

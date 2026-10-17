@@ -1,0 +1,48 @@
+/* Layout: one-screen stage. Dark lab wall, phosphor CRT as the backdrop, seven parts on a walnut desk, beige keyboard deck as the parts palette. */
+:root{
+  --wall:#1a1f23; --wall-2:#232a2f;
+  --desk:#5a4534; --desk-hi:#7b5f46; --desk-edge:#9a7a5b;
+  --deck:#d3c8aa; --deck-lo:#b3a786; --deck-ink:#5d5440;
+  --beige:#dcd2b6; --beige-hi:#efe7cf; --beige-lo:#b9ad8d; --ink:#26221d;
+  --metal:#a3a9b0; --metal-hi:#c9ced4;
+  --screen:#06170e; --phos:#5cf58e; --amber:#ffb12b; --red:#ff4b3a;
+  --text:#ebe5d4; --muted:#8f9c9f;
+  --c-beat:#3aa5bf; --c-fx:#9bbf35; --c-mel:#ee8530; --c-voc:#d4568b;
+  --f-display:"Silkscreen", "Courier New", monospace;
+  --f-screen:"VT323", "Courier New", monospace;
+  --f-ui:"IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--wall);color:var(--text);font-family:var(--f-ui);font-size:14px;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px dashed var(--phos);outline-offset:3px}
+
+.app{min-height:100%;display:grid;grid-template-rows:auto 1fr auto;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 32%, rgba(92,245,142,.07), transparent 70%),
+    repeating-linear-gradient(90deg, transparent 0 139px, rgba(255,255,255,.022) 139px 141px),
+    linear-gradient(var(--wall-2), var(--wall));}
+
+/* ---------- header ---------- */
+.top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 20px;
+  padding-block:12px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.badge{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px}
+.logo{margin:0;font-family:var(--f-display);font-weight:700;font-size:26px;letter-spacing:.06em;color:var(--beige);line-height:1}
+.logo b{color:var(--phos);font-weight:700}
+.model{font-family:var(--f-display);font-size:10px;color:var(--muted);letter-spacing:.14em}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font-family:var(--f-display);font-size:12px;letter-spacing:.08em;color:var(--ink);
+  background:linear-gradient(var(--beige-hi), var(--beige));border:2px solid var(--ink);border-bottom-width:4px;border-radius:6px;
+  padding:6px 11px;display:inline-flex;align-items:center;gap:8px;cursor:pointer;line-height:1.2}
+.btn:active{transform:translateY(2px);border-bottom-width:2px;margin-bottom:2px}
+.btn .led{width:8px;height:8px;border-radius:50%;background:#4a3f33;border:1px solid var(--ink)}
+.btn.on .led{background:var(--phos);box-shadow:0 0 8px var(--phos)}
+#turbo.on .led{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.readout{display:flex;align-items:center;gap:6px;font-family:var(--f-display);font-size:9px;letter-spacing:.12em;color:var(--muted)}
+.seg{font-family:var(--f-screen);font-size:26px;line-height:1;color:var(--red);background:#170807;border:2px solid #000;border-radius:4px;
+  padding:1px 7px;text-shadow:0 0 6px rgba(255,75,58,.75);min-width:3.4ch;text-align:center;font-variant-numeric:tabular-nums}
+.bars{display:flex;gap:3px}
+.bars i{width:14px;height:9px;background:#2c3337;border:1px solid #000;border-radius:2px}
+.bars i.on{background:var(--phos);box-shadow:0 0 6px var(--phos)}

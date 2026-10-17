@@ -6,12 +6,14 @@ Every sound is synthesized live with the Web Audio API. There are no audio files
 
 ## Play
 
-Open `index.html` in a browser. Because it's a single file, it can also be served from any static host:
+The game uses native ES modules, so it has to be served over HTTP. Opening `index.html` straight from disk (`file://`) won't load the scripts. There's no build step; any static server works:
 
 ```sh
 python3 -m http.server 8000
 # then open http://localhost:8000
 ```
+
+It also runs as-is on GitHub Pages.
 
 ## Controls
 
@@ -33,6 +35,49 @@ python3 -m http.server 8000
 New parts join on the next bar so everything stays in time. All parts play over the same 4-bar progression (Am, F, C, G), so any combination fits.
 
 Some trios of parts unlock bonus disks. There are four to find.
+
+## Project layout
+
+```
+index.html              page markup; loads the CSS and js/main.js
+css/
+  base.css              color/type tokens, page shell, header
+  stage.css             CRT backdrop, desk, slots
+  art.css               styling and animations for the part drawings
+  deck.css              keyboard palette and drag ghost
+  responsive.css        breakpoints and reduced motion
+js/
+  main.js               entry point: wires modules, frame loop, boot
+  config.js             tempo, chord progression, mtof
+  state.js              shared state, slots, event bus
+  combos.js             bonus-disk trios and unlock storage
+  audio/
+    synth.js            tone / noise / fm / formant voice primitives
+    engine.js           audio graph, transport, step scheduler
+  parts/
+    helpers.js          SVG building blocks (eyes, mouths, LEDs, reels)
+    beats.js effects.js melody.js voices.js   the 20 parts
+    index.js            catalog: PARTS, byId, CATS, artSvg
+  ui/
+    stage.js            slots: place/remove, mute/solo, hit animations
+    deck.js             keycaps and drag-and-drop
+    header.js           buttons, bar indicator, keyboard shortcuts
+    screen.js           CRT terminal text and oscilloscope
+```
+
+### Adding a part
+
+Add an object to one of the files in `js/parts/`:
+
+```js
+{ id: "zip", cat: "fx", key: "Y", name: "ZIP DRIVE", short: "ZIP", gain: 1,
+  art: () => `<rect class="b" x="10" y="40" width="100" height="86" rx="8"/>${E(60, 70)}${M(60, 92)}`,
+  play(s, t, out, hit) {          // s = step 0–63, t = audio time
+    if (s % 16 === 0) { noise(out, t, { f: 1500, r: .2 }); hit(t, "bump"); }
+  } }
+```
+
+`hit(time, kinds, dur)` schedules a visual reaction: `bump`, `led`, `mouth` (open for `dur` seconds) or `alt` (the part's own `alt(svg)` animation).
 
 ## How it works
 

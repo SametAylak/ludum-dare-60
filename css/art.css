@@ -1,0 +1,59 @@
+/* ---------- parts art ---------- */
+.art{display:block;overflow:visible}
+.art :is(rect,circle,ellipse,path){stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}
+.art :is(.ns,.ep,.es,.lit,.ph,.glow,.lp,.hole,.shadow,.flash){stroke:none}
+.art .shadow{fill:rgba(0,0,0,.35)}
+.art .b{fill:var(--beige)} .art .bl{fill:var(--beige-hi)} .art .bd{fill:var(--beige-lo)}
+.art .m{fill:var(--metal)} .art .mh{fill:var(--metal-hi)} .art .k{fill:#2b2a29} .art .k2{fill:#4b4946} .art .w{fill:#f7f4ea}
+.art .scr{fill:var(--screen)} .art .ph{fill:var(--phos)} .art .g{fill:#2e7a4b} .art .au{fill:#e3b23c} .art .blu{fill:#3a62b5} .art .r{fill:#d33b2e}
+.art .tt{fill:#c8c299} .art .ibm{fill:#7f94a7} .art .cg{fill:#9d9da2} .art .lab{fill:var(--c-mel)} .art .osc{fill:#8fa4ae}
+.art .tan{fill:#c9a878} .art .tan2{fill:#b38e5c} .art .glass{fill:rgba(190,225,255,.14)} .art .scr2{fill:#1c1a18}
+.art .hole{fill:#c8c1b0} .art .hi{fill:rgba(255,255,255,.55);stroke:none}
+.art .ew{fill:#fff} .art .ep{fill:var(--ink)} .art .es{fill:#fff}
+.art .mouth{fill:#5a2424}
+.art .mouth.ph{fill:var(--phos)}
+.art .mouth.slotm{fill:#1d1b19}
+.art .flash{fill:var(--phos);opacity:0}
+.art .wave{fill:none;stroke:var(--phos);stroke-width:2.5}
+.art .ledb{fill:#3b3631}
+.art .lit{fill:var(--amber);color:var(--amber);opacity:0;filter:drop-shadow(0 0 3px currentColor)}
+.art .lit.lg{fill:var(--phos);color:var(--phos)} .art .lit.lr{fill:var(--red);color:var(--red)}
+.art :is(.hl,.ln,.grill,.trace,.ridge,.tape,.cord,.wire,.wire2,.pin,.getter,.wireg,.grid,.kt,.handle){fill:none}
+.art .hl{stroke:rgba(255,255,255,.75);stroke-width:3}
+.art .ln{stroke:#9a958a;stroke-width:2}
+.art .grill{stroke:var(--metal);stroke-width:2.5}
+.art .trace{stroke:#5fb27c;stroke-width:2}
+.art .ridge{stroke:#6e6e72;stroke-width:2}
+.art .tape{stroke:#5b3a22;stroke-width:2}
+.art .cord{stroke:var(--ink);stroke-width:3}
+.art .wire{stroke:#c8392c;stroke-width:3}
+.art .wire2{stroke:#1a1a1a;stroke-width:3}
+.art .pin{stroke:#8a9097;stroke-width:3}
+.art .getter{stroke:#b9c3cc;stroke-width:3}
+.art .wireg{stroke:#8a9097;stroke-width:2}
+.art .grid{stroke:rgba(92,245,142,.18);stroke-width:1}
+.art .kt{stroke:var(--beige);stroke-width:2}
+.art .handle{stroke:var(--ink);stroke-width:5}
+.art text{stroke:none}
+.art .chip-t{font-family:var(--f-display);font-size:9px;fill:#a3a097;text-anchor:middle}
+.art .seg-t{font-family:var(--f-screen);font-size:13px;fill:var(--red);text-anchor:middle}
+.art .ct{font-family:var(--f-display);font-size:7px;fill:var(--ink);text-anchor:middle}
+.art .glow{fill:#ff9a3c;opacity:.15;filter:blur(3px)}
+.art .lp{fill:#3a3530}
+
+.art .bump{transform-box:fill-box;transform-origin:50% 100%}
+.art :is(.eyes,.mouth,.cap,.cone,.disk,.paper,.btnL,.btnR){transform-box:fill-box;transform-origin:50% 50%}
+.art :is(.spin,.stick,.arm){transform-box:view-box}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+@keyframes flicker{0%,100%{opacity:.55}40%{opacity:.72}43%{opacity:.38}60%{opacity:.62}}
+@keyframes lp{0%{fill:var(--c)}50%{fill:#3a3530}}
+.slot .art .eyes{animation:blink 5s infinite var(--bd, 0s)}
+.slot.on .art .spin{animation:spin 1.1s linear infinite}
+.slot.on .art .lit.steady{opacity:1}
+.slot.on .art .glow{opacity:.55;animation:flicker 2.3s infinite}
+.slot.on .art .lp{animation:lp var(--t, 1s) steps(1) infinite var(--d, 0s)}
+.slot.wait .art{opacity:.5;filter:grayscale(.7)}
+.slot.muted .art,.slot.dim .art{filter:grayscale(.9) brightness(.62)}
+.slot.muted .art .eyes,.slot.dim .art .eyes{animation:none;transform:scaleY(.12)}
+.slot.solo .char{box-shadow:0 0 0 2px var(--amber), 0 0 22px rgba(255,177,43,.35)}

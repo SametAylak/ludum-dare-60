@@ -1,0 +1,16 @@
+/* ---------- responsive + motion ---------- */
+@media (max-width:1240px){ .deck{--kw:clamp(50px, calc((100vw - 150px) / 10), 70px)} }
+@media (max-width:760px){
+  .stage{--meta:58px}
+  .shelf{grid-template-columns:repeat(8, minmax(0,1fr));margin-top:-26px}
+  .slot{grid-column:span 2}
+  .slot:nth-child(5){grid-column:2 / span 2}
+  .crt{max-height:230px}
+}
+@media (max-width:640px){
+  .deck{--kw:min(66px, calc((100vw - 64px) / 5))}
+  .logo{font-size:22px}
+}
+@media (prefers-reduced-motion: reduce){
+  .slot .art .eyes,.slot.on .art .spin,.slot.on .art .glow,.slot.on .art .lp{animation:none}
+}
