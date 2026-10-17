@@ -34,6 +34,7 @@ function startScene(c, n) {
   $(".u-guests", unlockEl).textContent = c.guests.map(guestName).join(" + ");
   $(".u-countdown span").textContent = "SIGNAL INCOMING";
   $("#bonusTitle").textContent = c.name;
+  $(".party-marquee span").textContent = c.live;
   termCache = ""; term.textContent = "";
   counterCache = "";
   startAtmosphere(c);
@@ -110,7 +111,7 @@ export function updateShow() {
   bonusEl.hidden = !performing;
   if (scene.section !== section.id) {
     scene.section = section.id;
-    $("#partyMessage").textContent = section.id === "groove" ? scene.c.message : section.label;
+    $("#partyMessage").textContent = section.id === "groove" ? scene.c.message : scene.c.cues[section.id] ?? section.label;
     $(".u-countdown span").textContent = section.label;
     if (!reduce && (section.id === "drop" || section.id === "peak")) {
       const r = $(".stage").getBoundingClientRect();
