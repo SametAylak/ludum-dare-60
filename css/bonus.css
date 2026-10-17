@@ -78,7 +78,7 @@
 .slot .art-wrap{transition:opacity .4s}
 .app.party .slot.has:not(.star) .art-wrap{opacity:.72}
 .app.party .stage .lights i{animation:none;opacity:0}
-.app.party .hint{background:#171027a8;color:#e7dcef}
+.app.party .hint,.app.party .counter{background:#171027a8;color:#e7dcef}
 .app.party .shelf{z-index:2;width:min(100%,980px)}
 .party-paused .retro-show *,.party-paused .unlock *{animation-play-state:paused!important}
 

@@ -12,11 +12,16 @@
   .rb.big{width:46px;height:46px}
   .recb{height:38px;min-width:76px;padding:0 12px 0 10px}
   .hud{grid-template-columns:1fr}
-  .hint,.disks{grid-column:1;justify-self:center}
+  .counter,.hint,.disks{grid-column:1;grid-row:auto;justify-self:center}
+  .counter{height:42px;gap:10px;padding:0 14px}
+  .counter .bars{gap:8px} .counter .bar{gap:3px}
+  .counter .bar i{width:7px;height:11px} .counter .bar i:first-child{height:17px}
+  .counter .pos{font-size:18px}
   #term{font-size:16px}
 }
 @media (prefers-reduced-motion: reduce){
   .slot .art .eyes,.slot.on .art .spin,.slot.on .art .glow,.slot.on .art .lp,.slot .fig.empty .idle,.app .lights i,.slot .art-wrap{animation:none !important}
   .oc{display:none}
+  .counter .bar.cue i:first-child{animation:none;background:color-mix(in srgb, var(--c) 70%, transparent)}
   .unlock .rays,.unlock .bdisk,.bonus{animation:none}
 }

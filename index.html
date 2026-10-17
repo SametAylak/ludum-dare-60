@@ -19,7 +19,6 @@
   <header class="top">
     <h1 class="logo">beige<b>b</b><b>o</b><b>x</b></h1>
     <div class="ctl">
-      <div class="bars" id="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
       <div class="tempo" role="group" aria-label="Tempo">
         <button id="bpmDown" class="tb" type="button" aria-label="Slower" title="Slower ( - )"><svg viewBox="0 0 24 24"><path class="st" d="M5 12h14"/></svg></button>
         <input id="bpmIn" type="range" min="80" max="180" step="1" value="110" aria-label="BPM">
@@ -47,6 +46,7 @@
       <div class="party-marquee"><span>LIVE FROM THE ANALOG UNIVERSE</span><b id="partyMessage"></b></div>
     </div>
     <div class="hud">
+      <div class="counter" id="counter" aria-hidden="true"></div>
       <p class="hint" id="hint" aria-live="polite"></p>
       <div class="disks" id="disks" aria-label="Bonus discoveries"><span>BONUS</span></div>
     </div>

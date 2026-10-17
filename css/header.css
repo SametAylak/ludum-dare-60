@@ -40,9 +40,6 @@
 .app.oc1 #bpm{color:var(--amber)}
 .app.oc2 #bpm{color:var(--red);text-shadow:0 0 10px rgba(255,75,58,.7)}
 .app.oc2 .ocb{fill:var(--red);filter:drop-shadow(0 0 4px var(--red))}
-.bars{display:flex;gap:5px;margin-right:4px}
-.bars i{width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.16);transition:background .1s}
-.bars i.on{background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
 /* record: pill with a red dot; while recording it turns red and shows the time, and the dot blinks when paused */
 .recb{height:42px;min-width:84px;padding:0 14px 0 12px;border:none;border-radius:999px;background:#fff;color:var(--sky-2);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
   font-weight:700;font-size:14px;letter-spacing:.08em;font-variant-numeric:tabular-nums;box-shadow:0 4px 0 rgba(0,0,0,.35);transition:transform .1s, background .15s}

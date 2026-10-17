@@ -1,6 +1,6 @@
 // Performer animation: per-hit reactions, the beat nod and slot states.
 import { checkCombos } from "../bonus/show.js";
-import { barEls } from "../dom.js";
+import { updateCounter } from "./counter.js";
 import { clock } from "../music.js";
 import { byId } from "../parts/index.js";
 import { slots, state } from "../state.js";
@@ -28,8 +28,7 @@ export function fire(ev) {
   if (!reduce && k.includes("alt") && p.alt) p.alt(svg);
 }
 export function onStep(n) {
-  const bar = (n >> 4) & 3;
-  barEls.forEach((b, i) => b.classList.toggle("on", i === bar));
+  updateCounter(n);
   // the whole band nods on every beat
   // bonus stars bounce harder and jump on every bar
   if (!reduce && n % 4 === 0) for (const sl of slots) {
