@@ -48,11 +48,11 @@
 @keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
 @keyframes flicker{0%,100%{opacity:.55}40%{opacity:.72}43%{opacity:.38}60%{opacity:.62}}
 @keyframes lp{0%{fill:var(--c)}50%{fill:#3a3530}}
-.slot .art .eyes{animation:blink 5s infinite var(--bd, 0s)}
-.slot.on .art .spin{animation:spin 1.1s linear infinite}
-.slot.on .art .lit.steady{opacity:1}
-.slot.on .art .glow{opacity:.55;animation:flicker 2.3s infinite}
-.slot.on .art .lp{animation:lp var(--t, 1s) steps(1) infinite var(--d, 0s)}
+.slot .art .eyes,.bn-part .art .eyes{animation:blink 5s infinite var(--bd, 0s)}
+.slot.on .art .spin,.bn-part.on .art .spin{animation:spin 1.1s linear infinite}
+.slot.on .art .lit.steady,.bn-part.on .art .lit.steady{opacity:1}
+.slot.on .art .glow,.bn-part.on .art .glow{opacity:.55;animation:flicker 2.3s infinite}
+.slot.on .art .lp,.bn-part.on .art .lp{animation:lp var(--t, 1s) steps(1) infinite var(--d, 0s)}
 .slot.wait .art{opacity:.5;filter:grayscale(.7)}
 .slot.muted .art,.slot.dim .art{filter:grayscale(.9) brightness(.62)}
 .slot.muted .art .eyes,.slot.dim .art .eyes{animation:none;transform:scaleY(.12)}

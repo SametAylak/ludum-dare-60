@@ -8,15 +8,18 @@ import { initStage, renderSlot, refresh, fire, updateSlotStates } from "./ui/sta
 import { initDeck } from "./ui/deck.js";
 import { initHeader, setBar } from "./ui/header.js";
 import { initScreen, drawScope, updateTerm } from "./ui/screen.js";
+import { initBonus, bonusStep, updateBonus } from "./ui/bonus.js";
 
 initStage(document.getElementById("shelf"));
 initDeck(document.getElementById("deck"));
 initHeader();
 initScreen(document.getElementById("scope"), document.getElementById("term"));
+initBonus(document.querySelector(".stage"), document.getElementById("disks"));
 startClock();
 
 function onStep(n) {
   setBar((n >> 4) & 3);
+  bonusStep();
   if (n % 16 === 0) checkCombos();
 }
 
@@ -31,6 +34,7 @@ function frame() {
   updateSlotStates();
   drawScope();
   updateTerm();
+  updateBonus();
 }
 
 // Optional hot-reload hook from the host page: keep the lineup across reloads.

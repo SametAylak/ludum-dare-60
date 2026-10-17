@@ -12,5 +12,6 @@
   .logo{font-size:22px}
 }
 @media (prefers-reduced-motion: reduce){
-  .slot .art .eyes,.slot.on .art .spin,.slot.on .art .glow,.slot.on .art .lp{animation:none}
+  :is(.slot,.bn-part) .art .eyes,:is(.slot,.bn-part).on .art :is(.spin,.glow,.lp){animation:none}
+  .bn-drive .disk,.bay .by-led{animation:none}
 }

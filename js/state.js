@@ -2,6 +2,7 @@
 //   "power"  transport started or paused
 //   "tempo"  turbo toggled
 //   "slots"  a part was added, removed, muted or soloed
+//   "bonus"  a bonus-disk trio was formed (see bonus.scene in combos.js)
 
 export const bus = new EventTarget();
 export const emit = name => bus.dispatchEvent(new Event(name));

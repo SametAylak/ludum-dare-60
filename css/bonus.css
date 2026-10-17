@@ -1,0 +1,71 @@
+/* ---------- bonus screen: full-stage overlay with a disk drive, a scene monitor and the trio on a desk ---------- */
+.bonus{position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  padding-block:clamp(8px, 2vh, 24px);padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  background:rgba(10,13,15,.74);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);--dc:var(--phos);--bar:2s}
+.bonus[hidden]{display:none}
+.bonus.paused *{animation-play-state:paused !important}
+.bn-panel{--pw:clamp(56px, min(13vh, 24vw), 128px);--ov:calc(var(--pw) * .3);
+  position:relative;width:min(100%, 980px);min-width:0;height:100%;max-height:780px;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(80px, 1fr) auto;
+  padding:12px 16px 0;overflow:hidden;background:linear-gradient(#3b4045,#2a2e32);border:3px solid #0d0e0f;border-radius:22px;
+  box-shadow:0 0 0 2px color-mix(in srgb, var(--dc) 65%, transparent), 0 0 70px color-mix(in srgb, var(--dc) 28%, transparent), 0 24px 60px rgba(0,0,0,.5)}
+
+.bn-head{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:14px;padding-bottom:10px}
+.bn-kick{margin:0;font-family:var(--f-display);font-size:11px;letter-spacing:.18em;color:var(--amber)}
+.bn-title{margin:4px 0 0;font-family:var(--f-display);font-weight:700;font-size:clamp(20px, 3.6vw, 42px);line-height:1;letter-spacing:.04em;
+  color:var(--dc);text-shadow:0 0 14px color-mix(in srgb, var(--dc) 55%, transparent);overflow-wrap:anywhere}
+.bn-x{align-self:start}
+
+/* the disk pops out of a 3.5" drive bay, then spins once per bar */
+.bn-drive{position:relative;width:64px;height:78px;flex:none}
+.bn-pop{position:absolute;left:0;right:0;top:0;bottom:15px;overflow:hidden;perspective:220px}
+.bn-drive .disk{position:absolute;left:10px;top:4px;width:44px;height:44px;
+  animation:bn-eject .7s cubic-bezier(.2,.9,.3,1.25) both, bn-coin var(--bar) linear .7s infinite}
+.bn-drive .bay{position:absolute;left:0;bottom:0;width:64px;height:20px;display:block}
+@keyframes bn-eject{from{transform:translateY(62px)}}
+@keyframes bn-coin{to{transform:rotateY(360deg)}}
+@keyframes bn-led{50%{opacity:.25}}
+.bay .by{fill:var(--beige);stroke:var(--ink);stroke-width:1.5}
+.bay .by-slot{fill:var(--ink)}
+.bay .by-btn{fill:var(--beige-lo);stroke:var(--ink);stroke-width:1}
+.bay .by-led{fill:var(--phos);animation:bn-led calc(var(--bar) / 4) steps(1) infinite}
+.bonus.empty .bn-pop,.bonus.empty .bn-prog{display:none}
+.bonus.empty .bay .by-led{fill:#3b3631;animation:none}
+
+.disk{display:block;width:100%;height:100%;overflow:visible}
+.disk .dk{fill:var(--dc);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.disk .dk-sh{fill:var(--metal);stroke:var(--ink);stroke-width:1.5}
+.disk .dk-win{fill:var(--ink)}
+.disk .dk-lb{fill:var(--beige-hi);stroke:var(--ink);stroke-width:1.5}
+.disk .dk-ln{fill:none;stroke:#9a958a;stroke-width:1.5}
+.disk .dk-q{font-family:var(--f-display);font-size:12px;fill:#69737a;text-anchor:middle}
+
+/* scene monitor; the bottom rows stay clear of the parts standing in front of it */
+.bn-screen{position:relative;min-height:0;border:3px solid #050505;border-radius:16px/22px;background:var(--screen);overflow:hidden;container-type:size}
+.bn-tty{position:absolute;inset:0 0 var(--ov);margin:0;padding:2.5cqh 4cqw;font-family:var(--f-screen);font-size:min(calc((100cqh - var(--ov)) * .068), 4.1cqw);line-height:1.1;
+  color:var(--phos);text-shadow:0 0 6px rgba(92,245,142,.55);white-space:pre;overflow:hidden}
+
+/* the trio on a strip of desk, in front of the monitor */
+.bn-desk{position:relative;z-index:1;margin:calc(-1 * var(--ov)) -16px 0;padding:0 16px 14px;--top:calc(var(--pw) * 1.083 - 3px);
+  background:linear-gradient(transparent var(--top), var(--desk-edge) 0 calc(var(--top) + 2px), var(--desk-hi) 0, var(--desk) calc(var(--top) + 12px))}
+.bn-band{display:flex;justify-content:center;gap:clamp(10px, 5vw, 56px);min-height:var(--top)}
+.bn-part{width:var(--pw);display:flex;flex-direction:column;align-items:center;gap:8px}
+.bn-part .art{width:100%;height:auto}
+.bn-part .tag{font-size:9px}
+.bn-foot{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 18px;padding-top:10px;
+  font-family:var(--f-display);font-size:10px;letter-spacing:.12em;color:var(--beige-hi)}
+.bonus.empty .bn-foot{padding-top:0}
+.bn-disks{display:flex;gap:8px}
+.bn-d{display:block;width:30px;height:30px;padding:0;border:0;background:none;transition:transform .12s}
+button.bn-d{cursor:pointer}
+button.bn-d:hover,.bn-d.cur{transform:translateY(-3px)}
+.bn-d.cur .disk{filter:drop-shadow(0 0 6px var(--dc))}
+.bn-d.locked .disk :is(.dk,.dk-sh,.dk-win,.dk-lb){fill:#262b2e;stroke:#101315}
+.bn-hint{color:rgba(239,231,207,.6)}
+.bn-prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(0,0,0,.45)}
+.bn-prog i{display:block;height:100%;width:0;background:var(--dc);box-shadow:0 0 8px var(--dc);transition:width .15s linear}
+
+@media (max-width:640px){
+  .bn-head{gap:10px}
+  .bn-drive{transform:scale(.8);transform-origin:left center;margin-right:-12px}
+  .bn-hint{display:none}
+}

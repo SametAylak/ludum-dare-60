@@ -128,12 +128,20 @@ export function shuffle() {
   chosen.forEach((p, i) => place(p.id, i));
 }
 
-// Plays a scheduled visual hit: "bump" squash, "led" flash, "mouth" open for `dur`, "alt" part-specific.
 const BUMP = [{ transform: "scale(1.05,.93)" }, { transform: "scale(1,1)" }];
+let mirror = null;
+export const onHit = fn => { mirror = fn; };   // also receives every hit: fn(partId, kinds, dur)
+
+// Releases a scheduled visual hit on its slot, if the part placed there is still the one that scheduled it.
 export function fire(ev) {
   const sl = slots[ev.i];
   if (sl.uid !== ev.uid || !sl.audible || !sl.svg) return;
-  const p = byId[sl.id], svg = sl.svg, k = ev.kinds;
+  animateHit(sl.svg, byId[sl.id], ev.kinds, ev.dur);
+  if (mirror) mirror(sl.id, ev.kinds, ev.dur);
+}
+
+// Plays a visual hit on a part drawing: "bump" squash, "led" flash, "mouth" open for `dur`, "alt" part-specific.
+export function animateHit(svg, p, k, dur) {
   if (!reduceMotion && k.includes("bump")) svg.querySelector(".bump").animate(BUMP, { duration: 170, easing: "ease-out" });
   if (k.includes("led")) {
     const lits = svg.querySelectorAll(".lit:not(.steady)");
@@ -143,7 +151,7 @@ export function fire(ev) {
   if (k.includes("mouth")) {
     const m = svg.querySelector(".mouth"), o = p.mo || 2.6;
     if (m) m.animate([{ transform: "scaleY(1)" }, { transform: `scaleY(${o})`, offset: .15 }, { transform: `scaleY(${o * .8})`, offset: .8 }, { transform: "scaleY(1)" }],
-      { duration: Math.max(140, (ev.dur || .2) * 1000) });
+      { duration: Math.max(140, (dur || .2) * 1000) });
   }
   if (!reduceMotion && k.includes("alt") && p.alt) p.alt(svg);
 }

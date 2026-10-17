@@ -26,6 +26,7 @@ It also runs as-is on GitHub Pages.
 | Master volume | VOL fader in the header; remembered in this browser |
 | Play / pause | `Space` or PLAY |
 | Faster tempo | TURBO (110 → 128 BPM) |
+| Bonus disks | DISKS shows how many you found and replays them; click or `Esc` closes the bonus screen |
 
 | Group | Parts | Keys |
 | --- | --- | --- |
@@ -36,7 +37,7 @@ It also runs as-is on GitHub Pages.
 
 New parts join on the next bar so everything stays in time. All parts play over the same 4-bar progression (Am, F, C, G), so any combination fits.
 
-Some trios of parts unlock bonus disks. There are four to find.
+Some trios of parts unlock bonus disks. There are four to find. Forming a trio opens a bonus screen that plays a short scene in time with the music, with the three parts playing along. It closes when the scene ends or the trio is broken.
 
 ## Project layout
 
@@ -47,6 +48,7 @@ css/
   stage.css             CRT backdrop, desk, slots
   art.css               styling and animations for the part drawings
   deck.css              keyboard palette and drag ghost
+  bonus.css             bonus-disk screen
   responsive.css        breakpoints and reduced motion
 js/
   main.js               entry point: wires modules, frame loop, boot
@@ -65,6 +67,7 @@ js/
     deck.js             keycaps and drag-and-drop
     header.js           buttons, bar indicator, keyboard shortcuts
     screen.js           CRT terminal text and oscilloscope
+    bonus.js            bonus-disk screen: scenes, disk drive, replays
 ```
 
 ### Adding a part
