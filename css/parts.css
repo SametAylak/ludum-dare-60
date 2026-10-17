@@ -44,6 +44,27 @@
 .art .leg{stroke:var(--ink);stroke-width:7}
 .art .shoe{fill:var(--cat)}
 .art .shoe-hi{fill:rgba(255,255,255,.5);stroke:none}
+/* stage costumes (js/parts/outfits.js) */
+.art :is(.chain,.chain-o,.seam,.rip,.crease,.fold,.trim,.hband,.mono,.mchain,.boom){fill:none}
+.art .denim{fill:#4d72b8} .art .denim2{fill:#7095d6}
+.art .jeans{fill:#3a3946} .art .rip{stroke:#e9e3d2;stroke-width:2}
+.art .suit{fill:#3d3657} .art .crease{stroke:rgba(255,255,255,.22);stroke-width:1.5}
+.art .robe{fill:color-mix(in srgb, var(--cat) 58%, #3a0c2a)} .art .fold{stroke:rgba(0,0,0,.28);stroke-width:2}
+.art .trim{stroke:#e3b23c;stroke-width:3.5}
+.art .seam{stroke:rgba(0,0,0,.25);stroke-width:1.5}
+.art .chain-o{stroke:var(--ink);stroke-width:7}
+.art .chain{stroke:#f2c94c;stroke-width:4;stroke-dasharray:4 2.4;stroke-linecap:butt}
+.art .beanie{fill:#2f8f8a} .art .beanie2{fill:#257570}
+.art .hband{stroke:var(--ink);stroke-width:6}
+.art .pad{fill:var(--cat);stroke-width:2}
+.art .shade{fill:#17161d}
+.art .hawk{fill:#ff3f8e}
+.art .stud{fill:var(--metal-hi);stroke-width:1.8}
+.art .felt{fill:#4a3b30} .art .straw{fill:#e6cf8b}
+.art .gem{fill:#ff5d9e;stroke-width:1.8}
+.art .mono{stroke:#e3b23c;stroke-width:3} .art .mchain{stroke:#e3b23c;stroke-width:1.5}
+.art .hair{fill:#2a211c}
+.art .boom{stroke:var(--ink);stroke-width:3}
 /* empty slot: a grey, sleeping stand-in */
 .fig.empty{opacity:.75;transition:opacity .2s, filter .2s}
 .fig.empty :is(rect,circle,ellipse,path){stroke:var(--ghost-ln)}

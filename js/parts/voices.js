@@ -26,6 +26,8 @@ export const VOICES = [
       <path class="k2" d="M50 18 A10 10 0 0 0 70 18 Z"/><circle class="k2" cx="32" cy="30" r="3"/>
       ${E(60, 56, 30, 11)}${M(60, 86, 26, 7)}
       <text class="chip-t" x="60" y="116">VOX-1</text>`,
+    outfit: { front: `<path class="au" d="M36 21 L40 6 L49 14 L60 -2 L71 14 L80 6 L84 21 Z"/><circle class="gem" cx="60" cy="12" r="4"/>
+      <circle class="gem" cx="44" cy="16" r="2.4"/><circle class="gem" cx="76" cy="16" r="2.4"/>` },
     play(s, t, d, h) {
       const b = s & 15;
       for (const [st, n, len, v] of SPEECH[s >> 4]) if (st === b) {
@@ -43,6 +45,9 @@ export const VOICES = [
         const col = ["var(--amber)", "var(--phos)", "var(--red)"][(r + c * 2) % 3];
         return `<circle class="lp" cx="${27 + c * 9.4}" cy="${95 + r * 8}" r="2.6" style="--c:${col};--t:${(.5 + ((r * 7 + c * 3) % 5) * .23).toFixed(2)}s;--d:-${((r * 5 + c * 7) % 9 * .17).toFixed(2)}s"/>`;
       }).join("")).join("")}`,
+    outfit: { front: `<rect class="k" x="36" y="-26" width="48" height="30" rx="2"/><rect class="r ns" x="37.3" y="-7" width="45.4" height="7"/>
+      <rect class="k" x="24" y="2" width="72" height="6" rx="3"/>
+      <circle class="mono" cx="75" cy="60" r="12"/><path class="mchain" d="M86 65 Q92 82 86 92"/>` },
     play(s, t, d, h) {
       const b = s & 15, bar = s >> 4, ch = CHORDS[bar];
       if (b === 0) {
@@ -62,6 +67,8 @@ export const VOICES = [
       <rect class="bd" x="64" y="98" width="20" height="6" rx="1.5"/><rect class="bd" x="64" y="107" width="20" height="8" rx="1.5"/>
       ${L(40, 119, 2.4, "lg steady")}${L(48, 119, 2.4)}
       <rect class="k" x="32" y="124" width="10" height="3"/><rect class="k" x="78" y="124" width="10" height="3"/>`,
+    outfit: { back: `<path class="hair" d="M27 14 Q22 -14 54 -16 Q80 -18 96 -4 Q86 -6 80 0 Q92 4 93 14 Z"/>`,
+      front: `<path class="hl ns" d="M40 -6 Q52 -12 66 -11"/>` },
     play(s, t, d, h) {
       const b = s & 15, ch = CHORDS[s >> 4];
       for (const [st, iv] of TOWER) if (st === b) {
@@ -81,6 +88,7 @@ export const VOICES = [
       <circle class="k" cx="96" cy="68" r="6.5"/><path class="kt" d="M96 68 L101 64"/>
       <circle class="m" cx="26" cy="108" r="5.5"/><circle class="m" cx="46" cy="108" r="5.5"/>
       ${L(96, 108, 3, "lg steady")}`,
+    outfit: { front: `<rect class="k2" x="0" y="40" width="9" height="22" rx="4"/><path class="boom" d="M5 58 Q4 78 18 76"/><circle class="k2" cx="20" cy="76" r="4.5"/>` },
     play(s, t, d, h) {
       const b = s & 15;
       for (const [st, n, len] of WHISTLE[s >> 4]) if (st === b) {
@@ -96,6 +104,7 @@ export const VOICES = [
       <ellipse class="k" cx="60" cy="82" rx="15" ry="5"/><ellipse class="r" cx="90" cy="82" rx="7" ry="3.2"/>
       ${E(60, 100, 26, 8.5)}${M(60, 116, 16, 4.5)}`,
     alt: s => { stickDir = -stickDir; anim(s, ".stick", [{ transform: "rotate(0)" }, { transform: `rotate(${14 * stickDir}deg)` }, { transform: "rotate(0)" }], 260); },
+    outfit: { front: `<g class="stick" style="transform-origin:60px 82px"><path class="au" d="M48 14 L46 1 L54 8 L60 -3 L66 8 L74 1 L72 14 Z"/><circle class="gem" cx="60" cy="8" r="2.4"/></g>` },
     play(s, t, d, h) {
       const b = s & 15, bar = s >> 4, ch = CHORDS[bar];
       if (b === 2 || b === 6 || b === 10 || b === 14 || (bar === 3 && b === 15)) {

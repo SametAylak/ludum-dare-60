@@ -42,7 +42,7 @@ Some trios of parts unlock bonus disks. There are four to find. Hitting one sets
 
 - **Sequencer:** a look-ahead scheduler queues 16th-note steps about 120 ms ahead on the `AudioContext` clock. Each part's `play(step, time, out, hit)` schedules its notes and visual hits for that step.
 - **Synthesis:** oscillators, filtered noise, 2-operator FM and a formant filter bank for the "singing" voices.
-- **Visuals:** the parts are inline SVG performers with legs, animated with the Web Animations API when their scheduled hits come due. The whole band nods on every beat, and empty slots hold a grey, sleeping stand-in. A faint waveform of the master output (from an `AnalyserNode`) sits behind the stage.
+- **Visuals:** the parts are inline SVG performers with legs. On stage each group dresses as one act: the beats are a hip-hop crew in baggy jeans, the effects a punk band in ripped skinnies, the melody a jazz combo in suit trousers and the voices a choir in robes. Each part adds its own hat, shades, bow tie or chain, which drop on just after it lands. The palette icons stay bare. The performers are animated with the Web Animations API when their scheduled hits come due. The whole band nods on every beat, and empty slots hold a grey, sleeping stand-in. A faint waveform of the master output (from an `AnalyserNode`) sits behind the stage.
 
 ## Project layout
 
@@ -57,9 +57,9 @@ js/
   transport.js        look-ahead sequencer, play/pause, tempo
   mixer.js            per-part gain, mute/solo, master and part volume
   audio/              AudioContext + bus (engine.js), synth voices (synth.js)
-  parts/              the 20 parts by category, plus their SVG building blocks (art.js)
+  parts/              the 20 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
   bonus/              trios (combos.js), bonus music, monitor scenes, the show itself
   ui/                 stage slots, palette, header, HUD, performer animation, waveform, confetti
 ```
 
-To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG and a `play(step, time, out, hit)` function.
+To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function.

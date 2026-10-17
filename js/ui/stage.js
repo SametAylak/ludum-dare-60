@@ -65,6 +65,10 @@ export function renderSlot(sl, pop) {
     { transform: "translateY(-30px) scale(.7)", opacity: 0 },
     { transform: "translateY(4px) scale(1.04)", opacity: 1, offset: .7 },
     { transform: "none", opacity: 1 }], { duration: 380, easing: "cubic-bezier(.2,.8,.3,1.2)" });
+  // then the costume drops on, piece by piece
+  if (pop && p && !reduce) sl.svg.querySelectorAll(".outfit").forEach((o, i) => o.animate([
+    { transform: "translateY(-18px)", opacity: 0 },
+    { transform: "none", opacity: 1 }], { duration: 260, delay: 300 + i * 110, easing: "cubic-bezier(.3,1.4,.5,1)", fill: "backwards" }));
 }
 export function place(id, i) {
   ensureAudio();

@@ -2,6 +2,7 @@
 import { noise, tone } from "../audio/synth.js";
 import { CHORDS, clock, mtof } from "../music.js";
 import { anim, E, L, M, spool } from "./art.js";
+import { shades } from "./outfits.js";
 
 const DTMF = [[697, 1209], [770, 1336], [852, 1477], [941, 1336], [697, 1336], [770, 1209], [852, 1209], [941, 1477]];
 
@@ -13,6 +14,7 @@ export const EFFECTS = [
       <rect class="k2" x="10" y="42" width="30" height="20" rx="7"/><rect class="k2" x="80" y="42" width="30" height="20" rx="7"/>
       ${E(60, 86, 26, 8.5)}${M(60, 103, 16, 4)}
       ${[20, 34, 48, 72, 86, 100].map(x => L(x, 116, 3, "lg")).join("")}`,
+    outfit: { front: shades(60, 86, 27, 25, 16) },
     play(s, t, d, h) {
       const b = s & 15, bar = s >> 4;
       if (bar === 0 && b % 2 === 0 && b < 12) {
@@ -53,6 +55,7 @@ export const EFFECTS = [
       <rect class="hi" x="26" y="23" width="16" height="5" rx="2.5"/>
       <circle class="bd" cx="88" cy="98" r="3"/>${L(100, 98, 3, "lg steady")}`,
     alt: s => anim(s, ".flash", [{ opacity: .75 }, { opacity: 0 }], 320),
+    outfit: { back: `<path class="hawk" d="M28 12 L30 -8 L42 6 L46 -20 L56 4 L62 -26 L68 4 L76 -20 L80 6 L92 -8 L94 12 Z"/>` },
     play(s, t, d, h) {
       const b = s & 15, bar = s >> 4;
       if ((bar === 0 || bar === 2) && b === 0) {
@@ -77,6 +80,8 @@ export const EFFECTS = [
       <g class="eyes">${spool(44, 67)}${spool(76, 67)}</g>
       <path class="m" d="M30 108 L36 91 L84 91 L90 108 Z"/>
       <circle class="k" cx="44" cy="100" r="2.6"/><circle class="k" cx="76" cy="100" r="2.6"/>${M(60, 100, 12, 4)}`,
+    outfit: { front: `<rect class="r" x="5" y="25" width="110" height="10" rx="3"/><path class="r" d="M10 30 L-2 22 L0 38 Z M10 30 L-1 42 L8 46 Z"/>
+      ${[20, 36, 52, 68, 84, 100].map(x => `<circle class="w ns" cx="${x}" cy="30" r="1.8"/>`).join("")}` },
     play(s, t, d, h) {
       const b = s & 15, ch = CHORDS[s >> 4];
       if ("x.x.xx.x.xx.x.x."[b] === "x") {
@@ -95,6 +100,7 @@ export const EFFECTS = [
       <path class="grill" d="M22 80 H98 M60 42 V118"/>
       <circle class="bl" cx="60" cy="80" r="15"/>${E(60, 77, 12, 4.6)}${M(60, 87, 8, 2.6)}
       ${L(102, 31, 3, "lg steady")}`,
+    outfit: { back: `<path class="r" d="M18 24 Q12 4 26 -8 Q24 8 36 22 Z"/><path class="r" d="M102 24 Q108 4 94 -8 Q96 8 84 22 Z"/>` },
     play(s, t, d, h) {
       const b = s & 15, bar = s >> 4;
       if (b % 4 === 2) {
@@ -111,6 +117,8 @@ export const EFFECTS = [
       ${[0, 1, 2].map(r => [0, 1, 2, 3, 4, 5, 6, 7].map(i => `<circle class="k" cx="${25 + i * 10 + r * 2.5}" cy="${103 + r * 8}" r="3"/>`).join("")).join("")}
       ${L(98, 62, 3.4)}`,
     alt: s => anim(s, ".paper", [{ transform: "translateY(0)" }, { transform: "translateY(-3px)" }, { transform: "translateY(0)" }], 140),
+    outfit: { front: `<path class="k2" d="M14 51 H106 L107 60 H13 Z"/>
+      ${[22, 34, 46, 58, 70, 82, 94].map(x => `<path class="stud" d="M${x - 3.5} 52 L${x} 44 L${x + 3.5} 52 Z"/>`).join("")}` },
     play(s, t, d, h) {
       const b = s & 15, bar = s >> 4;
       const pat = bar === 3 ? "x.xx.x.x........" : "x.xx.x.xx.xx.x.x";

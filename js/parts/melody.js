@@ -2,6 +2,7 @@
 import { fm, pulseWave, tone } from "../audio/synth.js";
 import { CHORDS, clock, mtof } from "../music.js";
 import { anim, E, L, M } from "./art.js";
+import { bowtie } from "./outfits.js";
 
 const FLOPPY_BASS = [[0, 0, 2], [3, 0, 1], [6, 0, 2], [8, 12, 1], [10, 0, 2], [14, 7, 2]];
 const ARP = [0, 1, 2, 3, 1, 2, 3, 2, 0, 1, 2, 3, 2, 3, -1, -1];
@@ -23,6 +24,7 @@ export const MELODY = [
       <rect class="bd" x="54" y="106" width="12" height="8" rx="1.5"/>${L(97, 111, 3, "lg")}`,
     mo: 1.9,
     alt: s => anim(s, ".disk", [{ transform: "translateY(0) rotate(0)" }, { transform: "translateY(-7px) rotate(4deg)" }, { transform: "translateY(0) rotate(0)" }], 260),
+    outfit: { front: bowtie(60, 112, 28, 13) },
     play(s, t, d, h) {
       const b = s & 15, ch = CHORDS[s >> 4];
       for (const [st, iv, len] of FLOPPY_BASS) if (st === b) {
@@ -40,6 +42,8 @@ export const MELODY = [
       <g class="cone"><circle class="k2" cx="60" cy="66" r="38"/><circle class="tan" cx="60" cy="66" r="31"/><circle class="tan2" cx="60" cy="66" r="20"/>
       ${E(60, 60, 20, 7)}${M(60, 77, 14, 4)}</g>`,
     alt: s => anim(s, ".cone", [{ transform: "scale(1)" }, { transform: "scale(1.07)" }, { transform: "scale(1)" }], 110),
+    outfit: { front: `<g transform="rotate(-7 60 20)"><path class="felt" d="M33 22 L37 2 Q48 -2 60 4 Q72 -2 83 2 L87 22 Z"/><path class="r ns" d="M35.2 13 H84.8 L86 20 H34 Z"/>
+      <path class="felt" d="M14 23 Q60 13 106 23 Q60 31 14 23 Z"/></g>` },
     play(s, t, d, h) {
       const b = s & 15, ch = CHORDS[s >> 4], i = ARP[b];
       if (i < 0) return;
@@ -59,6 +63,7 @@ export const MELODY = [
       <rect class="g" x="36" y="106" width="64" height="18"/>
       ${[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => `<rect class="au ns" x="${39.5 + i * 6}" y="109" width="3.6" height="13"/>`).join("")}
       ${L(104, 20, 2.8, "lr")}`,
+    outfit: { front: `<path class="k2" d="M42 15 Q42 -1 68 -1 Q96 -1 98 11 Q82 17 42 15 Z"/><path class="k2" d="M68 -1 L70 -6"/>` },
     play(s, t, d, h) {
       const b = s & 15, ch = CHORDS[s >> 4];
       if ("x..x..x...x.x..."[b] === "x") {
@@ -74,6 +79,8 @@ export const MELODY = [
       <rect class="w ns" x="24" y="86" width="72" height="10"/><text class="ct" x="60" y="94">LEVEL 1</text>
       ${E(60, 56, 26, 8.5)}${M(60, 74, 16, 4.5)}
       <rect class="au" x="30" y="118" width="60" height="8"/>`,
+    outfit: { front: `<path class="straw" d="M36 9 L37 -11 H83 L84 9 Z"/><rect class="lab ns" x="36.6" y="-3" width="46.8" height="7"/><path class="seam" d="M36.7 -3 H83.3 M36.4 4 H83.6"/>
+      <path class="straw" d="M22 9 Q60 3 98 9 Q60 15 22 9 Z"/>` },
     play(s, t, d, h) {
       const b = s & 15;
       for (const [st, n, len] of LEAD[s >> 4]) if (st === b) {
@@ -90,6 +97,7 @@ export const MELODY = [
       ${E(60, 55, 14, 5.6)}${M(60, 70, 10, 3)}
       <rect class="k" x="32" y="96" width="56" height="20" rx="4"/>
       <path class="pin" d="M44 116 V126 M54 116 V126 M66 116 V126 M76 116 V126"/>`,
+    outfit: { front: `<path class="k" d="M46 19 Q46 4 60 4 Q74 4 74 19 Z"/><path class="k" d="M40 19 Q60 14 80 19 Q60 23 40 19 Z"/>${bowtie(60, 98, 24, 11)}` },
     play(s, t, d, h) {
       const b = s & 15, ch = CHORDS[s >> 4];
       if (b === 0) {
