@@ -14,8 +14,8 @@ import { initHeader } from "./ui/header.js";
 import { initHud, updateHud } from "./ui/hud.js";
 import { initOnboard, updateOnboard } from "./ui/onboard.js";
 import { fire, onStep, updateSlotStates } from "./ui/performers.js";
-import { drawScope, initScope } from "./ui/scope.js";
 import { initStage, renderSlot } from "./ui/stage.js";
+import { drawViz, initViz } from "./ui/visualizer.js";
 
 initStage();
 initDeck();
@@ -23,7 +23,7 @@ initHeader();
 initCounter();
 initMixer();
 initHud();
-initScope();
+initViz();
 initTransport();
 initGaze();
 initRecorder();
@@ -38,7 +38,7 @@ function frame() {
     for (let k = vq.length - 1; k >= 0; k--) if (vq[k].t <= now) fire(vq.splice(k, 1)[0]);
   }
   updateSlotStates();
-  drawScope();
+  drawViz();
   updateHud();
   updateRec();
   updateOnboard();
