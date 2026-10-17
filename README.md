@@ -6,12 +6,15 @@ Every sound is synthesized live with the Web Audio API. There are no audio files
 
 ## Play
 
-The game is plain HTML, CSS and JavaScript modules with no build step. Browsers don't load JavaScript modules from `file://`, so serve the folder with any static server:
+The game is plain HTML, CSS and JavaScript modules with no build step. Browsers don't load JavaScript modules from `file://`, so serve the folder with a local server:
 
 ```sh
-python3 -m http.server 8000
-# then open http://localhost:8000
+pnpm install
+pnpm dev
+# then open http://localhost:5173
 ```
+
+`pnpm dev` runs Vite, which reloads the page when you save a file. Any static server works too, for example `python3 -m http.server 8000`.
 
 It can be deployed to any static host as is.
 
