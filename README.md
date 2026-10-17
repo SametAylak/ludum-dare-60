@@ -42,7 +42,22 @@ New parts join on the next bar so everything stays in time. All parts play over 
 
 Some trios unlock bonus disks. There are five to find. Each brings two animated guests in from the sides, lowers a mirrored disco ball, and turns the stage into a dance floor. A transmission card introduces the guests before becoming a small live monitor, with eight bars of bonus music and a countdown. The show follows the song clock, including pause and tempo changes. Removing or muting a required part ends it. Simultaneous discoveries play in order.
 
-Click a bonus disk for its trio, or replay a discovered show while its trio is audible. The new **Cosmic Telegraph** show uses **Teletype + Vacuum Tube + Oscilloscope** (`T`, `G`, `V`): an alien telegraph operator and a lunar gramophone trade Morse-code melodies over a disco groove. Boot Sequence, Dial-up Nights, Mainframe Opera and LAN Party each have their own guest pairing and lighting colors. Reduced-motion mode keeps the lighting static and disables guest dancing and confetti.
+Click a bonus disk for its trio, or replay a discovered show while its trio is audible. Each show has its own guest pairing and lighting colors. Reduced-motion mode keeps the lighting static and disables guest dancing and confetti.
+
+<details>
+<summary><b>Bonus combinations</b> (spoilers)</summary>
+
+| Bonus | Trio | Keys | Guests |
+| --- | --- | --- | --- |
+| Boot Sequence | Hard Drive + Floppy Drive + CRT Monitor | `1` `A` `W` | Alien Telegraph, Orbital Radio |
+| Dial-up Nights | Modem + Speech Chip + PC Speaker | `Q` `Z` `S` | Orbital Radio, Lunar Gramophone |
+| Mainframe Opera | Mainframe + Tape Drive + Teletype | `X` `5` `T` | Reel Time Traveler, Alien Telegraph |
+| LAN Party | Game Cartridge + Keyboard + Joystick | `F` `3` `B` | Lunar Gramophone, Reel Time Traveler |
+| Cosmic Telegraph | Teletype + Vacuum Tube + Oscilloscope | `T` `G` `V` | Alien Telegraph, Lunar Gramophone |
+
+The trio can sit in any slots, alongside other parts. All three must be audible: a part that is muted, turned down to 0%, or silenced by another part's solo doesn't count. The trios are defined in `js/bonus/combos.js`.
+
+</details>
 
 The guests also change the music. Their entrance filters the band into a rising drum roll, followed by a short gap and a disco drop with bass, claps and stereo call-and-response. A breakdown leads into a second drop with extra harmonies. Telegraph guests play keyed synth melodies, gramophones play brass stabs, radios sing through formant filters, and reel machines play FM notes with tape-style echoes. Their movements and lighting follow the scheduled notes. The band mix returns automatically when the show finishes or is cancelled; individual volume and mute settings stay intact.
 
