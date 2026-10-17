@@ -6,6 +6,7 @@ import { byId, CATS, PARTS } from "../parts/index.js";
 import { FILL_ORDER, slots, state } from "../state.js";
 import { resetTransport, setRunning } from "../transport.js";
 import { updateKeys } from "./deck.js";
+import { clearEnter, enter } from "./entrance.js";
 import { aim } from "./gaze.js";
 import { $, fillRange, reduce } from "../util.js";
 
@@ -63,14 +64,12 @@ export function renderSlot(sl, pop) {
   if (p) aim();
   if (p) { sl.volIn.value = volOf(p.id); fillRange(sl.volIn); sl.volIn.setAttribute("aria-label", `${p.name} volume`); }
   sl.char.setAttribute("aria-label", p ? `${p.name}. Press to mute or unmute.` : `Empty slot ${sl.i + 1}`);
-  if (pop && p && !reduce) sl.svg.animate([
-    { transform: "translateY(-30px) scale(.7)", opacity: 0 },
-    { transform: "translateY(4px) scale(1.04)", opacity: 1, offset: .7 },
-    { transform: "none", opacity: 1 }], { duration: 380, easing: "cubic-bezier(.2,.8,.3,1.2)" });
+  clearEnter(sl);
+  if (pop && p && !reduce) enter(sl, p.cat);
   // then the costume drops on, piece by piece
   if (pop && p && !reduce) sl.svg.querySelectorAll(".outfit").forEach((o, i) => o.animate([
     { transform: "translateY(-18px)", opacity: 0 },
-    { transform: "none", opacity: 1 }], { duration: 260, delay: 300 + i * 110, easing: "cubic-bezier(.3,1.4,.5,1)", fill: "backwards" }));
+    { transform: "none", opacity: 1 }], { duration: 260, delay: 450 + i * 110, easing: "cubic-bezier(.3,1.4,.5,1)", fill: "backwards" }));
 }
 export function place(id, i) {
   ensureAudio();

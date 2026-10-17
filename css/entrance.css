@@ -1,0 +1,33 @@
+/* ---------- stage entrances (js/ui/entrance.js) ---------- */
+.enter{position:absolute;inset:0;pointer-events:none}
+.enter > *{position:absolute;display:block;z-index:2}
+
+/* beats: floor shockwave and dust kicked out on landing */
+@keyframes e-ring{from{transform:translateX(-50%) scale(.2);opacity:.9}to{transform:translateX(-50%) scale(1.6);opacity:0}}
+@keyframes e-dust{from{transform:translate(-50%, 0) scale(.4);opacity:.8}to{transform:translate(calc(-50% + var(--x)), var(--y)) scale(1.3);opacity:0}}
+.enter-beat .ring{z-index:0;left:50%;bottom:-2%;width:110%;height:16%;border-radius:50%;border:3px solid var(--cat);box-shadow:0 0 14px var(--cat);
+  animation:e-ring .5s .25s ease-out both}
+.enter-beat b{left:50%;bottom:2%;width:var(--s);height:var(--s);border-radius:50%;background:rgba(220,210,182,.7);
+  animation:e-dust .55s calc(.25s + var(--dl)) ease-out both}
+
+/* effects: CRT scan bars sweep the slot, then stray pixels flicker out */
+@keyframes e-scan{from{top:-6%;opacity:0}15%{opacity:.9}to{top:100%;opacity:0}}
+@keyframes e-pix{0%,100%{opacity:0}10%,30%,55%{opacity:1}20%,45%{opacity:.15}}
+.enter-fx s{left:-6%;right:-6%;height:6%;background:linear-gradient(transparent, var(--cat), transparent);mix-blend-mode:screen;
+  animation:e-scan .45s var(--dl) linear both}
+.enter-fx b{left:var(--x);top:var(--y);width:7px;height:7px;background:var(--cat);box-shadow:0 0 6px var(--cat);
+  animation:e-pix .4s var(--dl) steps(1) both}
+
+/* melody: notes float up and drift away */
+@keyframes e-note{from{transform:translate(-50%, 0) rotate(0) scale(.5);opacity:0}20%{opacity:1}to{transform:translate(calc(-50% + var(--dx)), -120px) rotate(var(--r)) scale(1.1);opacity:0}}
+.enter-mel b{left:var(--x);top:40%;font:600 26px/1 var(--f-screen);color:var(--cat);text-shadow:0 2px 0 var(--ink), 0 0 10px var(--cat);
+  animation:e-note 1s var(--dl) ease-out both}
+
+/* voices: a spotlight drops, then sparkles burst on the reveal */
+@keyframes e-cone{0%{opacity:0}25%,55%{opacity:1}100%{opacity:0}}
+@keyframes e-spark{from{transform:translate(-50%, -50%) rotate(var(--a)) translateY(0) scale(0);opacity:1}
+  60%{opacity:1}to{transform:translate(-50%, -50%) rotate(var(--a)) translateY(calc(-1 * var(--r))) scale(1);opacity:0}}
+.enter-voc .cone{z-index:0;left:-30%;right:-30%;top:-70%;bottom:2%;clip-path:polygon(44% 0, 56% 0, 90% 100%, 10% 100%);
+  background:linear-gradient(color-mix(in srgb, var(--cat) 50%, transparent), color-mix(in srgb, #fff 30%, transparent));animation:e-cone .9s ease-out both}
+.enter-voc b{left:50%;top:50%;width:12px;height:12px;background:#fff;clip-path:polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  animation:e-spark .6s var(--dl) ease-out both}
