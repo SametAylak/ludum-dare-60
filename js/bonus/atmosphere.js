@@ -1,17 +1,21 @@
+import { aim } from "../ui/gaze.js";
 import { guestSvg } from "./guests.js";
 import { $, reduce } from "../util.js";
 
 const stage = $(".stage"), show = $("#retroShow"), canvas = $("#partyScene");
 const g = canvas.getContext("2d");
 const guests = [$("#guestLeft"), $("#guestRight")];
-let width = 1, height = 1, colors = [], lastBeat = -1;
+let width = 1, height = 1, top = 0, bottom = 0, colors = [], lastBeat = -1;
 const clamp = x => Math.max(0, Math.min(1, x));
 const ease = x => 1 - (1 - clamp(x)) ** 3;
 const fract = x => x - Math.floor(x);
 const stars = Array.from({ length: 72 }, (_, i) => ({ x: fract(Math.sin(i * 127.1 + 4) * 43758.5), y: fract(Math.sin(i * 311.7 + 9) * 96453.3), size: 1 + i % 3 * .5 }));
+const crowd = Array.from({ length: 132 }, (_, i) => ({ x: fract(Math.sin(i * 91.7 + 1) * 43758.5), row: i % 3, size: .85 + fract(Math.sin(i * 12.9 + 3) * 9631.1) * .35,
+  phase: fract(Math.sin(i * 5.3 + 7) * 311.7) * Math.PI * 2, arms: i % 5 === 0 ? 2 : i % 4 === 0 ? 1 : 0 }));
 
-new ResizeObserver(([entry]) => {
-  width = entry.contentRect.width; height = entry.contentRect.height;
+new ResizeObserver(() => {
+  const css = getComputedStyle(stage);
+  width = stage.clientWidth; height = stage.clientHeight; top = parseFloat(css.paddingTop) || 0; bottom = parseFloat(css.paddingBottom) || 0;
   const dpr = Math.min(2, devicePixelRatio || 1);
   canvas.width = Math.round(width * dpr); canvas.height = Math.round(height * dpr);
   g.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -23,6 +27,7 @@ export function startAtmosphere(combo) {
   stage.style.setProperty("--party-a", colors[0]);
   stage.style.setProperty("--party-b", colors[1]);
   guests.forEach((el, i) => { el.innerHTML = guestSvg(combo.guests[i]); });
+  aim();
   $("#partyMessage").textContent = combo.message;
   lastBeat = -1;
 }
@@ -42,9 +47,42 @@ function glow(x, y, radius, color, alpha) {
   g.globalAlpha = 1;
 }
 
-function mirrorBall(x, y, r, turn) {
+// Soft beams fanning out of the ball; they sweep slowly with the song and never flash.
+function ballBeams(x, y, beat, alpha) {
+  g.save(); g.globalCompositeOperation = "screen";
+  for (let i = 0; i < 10; i++) {
+    const angle = i / 10 * Math.PI * 2 + beat * .04, reach = Math.max(width, height) * .8, spread = .05 + i % 3 * .02;
+    const beam = g.createLinearGradient(x, y, x + Math.sin(angle) * reach, y + Math.cos(angle) * reach);
+    beam.addColorStop(0, colors[i % 2]); beam.addColorStop(1, "transparent");
+    g.fillStyle = beam; g.globalAlpha = .09 * alpha;
+    g.beginPath(); g.moveTo(x, y);
+    g.lineTo(x + Math.sin(angle - spread) * reach, y + Math.cos(angle - spread) * reach);
+    g.lineTo(x + Math.sin(angle + spread) * reach, y + Math.cos(angle + spread) * reach);
+    g.closePath(); g.fill();
+  }
+  g.restore();
+}
+
+const rgb = hex => [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16));
+const mix = (a, b, t) => `rgb(${rgb(a).map((v, i) => Math.round(v + (rgb(b)[i] - v) * t)).join(",")})`;
+
+// The trio's spotlights shine from the ball onto each star performer: they sway a little, drift between the show colors and swell on the beat.
+function starBeams(x, y, beat, alpha) {
+  const box = stage.getBoundingClientRect(), swell = .65 + .35 * Math.exp(-fract(beat) * 3);
+  g.save(); g.globalCompositeOperation = "screen";
+  document.querySelectorAll(".slot.star .char").forEach((el, i) => {
+    const r = el.getBoundingClientRect(), half = r.width * .62;
+    const cx = r.left - box.left + r.width / 2 + Math.sin(beat * Math.PI / 4 + i * 2.1) * r.width * .18, floor = r.bottom - box.top;
+    const color = mix(colors[0], colors[1], Math.sin(beat * Math.PI / 8 + i * 1.7) * .5 + .5);
+    g.globalAlpha = .32 * alpha * swell; g.fillStyle = color;
+    g.beginPath(); g.moveTo(x - 4, y); g.lineTo(x + 4, y); g.lineTo(cx + half, floor); g.lineTo(cx - half, floor); g.closePath(); g.fill();
+  });
+  g.restore();
+}
+
+function mirrorBall(x, y, r, turn, from) {
   g.strokeStyle = "#a297bc"; g.lineWidth = 2;
-  g.beginPath(); g.moveTo(x, 0); g.lineTo(x, y - r); g.stroke();
+  if (y - r > from) { g.beginPath(); g.moveTo(x, from); g.lineTo(x, y - r); g.stroke(); }
   glow(x, y, r * 3.6, colors[0], .18);
   g.fillStyle = "#393550"; g.beginPath(); g.arc(x, y, r + 2, 0, Math.PI * 2); g.fill();
   const rows = 12, cols = 24;
@@ -79,9 +117,9 @@ function sparkle(x, y, r, color) {
   g.closePath(); g.fill();
 }
 
-function danceFloor(beat, energy) {
+function danceFloor(alpha) {
   const horizon = height * .72, depth = height - horizon;
-  g.save();
+  g.save(); g.lineWidth = 1; g.strokeStyle = colors[0];
   for (let row = 0; row < 7; row++) {
     const near = (row + 1) / 7, far = row / 7;
     const y1 = horizon + far * far * depth, y2 = horizon + near * near * depth;
@@ -94,19 +132,42 @@ function danceFloor(beat, energy) {
       g.lineTo(width / 2 + col * unit * (.28 + near), y2);
       g.closePath();
       g.fillStyle = colors[Math.abs(col + row) % 2];
-      const lit = ((col + row + Math.floor(beat / 2)) % 4 + 4) % 4 === 0;
-      g.globalAlpha = (lit ? .18 : .025) * energy; g.fill();
-      g.globalAlpha = .15 * energy; g.lineWidth = 1; g.strokeStyle = colors[0]; g.stroke();
+      g.globalAlpha = .04 * alpha; g.fill();
+      g.globalAlpha = .15 * alpha; g.stroke();
     }
   }
   g.restore();
 }
 
+function person(x, y, s, arms, rim, alpha) {
+  g.globalAlpha = alpha; g.fillStyle = g.strokeStyle = "#120d24"; g.lineWidth = 7 * s; g.lineCap = "round";
+  if (arms) {
+    g.beginPath(); g.moveTo(x - 11 * s, y - 30 * s); g.lineTo(x - 19 * s, y - 60 * s);
+    if (arms > 1) { g.moveTo(x + 11 * s, y - 30 * s); g.lineTo(x + 19 * s, y - 60 * s); }
+    g.stroke();
+  }
+  g.beginPath(); g.roundRect(x - 16 * s, y - 36 * s, 32 * s, 46 * s, 13 * s); g.fill();
+  g.beginPath(); g.arc(x, y - 46 * s, 10 * s, 0, Math.PI * 2); g.fill();
+  g.globalAlpha = alpha * .6; g.strokeStyle = rim; g.lineWidth = 1.6;
+  g.beginPath(); g.arc(x, y - 46 * s, 10 * s, Math.PI * 1.05, Math.PI * 1.8); g.stroke();
+  g.globalAlpha = 1;
+}
+
+// Three rows of dancers: two behind the band, the front row half hidden by the palette glass.
+function drawCrowd(beat, alpha, dancing) {
+  const horizon = height * .72, k = Math.max(.6, Math.min(1.2, width / 1400));
+  const rows = [[horizon + (height - horizon) * .12, .72], [horizon + (height - horizon) * .34, .95], [height - bottom * .2, 1.3]];
+  rows.forEach(([y, scale], row) => {
+    for (const p of crowd) if (p.row === row) {
+      const s = scale * p.size * k, lift = dancing ? Math.abs(Math.sin(beat * Math.PI + p.phase)) * 7 * s : 0;
+      person(p.x * width, y - lift, s, p.arms, colors[p.x < .5 ? 0 : 1], alpha * (.75 + row * .1));
+    }
+  });
+}
+
 export function drawAtmosphere(position, running, ending, hits, section) {
   const intro = reduce ? 1 : ease(position / 22), fade = 1 - ease(ending / 8);
   const beat = reduce ? 8 : Math.max(0, position - 32) / 4;
-  const pulse = reduce ? .3 : Math.exp(-fract(beat) * 5);
-  const energy = reduce ? .7 : section.energy;
   show.style.opacity = String(fade);
   show.classList.toggle("paused", !running);
   show.classList.toggle("dropped", position >= 32);
@@ -115,57 +176,29 @@ export function drawAtmosphere(position, running, ending, hits, section) {
   const backdrop = g.createLinearGradient(0, 0, 0, height);
   backdrop.addColorStop(0, "#100d26"); backdrop.addColorStop(.6, "#201438"); backdrop.addColorStop(1, "#121126");
   g.globalAlpha = intro * .94; g.fillStyle = backdrop; g.fillRect(0, 0, width, height); g.globalAlpha = 1;
-  glow(width * .08, height * .5, width * .5, colors[0], (.07 + (reduce ? 0 : hits[0] * .12)) * intro);
-  glow(width * .9, height * .5, width * .5, colors[1], (.08 + (reduce ? 0 : hits[1] * .12)) * intro);
+  glow(width * .08, height * .5, width * .5, colors[0], .08 * intro);
+  glow(width * .9, height * .5, width * .5, colors[1], .08 * intro);
 
   for (let i = 0; i < stars.length; i++) {
-    const s = stars[i], x = s.x * width, y = s.y * height * .84;
-    g.globalAlpha = intro * (.2 + (Math.sin(beat * .6 + i) + 1) * .22);
-    g.fillStyle = i % 3 ? "#d8d2ee" : colors[0];
-    g.fillRect(x, y, s.size, s.size);
-    if (i % 13 === 0) sparkle(x, y, 4, colors[1]);
+    const s = stars[i];
+    g.globalAlpha = intro * (.2 + i % 4 * .1); g.fillStyle = i % 3 ? "#d8d2ee" : colors[0];
+    g.fillRect(s.x * width, s.y * height * .84, s.size, s.size);
   }
   g.globalAlpha = 1;
+  danceFloor(intro);
+  drawCrowd(beat, intro, !reduce && running && position >= 32);
   const exit = reduce ? 0 : ease(ending / 8);
-  const ballX = width / 2, ballY = (width < 640 ? 114 : 103) - (1 - intro + exit) * 190;
-  const radius = width < 640 ? 30 : 44;
-  g.save(); g.globalCompositeOperation = "screen";
-  for (let i = 0; i < 8; i++) {
-    const angle = Math.sin(beat * .17 + i * 1.1) * 1.3 + (i % 2 ? .7 : -.7);
-    const reach = height * 1.5, spread = .055 + i % 3 * .025;
-    const beam = g.createLinearGradient(ballX, ballY, ballX + Math.sin(angle) * reach, ballY + Math.cos(angle) * reach);
-    beam.addColorStop(0, colors[i % 2]); beam.addColorStop(1, "transparent");
-    g.fillStyle = beam; g.globalAlpha = intro * (.045 + pulse * .035) * energy;
-    g.beginPath(); g.moveTo(ballX, ballY);
-    g.lineTo(ballX + Math.sin(angle - spread) * reach, ballY + Math.cos(angle - spread) * reach);
-    g.lineTo(ballX + Math.sin(angle + spread) * reach, ballY + Math.cos(angle + spread) * reach);
-    g.closePath(); g.fill();
-  }
-  g.restore();
-  danceFloor(beat, intro * energy);
-
-  if (position >= 32) {
-    for (let i = 0; i < 38; i++) {
-      const a = i * 2.4 + beat * .12, spread = 100 + i * 17;
-      const x = ballX + Math.cos(a) * spread, y = height * .5 + Math.sin(a * .7) * height * .43;
-      g.globalAlpha = .12 + pulse * .17; g.fillStyle = colors[i % 2];
-      g.save(); g.translate(x, y); g.rotate(a); g.fillRect(-3, -2, 6, 4); g.restore();
-    }
-    g.globalAlpha = 1;
-    if (!reduce) for (let i = 0; i < 3; i++) {
-      const phase = fract(beat / 4 + i / 3);
-      g.strokeStyle = colors[i % 2]; g.globalAlpha = (1 - phase) * .2;
-      g.beginPath(); g.ellipse(ballX, ballY, radius + phase * width * .46, radius * .4 + phase * 80, 0, 0, Math.PI * 2); g.stroke();
-    }
-    g.globalAlpha = 1;
-  }
-  mirrorBall(ballX, ballY, radius, beat * .15);
+  // the ball hangs in the middle of the open stage, under the show title; its beams reach the walls and the floor
+  const radius = width < 640 ? 30 : 44, drop = reduce ? 1 : ease((position - 26) / 8);
+  const ballX = width / 2, ballY = (width < 640 ? top + 114 : (top + 186 + height * .72) / 2) - (1 - drop + exit) * 190;
+  ballBeams(ballX, ballY, beat, drop * (1 - exit));
+  starBeams(ballX, ballY, beat, drop * (1 - exit));
+  mirrorBall(ballX, ballY, radius, beat * .15, top + (width < 640 ? 62 : 186));
 
   guests.forEach((el, i) => {
     const enter = reduce ? 1 : ease((position - 3 - i * 2) / 17);
     const hit = reduce ? 0 : hits[i];
-    const bob = reduce || position < 32 ? 0 : Math.sin(beat * Math.PI * 2 + i * Math.PI) * 3 - hit * 12;
-    el.style.transform = `translate(${(1 - enter + exit) * (i ? 1 : -1) * (width * .5 + 240)}px, ${bob}px) rotate(${reduce ? 0 : Math.sin(beat * Math.PI + i) * 2}deg)`;
+    el.style.transform = `translateX(${(1 - enter + exit) * (i ? 1 : -1) * (width * .5 + 240)}px)`;
     el.style.opacity = String(enter);
     el.style.setProperty("--hit", hit.toFixed(3));
     el.classList.toggle("playing", hit > .3);

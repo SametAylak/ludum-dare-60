@@ -9,6 +9,11 @@ import { clearSlot, shuffle, togglePart } from "./stage.js";
 import { $ } from "../util.js";
 
 export function initHeader() {
+  const top = $(".top"), deck = $("#deck"), ro = new ResizeObserver(() => {
+    top.parentElement.style.setProperty("--top-h", top.offsetHeight + "px");
+    top.parentElement.style.setProperty("--deck-h", deck.offsetHeight + "px");
+  });
+  ro.observe(top); ro.observe(deck);
   playBtn.addEventListener("click", () => setRunning(!state.running));
   bpmIn.addEventListener("input", () => setBpm(+bpmIn.value));
   $("#bpmDown").addEventListener("click", () => setBpm(clock.BPM - 5));

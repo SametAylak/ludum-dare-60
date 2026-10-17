@@ -1,12 +1,12 @@
 // Entry point: wires the modules together and runs the frame loop.
 import { audio } from "./audio/engine.js";
+import { loadSamples } from "./bonus/music.js";
 import { applyGains, initMixer } from "./mixer.js";
 import { clock } from "./music.js";
 import { byId } from "./parts/index.js";
 import { initRecorder, updateRec } from "./recorder.js";
 import { slots, state } from "./state.js";
 import { initTransport, setBpm, sq, vq } from "./transport.js";
-import { drawConfetti } from "./ui/confetti.js";
 import { initCounter } from "./ui/counter.js";
 import { initDeck, updateKeys } from "./ui/deck.js";
 import { initGaze } from "./ui/gaze.js";
@@ -26,6 +26,7 @@ initScope();
 initTransport();
 initGaze();
 initRecorder();
+loadSamples();
 
 function frame() {
   requestAnimationFrame(frame);
@@ -38,7 +39,6 @@ function frame() {
   drawScope();
   updateHud();
   updateRec();
-  drawConfetti(state.running);
 }
 
 const hot = window.claude && window.claude.hot;

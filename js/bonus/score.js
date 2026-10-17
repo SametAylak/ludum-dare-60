@@ -37,7 +37,7 @@ const MOTIFS = {
 };
 const RHYTHMS = {
   telegraph: [0, 2, 3, 6], gramophone: [0, 3, 6],
-  radio: [0, 4, 6], reel: [0, 2, 5, 7],
+  radio: [0, 4, 6], phone: [0, 2, 5, 7],
 };
 
 // Both guests get a foreground phrase, then an answering accent in the other half-bar.

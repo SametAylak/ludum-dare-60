@@ -1,15 +1,59 @@
 // The guests take over for a build, a drop, a breakdown and a bigger second drop.
-import { audio } from "../audio/engine.js";
+import { audio, loadSample } from "../audio/engine.js";
 import { fm, kick, noise, pulseWave, tone, voice } from "../audio/synth.js";
 import { CHORDS, clock, mtof } from "../music.js";
+import { COMBOS } from "./combos.js";
 import { guestNote, sectionAt } from "./score.js";
 
 const cues = [];
 const lastHits = [{ t: -Infinity, strength: 0 }, { t: -Infinity, strength: 0 }];
 const BASS = { 0: 0, 3: 0, 6: 12, 8: 0, 10: 7, 14: 12 };
 
+// Shows with a `sample` in combos.js add a recorded voice on top of the guests.
+// "hook": an 8-bar vocal hook recorded at 125 BPM covers the drop through the finale.
+// It plays as one crossfaded grain per 16th step, so it follows any tempo at its own pitch.
+const HOOK_STEP = 60 / 125 / 4, HOOK_FROM = 32, HOOK_TO = 160, HOOK_FADE = .012;
+const hook = { url: new URL("../../audio/needed-you-hook.wav", import.meta.url), buffer: null, loading: null, out: null, on: false };
+// "speech": a spoken transmission comes in with the show and talks over the intro.
+const SPEECH_GAIN = .8;
+const speech = { url: new URL("../../audio/extreme-radiation.wav", import.meta.url), buffer: null, loading: null, src: null, due: false };
+
+export function loadSamples() {
+  for (const [name, sample] of [["hook", hook], ["speech", speech]])
+    if (COMBOS.some(c => c.sample === name)) loadSample(sample);
+}
+
+function hookGrain(combo, position, t) {
+  // Only start on the downbeat, so a hook that loads late never comes in mid-phrase.
+  if (position === HOOK_FROM) hook.on = combo.sample === "hook" && !!hook.buffer;
+  if (!hook.on || position < HOOK_FROM || position >= HOOK_TO) return;
+  if (!hook.out) { hook.out = audio.ctx.createGain(); hook.out.gain.value = .5; hook.out.connect(audio.fxBus); }
+  const src = audio.ctx.createBufferSource(), env = audio.ctx.createGain(), hold = clock.SPB;
+  src.buffer = hook.buffer;
+  env.gain.setValueAtTime(0, t);
+  env.gain.linearRampToValueAtTime(1, t + HOOK_FADE);
+  env.gain.setValueAtTime(1, t + hold);
+  env.gain.linearRampToValueAtTime(0, t + hold + HOOK_FADE);
+  src.connect(env); env.connect(hook.out);
+  src.start(t, (position - HOOK_FROM) * HOOK_STEP, hold + HOOK_FADE);
+}
+
+// The bar a show starts on is usually queued already, so speak on the first step the show schedules.
+function speak(combo, t) {
+  speech.due = false;
+  if (combo.sample !== "speech" || !speech.buffer) return;
+  const src = speech.src = audio.ctx.createBufferSource(), level = audio.ctx.createGain();
+  src.buffer = speech.buffer; level.gain.value = SPEECH_GAIN;
+  src.connect(level); level.connect(audio.fxBus);
+  src.start(t);
+  src.onended = () => { if (speech.src === src) speech.src = null; };
+}
+
 export function startBonusAudio() {
   cues.length = 0;
+  hook.on = false;
+  speech.due = true;
+  loadSamples();
   lastHits.forEach(hit => { hit.t = -Infinity; hit.strength = 0; });
   const t = audio.ctx.currentTime;
   audio.fxBus.gain.cancelScheduledValues(t);
@@ -18,12 +62,16 @@ export function startBonusAudio() {
 
 export function stopBonusAudio() {
   cues.length = 0;
+  speech.due = false;
   if (!audio.ctx) return;
   const t = audio.ctx.currentTime;
   for (const [param, value] of [[audio.fxBus.gain, 0], [audio.bandGain.gain, 1], [audio.bandFilter.frequency, 20000]]) {
     param.cancelScheduledValues(t);
     param.setTargetAtTime(value, t, .04);
   }
+  // Stop a cut-off transmission after the fade, so it can't resurface when the next show opens the bus.
+  speech.src?.stop(t + .2);
+  speech.src = null;
 }
 
 export function guestEnergy(now) {
@@ -53,7 +101,7 @@ const INSTRUMENTS = {
       a: .015, hold: clock.SPB * note.length, r: .1, scoop: note.accent ? .82 : 1.08, vib: .009 });
     fm(d, t, { f: mtof(note.midi + 12), ratio: 1, index: 1.5, vol: .035 * note.velocity, r: .22 });
   },
-  reel(d, t, note) {
+  phone(d, t, note) {
     const f = mtof(note.midi);
     fm(d, t, { f, ratio: 1, index: 3.5, vol: .22 * note.velocity, hold: clock.SPB * note.length * .4, r: .22 });
     tone(d, t, { type: "triangle", f: f / 2, vol: .065 * note.velocity, hold: clock.SPB * .4, r: .13 });
@@ -123,7 +171,9 @@ export function scheduleBonusMusic(combo, position, songStep, t) {
   audio.bandGain.gain.setTargetAtTime(section.band * (pumping ? [.52, .76, .94, 1][b % 4] : 1), t, .018);
   audio.bandFilter.frequency.setTargetAtTime(section.cutoff, t, .06);
   if (section.id === "build" || section.id === "lift") build(position, songStep, t);
+  if (speech.due) speak(combo, t);
   if (pumping) rhythm(combo, position, songStep, t);
+  hookGrain(combo, position, t);
   for (const side of [0, 1]) {
     const note = guestNote(combo, side, position, songStep);
     if (!note) continue;

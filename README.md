@@ -2,7 +2,7 @@
 
 An Incredibox-style music game where old computer parts are the band. Drag a hard drive, floppy drive, modem, CRT monitor or speech chip onto the desk and each one adds its own loop to the mix.
 
-Every sound is synthesized live with the Web Audio API. There are no audio files.
+Every band sound is synthesized live with the Web Audio API. The only audio files are the two recorded voices used by some bonus shows, in `audio/`.
 
 ## Play
 
@@ -42,24 +42,26 @@ New parts join on the next bar so everything stays in time. All parts play over 
 
 Some trios unlock bonus disks. There are five to find. Each brings two animated guests in from the sides, lowers a mirrored disco ball, and turns the stage into a dance floor. A transmission card introduces the guests before becoming a small live monitor, with eight bars of bonus music and a countdown. The show follows the song clock, including pause and tempo changes. Removing or muting a required part ends it. Simultaneous discoveries play in order.
 
-Click a bonus disk for its trio, or replay a discovered show while its trio is audible. Each show has its own guest pairing and lighting colors. Reduced-motion mode keeps the lighting static and disables guest dancing and confetti.
+Click a bonus disk for its trio, or replay a discovered show while its trio is audible. Each show has its own guest pairing and lighting colors. Reduced-motion mode stops the crowd from dancing.
 
 <details>
 <summary><b>Bonus combinations</b> (spoilers)</summary>
 
 | Bonus | Trio | Keys | Guests |
 | --- | --- | --- | --- |
-| Boot Sequence | Hard Drive + Floppy Drive + CRT Monitor | `1` `A` `W` | Alien Telegraph, Orbital Radio |
-| Dial-up Nights | Modem + Speech Chip + PC Speaker | `Q` `Z` `S` | Orbital Radio, Lunar Gramophone |
-| Mainframe Opera | Mainframe + Tape Drive + Teletype | `X` `5` `T` | Reel Time Traveler, Alien Telegraph |
-| LAN Party | Game Cartridge + Keyboard + Joystick | `F` `3` `B` | Lunar Gramophone, Reel Time Traveler |
-| Cosmic Telegraph | Teletype + Vacuum Tube + Oscilloscope | `T` `G` `V` | Alien Telegraph, Lunar Gramophone |
+| Boot Sequence | Hard Drive + Floppy Drive + CRT Monitor | `1` `A` `W` | Telegraph, Tube Radio |
+| Dial-up Nights | Modem + Speech Chip + PC Speaker | `Q` `Z` `S` | Tube Radio, Gramophone |
+| Mainframe Opera | Mainframe + Tape Drive + Teletype | `X` `5` `T` | Rotary Phone, Telegraph |
+| LAN Party | Game Cartridge + Keyboard + Joystick | `F` `3` `B` | Gramophone, Rotary Phone |
+| Cosmic Telegraph | Teletype + Vacuum Tube + Oscilloscope | `T` `G` `V` | Telegraph, Gramophone |
 
 The trio can sit in any slots, alongside other parts. All three must be audible: a part that is muted, turned down to 0%, or silenced by another part's solo doesn't count. The trios are defined in `js/bonus/combos.js`.
 
 </details>
 
-The guests also change the music. Their entrance filters the band into a rising drum roll, followed by a short gap and a disco drop with bass, claps and stereo call-and-response. A breakdown leads into a second drop with extra harmonies. Telegraph guests play keyed synth melodies, gramophones play brass stabs, radios sing through formant filters, and reel machines play FM notes with tape-style echoes. Their movements and lighting follow the scheduled notes. The band mix returns automatically when the show finishes or is cancelled; individual volume and mute settings stay intact.
+The guests also change the music. Their entrance filters the band into a rising drum roll, followed by a short gap and a disco drop with bass, claps and stereo call-and-response. A breakdown leads into a second drop with extra harmonies. Telegraph guests play keyed synth melodies, gramophones play brass stabs, radios sing through formant filters, and rotary phones ring FM notes with tape-style echoes. Their movements and lighting follow the scheduled notes. The band mix returns automatically when the show finishes or is cancelled; individual volume and mute settings stay intact.
+
+Two shows use recordings. Boot Sequence opens with a spoken transmission about an extreme amount of radiation, over the intro. In Dial-up Nights a female house vocal hook (recorded at 125 BPM in D minor) sings from the first drop to the end of the finale. It plays as crossfaded 16th-note grains, so it stays in time at any tempo without changing pitch. To move them, set `sample: "speech"` or `sample: "hook"` on a show in `js/bonus/combos.js`. Recordings download and decode when the page loads, so they're ready even when a show opens the moment PLAY is pressed.
 
 ## How it works
 
@@ -71,6 +73,7 @@ The guests also change the music. Their entrance filters the band into a rising 
 
 ```
 index.html            markup only
+audio/                recorded voices used by the bonus shows (WAV)
 css/                  base, header, stage, bonus, parts, overclock, deck, responsive
 js/
   main.js             entry point: init + frame loop
@@ -83,7 +86,7 @@ js/
   audio/              AudioContext + bus (engine.js), synth voices (synth.js)
   parts/              the 20 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
   bonus/              trios, music, monitor scenes, SVG guests, stage lighting, show timing
-  ui/                 stage slots, palette, header, HUD, performer animation, waveform, confetti
+  ui/                 stage slots, palette, header, HUD, performer animation, waveform
 ```
 
 To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function.

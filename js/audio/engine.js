@@ -41,3 +41,13 @@ export function ensureAudio() {
   slots.forEach(s => { if (s.id) makeNodes(s); });
   applyGains();
 }
+
+// Download and decode a recorded sample at page load. An offline context decodes without a click,
+// so a show that opens the moment PLAY is pressed already has its audio. A failed load is retried on the next call.
+let decoder = null;
+export function loadSample(sample) {
+  if (sample.loading) return;
+  decoder ??= new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, 1, 48000);
+  sample.loading = fetch(sample.url).then(r => r.arrayBuffer()).then(b => decoder.decodeAudioData(b))
+    .then(buffer => { sample.buffer = buffer; }).catch(() => { sample.loading = null; });
+}

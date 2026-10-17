@@ -10,7 +10,6 @@ import { app } from "../dom.js";
 import { clock } from "../music.js";
 import { byId } from "../parts/index.js";
 import { liveCombos, saveBonus, slots, state, unlocked } from "../state.js";
-import { burst, clearConfetti } from "../ui/confetti.js";
 import { diskEls } from "../ui/hud.js";
 import { $, reduce } from "../util.js";
 
@@ -49,7 +48,6 @@ function endScene() {
   slots.forEach(s => s.el.classList.remove("star"));
   diskEls.forEach(el => el.classList.remove("playing"));
   endAtmosphere();
-  clearConfetti();
 }
 
 export function resetShow() {
@@ -97,7 +95,7 @@ export function updateShow() {
   const performing = rel >= CARD_END, ending = Math.max(0, rel - MUSIC_END);
   const section = sectionAt(rel);
   app.classList.toggle("party-paused", !state.running);
-  retroShow.style.setProperty("--beat-time", `${clock.SPB * 4}s`);
+  retroShow.parentElement.style.setProperty("--beat-time", `${clock.SPB * 4}s`);
   slots.forEach(s => s.el.classList.toggle("star", scene.c.parts.includes(s.id)));
   diskEls.forEach((el, i) => el.classList.toggle("playing", i === scene.idx));
   drawAtmosphere(rel, state.running, ending, guestEnergy(audio.ctx.currentTime), section);
@@ -113,12 +111,6 @@ export function updateShow() {
     scene.section = section.id;
     $("#partyMessage").textContent = section.id === "groove" ? scene.c.message : scene.c.cues[section.id] ?? section.label;
     $(".u-countdown span").textContent = section.label;
-    if (!reduce && (section.id === "drop" || section.id === "peak")) {
-      const r = $(".stage").getBoundingClientRect();
-      const count = r.width < 640 ? 36 : 80;
-      burst(r.left + r.width * .16, r.top + r.height * .46, count);
-      burst(r.left + r.width * .84, r.top + r.height * .46, count);
-    }
   }
   if (performing) {
     const pos = Math.min(128, rel - CARD_END);

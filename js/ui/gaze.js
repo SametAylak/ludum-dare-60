@@ -1,4 +1,4 @@
-// Every performer on stage watches the mouse, Incredibox-style.
+// Every performer on stage, and any bonus guest, watches the mouse, Incredibox-style.
 import { slots } from "../state.js";
 
 const mouse = { x: 0, y: 0, seen: false };
@@ -7,8 +7,7 @@ let queued = false;
 export function aim() {
   queued = false;
   if (!mouse.seen) return;
-  for (const sl of slots) {
-    const eyes = sl.svg && sl.svg.querySelector(".eyes");
+  for (const eyes of [...slots.map(sl => sl.svg && sl.svg.querySelector(".eyes")), ...document.querySelectorAll(".guest .eyes")]) {
     if (!eyes) continue;
     const r = eyes.getBoundingClientRect(), dx = mouse.x - (r.left + r.width / 2), dy = mouse.y - (r.top + r.height / 2);
     const d = Math.hypot(dx, dy) || 1, k = Math.min(1, d / 120) / d;

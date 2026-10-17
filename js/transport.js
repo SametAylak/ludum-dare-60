@@ -1,6 +1,6 @@
 // Look-ahead sequencer, play/pause and tempo.
 import { audio, ensureAudio } from "./audio/engine.js";
-import { scheduleBonusMusic } from "./bonus/music.js";
+import { loadSamples, scheduleBonusMusic } from "./bonus/music.js";
 import { resetShow } from "./bonus/show.js";
 import { app, bpmEl, bpmIn, playBtn } from "./dom.js";
 import { BPM_MAX, BPM_MIN, clock, LOOP } from "./music.js";
@@ -38,6 +38,7 @@ function scheduleStep(n, t) {
 }
 export function setRunning(on) {
   ensureAudio();
+  loadSamples();
   state.running = on;
   if (on) {
     audio.ctx.resume();

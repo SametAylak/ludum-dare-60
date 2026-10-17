@@ -30,11 +30,15 @@ export function fire(ev) {
 export function onStep(n) {
   updateCounter(n);
   // the whole band nods on every beat
-  // bonus stars bounce harder and jump on every bar
-  if (!reduce && n % 4 === 0) for (const sl of slots) {
-    if (!sl.svg || !sl.el.classList.contains("on")) continue;
-    const star = sl.el.classList.contains("star");
-    sl.svg.querySelector(".bob").animate(star ? (n % 16 === 0 ? JUMP : BOB_BIG) : BOB, { duration: clock.SPB * 4000 * .9, easing: "ease-out" });
+  // bonus stars and guests bounce harder and jump on every bar
+  if (!reduce && n % 4 === 0) {
+    const big = { duration: clock.SPB * 4000 * .9, easing: "ease-out" };
+    for (const sl of slots) {
+      if (!sl.svg || !sl.el.classList.contains("on")) continue;
+      const star = sl.el.classList.contains("star");
+      sl.svg.querySelector(".bob").animate(star ? (n % 16 === 0 ? JUMP : BOB_BIG) : BOB, big);
+    }
+    document.querySelectorAll(".dropped .guest .bob").forEach(b => b.animate(n % 16 === 0 ? JUMP : BOB_BIG, big));
   }
   if (n % 16 === 0) checkCombos(n);
 }

@@ -1,4 +1,4 @@
-// The hint pill and bonus disk icons.
+// The hint pill and bonus disk icons; a locked disk fills a third per trio part playing.
 import { COMBOS, DISK_COLORS } from "../bonus/combos.js";
 import { requestReplay, updateShow } from "../bonus/show.js";
 import { clock } from "../music.js";
@@ -9,10 +9,11 @@ const hintEl = $("#hint");
 const disksEl = $("#disks");
 export let diskEls = [];
 let hintCache = "";
-let disksCache = -1;
+let disksCache = "";
+const disk = cls => `<svg class="${cls}" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h15l3 3v15H3z"/><rect class="sh" x="7" y="3" width="9" height="6"/><rect class="lb" x="6" y="13" width="12" height="8"/></svg>`;
 export function initHud() {
   disksEl.insertAdjacentHTML("beforeend", COMBOS.map((c, i) =>
-    `<button class="bonus-disk" type="button" style="--c:${DISK_COLORS[i]}" aria-label="Bonus ${i + 1}: show the secret trio" title="Show the secret trio"><svg class="dk" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h15l3 3v15H3z"/><rect class="sh" x="7" y="3" width="9" height="6"/><rect class="lb" x="6" y="13" width="12" height="8"/></svg></button>`).join(""));
+    `<button class="bonus-disk" type="button" style="--c:${DISK_COLORS[i]}" aria-label="Bonus ${i + 1}: show the secret trio" title="Show the secret trio">${disk("dk")}${disk("dkf")}</button>`).join(""));
   diskEls = [...disksEl.querySelectorAll(".dk")];
   disksEl.querySelectorAll("button").forEach((el, i) => el.addEventListener("click", () => requestReplay(COMBOS[i])));
 }
@@ -30,13 +31,15 @@ export function updateHud() {
   else if (n < 7) hint = "Add more parts. Some trios unlock bonus disks";
   else hint = "Full band! Click a performer to mute it";
   if (hint !== hintCache) { hintCache = hint; hintEl.textContent = hint; }
-  if (unlocked.size !== disksCache) {
-    disksCache = unlocked.size;
+  const have = COMBOS.map(c => c.parts.filter(id => slots.some(s => s.id === id && s.audible)).length);
+  if (unlocked.size + have.join("") !== disksCache) {
+    disksCache = unlocked.size + have.join("");
     COMBOS.forEach((c, i) => {
-      const found = unlocked.has(c.id), button = diskEls[i].parentElement;
+      const found = unlocked.has(c.id), button = diskEls[i].parentElement, got = have[i];
       diskEls[i].classList.toggle("on", found);
-      button.title = found ? `${c.name} · Replay with its trio` : "Show the secret trio";
-      button.setAttribute("aria-label", found ? `Replay ${c.name}` : `Bonus ${i + 1}: show the secret trio`);
+      button.style.setProperty("--p", got / 3);
+      button.title = found ? `${c.name} · Replay with its trio` : `${got}/3 playing · Show the secret trio`;
+      button.setAttribute("aria-label", found ? `Replay ${c.name}` : `Bonus ${i + 1}: ${got} of 3 parts playing, show the secret trio`);
     });
   }
 }

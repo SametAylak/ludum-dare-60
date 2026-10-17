@@ -1,5 +1,10 @@
 /* ---------- breakpoints and reduced motion ---------- */
 @media (max-width:1240px){ .deck{--kw:clamp(44px, calc((100vw - 160px) / 10), 64px)} }
+@media (max-width:980px){
+  .top{grid-template-columns:auto auto;justify-content:center}
+  .disks{grid-column:1 / -1;grid-row:1;justify-self:center}
+  .mix{grid-column:1;grid-row:2} .ctl{grid-column:2;grid-row:2}
+}
 @media (max-width:760px){
   .shelf{grid-template-columns:repeat(8, minmax(0,1fr));row-gap:6px}
   .slot{grid-column:span 2}
@@ -7,12 +12,13 @@
 }
 @media (max-width:640px){
   .deck{--kw:min(58px, calc((100vw - 72px) / 5))}
-  .logo{font-size:28px}
+  .top{grid-template-columns:auto}
+  .mix,.ctl{grid-column:1;grid-row:auto;justify-self:center}
   .rb{width:38px;height:38px}
   .rb.big{width:46px;height:46px}
   .recb{height:38px;min-width:76px;padding:0 12px 0 10px}
   .hud{grid-template-columns:1fr}
-  .counter,.hint,.disks{grid-column:1;grid-row:auto;justify-self:center}
+  .counter,.hint{grid-column:1;grid-row:auto;justify-self:center}
   .counter{height:42px;gap:10px;padding:0 14px}
   .counter .bars{gap:8px} .counter .bar{gap:3px}
   .counter .bar i{width:7px;height:11px} .counter .bar i:first-child{height:17px}
@@ -24,4 +30,5 @@
   .oc{display:none}
   .counter .bar.cue i:first-child{animation:none;background:color-mix(in srgb, var(--c) 70%, transparent)}
   .unlock .rays,.unlock .bdisk,.bonus{animation:none}
+  .dkf{transition:none}
 }

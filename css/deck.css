@@ -1,6 +1,5 @@
 /* ---------- palette ---------- */
-.deck{--kw:clamp(44px, calc((100vw - 260px) / 20), 74px);position:relative;z-index:3;
-  background:linear-gradient(var(--bar-2), var(--bar));box-shadow:0 -10px 30px rgba(0,0,0,.35);
+.deck{grid-row:3;grid-column:1;align-self:end;--kw:clamp(44px, calc((100vw - 260px) / 20), 74px);position:relative;z-index:3;border-top:1px solid rgba(255,255,255,.1);
   padding:12px var(--gut-r) 18px var(--gut-l);display:flex;flex-wrap:wrap;justify-content:center;gap:10px 26px}
 .group{display:flex;flex-direction:column;align-items:center;gap:8px}
 .group h2{margin:0;font-weight:600;font-size:11px;letter-spacing:.22em;color:var(--cat)}

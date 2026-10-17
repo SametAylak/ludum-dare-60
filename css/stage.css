@@ -1,5 +1,5 @@
 /* ---------- stage ---------- */
-.stage{position:relative;display:flex;flex-direction:column;min-height:380px;overflow:hidden}
+.stage{grid-row:1 / 4;grid-column:1;padding-top:var(--top-h, 0px);padding-bottom:var(--deck-h, 0px);position:relative;display:flex;flex-direction:column;min-height:380px;overflow:hidden}
 .stage::before{content:"";position:absolute;left:-15%;right:-15%;bottom:0;height:clamp(80px, 24%, 190px);z-index:0;
   border-radius:50% 50% 0 0 / 46px 46px 0 0;border-top:2px solid rgba(190,198,255,.28);
   box-shadow:0 -1px 0 rgba(255,255,255,.06), 0 -18px 40px -12px rgba(140,150,255,.22);
@@ -50,11 +50,6 @@
 .app:not(.live) .counter .pos{color:var(--muted)}
 .hint{grid-column:2;grid-row:2;justify-self:center;margin:0;padding:7px 16px;border-radius:999px;background:rgba(8,9,30,.38);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--text);text-align:center}
 .hint .cur{display:inline-block;width:.5em}
-.disks{grid-column:3;grid-row:1;justify-self:end;display:flex;align-items:center;gap:6px;font-weight:600;font-size:10px;letter-spacing:.16em;color:var(--muted)}
-.dk{width:22px;height:22px;fill:rgba(255,255,255,.14)}
-.dk .sh{fill:rgba(255,255,255,.18)} .dk .lb{fill:rgba(255,255,255,.1)}
-.dk.on{fill:var(--c);filter:drop-shadow(0 0 6px var(--c))}
-.dk.on .sh{fill:#d9dce6} .dk.on .lb{fill:#fff}
 
 
 .shelf{position:relative;z-index:2;margin-top:auto;display:grid;grid-template-columns:repeat(7, minmax(0,1fr));
