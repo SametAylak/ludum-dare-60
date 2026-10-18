@@ -25,7 +25,7 @@ const SCENES = {
   },
   boot(g, pos, beat) {
     const mem = Math.min(640, Math.floor(pos * 24));
-    g.fillText("BEIGEBOX BIOS v4.51", 12, 8);
+    g.fillText("RHYTHM CODERS BIOS v4.51", 12, 8);
     g.fillText(`MEMORY TEST: ${mem}K${mem >= 640 ? " OK" : ""}`, 12, 26);
     const hop = Math.abs(Math.sin(beat * Math.PI)), x = 136, y = 66 - hop * 18;
     g.globalAlpha = .35; g.fillRect(x + 8 + hop * 6, 120, 32 - hop * 12, 3); g.globalAlpha = 1;

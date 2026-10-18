@@ -4,7 +4,7 @@ import { $ } from "../util.js";
 
 const KEY = "beigebox.intro";
 const STEPS = [
-  { el: () => $("#play"), text: "Welcome to Beigebox! Press play or Space to start the band", done: () => state.running },
+  { el: () => $("#play"), text: "Welcome to Rhythm Coders! Press play or Space to start the band", done: () => state.running },
   { el: () => $("#deck"), text: "Click a part or press its key to add it to the band", base: () => state.uidN, done: b => state.uidN !== b },
   { el: () => (slots.find(s => s.id) || slots[3]).el, text: "Parts take the next free spot on stage, up to seven. Drag a part onto a performer to swap it, or click it again to send it off", btn: "Let's play" },
 ];

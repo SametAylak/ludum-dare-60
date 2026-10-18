@@ -1,4 +1,4 @@
-# Beigebox
+# Rhythm Coders
 
 An Incredibox-style music game where old computer parts are the band. Drag a hard drive, floppy drive, modem, CRT monitor or speech chip onto the desk and each one adds its own loop to the mix.
 
@@ -130,6 +130,6 @@ The game shows the license notice and these credits behind the ⓘ button in the
 
 ## License
 
-Copyright (C) 2026 the Beigebox contributors.
+Copyright (C) 2026 the Rhythm Coders contributors.
 
-Beigebox is free software under the [GNU Affero General Public License v3.0](LICENSE) or later, the same license as Strudel. The third-party sounds and fonts listed above keep their own licenses.
+Rhythm Coders is free software under the [GNU Affero General Public License v3.0](LICENSE) or later, the same license as Strudel. The third-party sounds and fonts listed above keep their own licenses.

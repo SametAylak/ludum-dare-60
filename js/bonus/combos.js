@@ -4,7 +4,7 @@ export const COMBOS = [
   { id: "boot", name: "BOOT SEQUENCE", parts: ["hdd", "floppy", "crt"],
     guests: ["telegraph", "radio"], colors: ["#64edff", "#fc8bc4"], message: "THE MACHINES ARE ALIVE", sample: "speech",
     live: "LIVE FROM THE MOTHERBOARD", cues: { build: "POWER-ON SELF TEST", breath: "PRESS ANY KEY...", drop: "SYSTEM ONLINE", break: "SAFE MODE...", lift: "REBOOTING", peak: "ALL DRIVES SPINNING", finale: "TURBO BUTTON: ON", outro: "SHUTTING DOWN..." },
-    lines: ["BEIGEBOX BIOS v4.51", "MEMORY TEST: 640K OK", "DETECTING IDE DRIVES... C: 420MB", "FLOPPY A: 1.44MB 3.5\"", "STARTING BEIGE-DOS...", "", "*** BONUS DISK: BOOT SEQUENCE ***"] },
+    lines: ["RHYTHM CODERS BIOS v4.51", "MEMORY TEST: 640K OK", "DETECTING IDE DRIVES... C: 420MB", "FLOPPY A: 1.44MB 3.5\"", "STARTING BEIGE-DOS...", "", "*** BONUS DISK: BOOT SEQUENCE ***"] },
   { id: "dial", name: "DIAL-UP NIGHTS", parts: ["modem", "speech", "pcspk"],
     guests: ["radio", "gramophone"], colors: ["#ff91d0", "#9b9dff"], message: "CONNECTED TO ANOTHER DIMENSION", sample: "hook",
     live: "LIVE FROM THE NIGHT OWL BBS", cues: { build: "HANDSHAKING...", breath: "KSSSHHHH...", drop: "CARRIER DETECTED", break: "SOMEONE PICKED UP THE PHONE", lift: "REDIALING", peak: "56K OF PURE BLISS", finale: "UPLOADING TO THE STARS", outro: "NO CARRIER" },

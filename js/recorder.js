@@ -45,7 +45,7 @@ export function syncRec(on) {
 }
 function save(blob, ext) {
   const d = new Date(), p = n => String(n).padStart(2, "0");
-  const name = `beigebox-mix-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}.${ext}`;
+  const name = `rhythm-coders-mix-${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}.${ext}`;
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url; a.download = name; document.body.append(a); a.click(); a.remove();
