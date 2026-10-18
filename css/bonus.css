@@ -20,7 +20,7 @@
 .guest-label b{font-size:clamp(11px, calc(var(--gw) / 13), 17px);font-weight:400;letter-spacing:.06em;color:var(--party-a)}
 .guest-right .guest-label b{color:var(--party-b)}
 .guest.playing .guest-label b{text-shadow:0 0 12px currentColor;color:#fff5d6}
-.party-marquee{position:absolute;top:calc(var(--top-h, 0px) + 122px);left:50%;width:34%;transform:translateX(-50%);display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center;opacity:0;transition:opacity .5s}
+.party-marquee{position:absolute;top:calc(var(--top-h, 0px) + 148px);left:50%;width:34%;transform:translateX(-50%);display:flex;flex-direction:column;gap:7px;align-items:center;text-align:center;opacity:0;transition:opacity .5s}
 .dropped .party-marquee{opacity:1}
 .party-marquee span{font:12px var(--f-screen);letter-spacing:.22em;color:#c7b8dc}
 .party-marquee b{font-size:clamp(13px, 1.45vw, 21px);font-weight:500;letter-spacing:.07em;color:#fff1d5;text-shadow:0 0 25px #dfb8ff55}

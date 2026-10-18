@@ -21,7 +21,7 @@
 .lamp i{position:absolute;left:50%;top:18px;width:min(26vw, 340px);height:min(70vh, 640px);margin-left:max(-13vw, -170px);transform:rotate(var(--a));transform-origin:50% 0;
   background:conic-gradient(from 168deg at 50% 0, transparent, var(--c) 12deg, transparent 24deg);opacity:calc(.04 + var(--on) * .3);mix-blend-mode:screen;
   -webkit-mask-image:linear-gradient(#000, transparent 90%);mask-image:linear-gradient(#000, transparent 90%)}
-.hud{padding-top:30px}
+.hud{padding-top:56px}
 
 /* speaker towers flanking the band: tweeters, an EQ meter, a woofer and a sub, cones pumping on the bass */
 .venue{--sw:min(100%, max(1080px, 62vw), calc((100svh - 250px) * 4.2));--tw:clamp(76px, 7.4vw, 128px)}
