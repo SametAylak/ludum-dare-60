@@ -165,12 +165,12 @@ function drawCrowd(beat, alpha, dancing) {
   });
 }
 
-export function drawAtmosphere(position, running, ending, hits, section) {
-  const intro = reduce ? 1 : ease(position / 22), fade = 1 - ease(ending / 8);
-  const beat = reduce ? 8 : Math.max(0, position - 32) / 4;
+export function drawAtmosphere(position, running, ending, hits, section, time) {
+  const intro = reduce ? 1 : ease(position / 22), fade = 1 - ease(ending / time.outro);
+  const beat = reduce ? 8 : Math.max(0, position - time.intro) / 4;
   show.style.opacity = String(fade);
   show.classList.toggle("paused", !running);
-  show.classList.toggle("dropped", position >= 32);
+  show.classList.toggle("dropped", position >= time.intro);
   show.dataset.section = section.id;
   g.clearRect(0, 0, width, height);
   const backdrop = g.createLinearGradient(0, 0, 0, height);
@@ -186,10 +186,10 @@ export function drawAtmosphere(position, running, ending, hits, section) {
   }
   g.globalAlpha = 1;
   danceFloor(intro);
-  drawCrowd(beat, intro, !reduce && running && position >= 32);
-  const exit = reduce ? 0 : ease(ending / 8);
+  drawCrowd(beat, intro, !reduce && running && position >= time.intro);
+  const exit = reduce ? 0 : ease(ending / time.outro);
   // the ball hangs in the middle of the open stage, under the show title; its beams reach the walls and the floor
-  const radius = width < 640 ? 30 : 44, drop = reduce ? 1 : ease((position - 26) / 8);
+  const radius = width < 640 ? 30 : 44, drop = reduce ? 1 : ease((position - time.intro + 6) / 8);
   const ballX = width / 2, ballY = (width < 640 ? top + 114 : (top + 186 + height * .72) / 2) - (1 - drop + exit) * 190;
   ballBeams(ballX, ballY, beat, drop * (1 - exit));
   starBeams(ballX, ballY, beat, drop * (1 - exit));

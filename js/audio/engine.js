@@ -3,6 +3,7 @@ import { applyGains, makeNodes, masterGain } from "../mixer.js";
 import { clock } from "../music.js";
 import { slots } from "../state.js";
 import { initStrudel } from "./strudel.js";
+import { loadSamples } from "./samples.js";
 
 export const audio = { ctx: null, master: null, analyser: null, delayIn: null, delay: null,
   bandFilter: null, bandGain: null, fxBus: null, fxLeft: null, fxRight: null, sweep: null, tape: null, tapeGain: null, hitBus: null };
@@ -48,6 +49,7 @@ export function ensureAudio() {
   initStrudel(audio.ctx);
   slots.forEach(s => { if (s.id) makeNodes(s); });
   applyGains();
+  loadSamples();
 }
 
 // Download and decode a recorded sample at page load. An offline context decodes without a click,

@@ -86,9 +86,10 @@ const SCENES = {
     g.fillText(String(Math.floor(beat / 3) % 21), 118, 14); g.fillText(String(Math.floor((beat + 1) / 4) % 21), 184, 14);
   },
 };
-export function drawScene(g, id, pos) {
+// `music` is the show's length in steps; every scene is drawn as if it ran the usual 128.
+export function drawScene(g, id, pos, music) {
   g.shadowBlur = 0; g.fillStyle = BGC; g.fillRect(0, 0, 320, 180);
   g.fillStyle = g.strokeStyle = PH; g.lineWidth = 2; g.font = "18px VT323, monospace"; g.textBaseline = "top";
   g.shadowColor = PH; g.shadowBlur = 6;
-  SCENES[id](g, Math.max(0, pos), Math.max(0, pos) / 4);
+  SCENES[id](g, Math.max(0, pos) * 128 / music, Math.max(0, pos) / 4);
 }
