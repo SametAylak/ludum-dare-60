@@ -1,21 +1,17 @@
 /* ---------- stage ---------- */
 .stage{grid-row:1 / 4;grid-column:1;padding-top:var(--top-h, 0px);padding-bottom:var(--deck-h, 0px);position:relative;display:flex;flex-direction:column;min-height:380px;overflow:hidden}
 .stage::before{content:"";position:absolute;left:-15%;right:-15%;bottom:0;height:clamp(80px, 24%, 190px);z-index:0;
-  border-radius:50% 50% 0 0 / 46px 46px 0 0;border-top:2px solid rgba(190,198,255,.28);
-  box-shadow:0 -1px 0 rgba(255,255,255,.06), 0 -18px 40px -12px rgba(140,150,255,.22);
+  border-radius:50% 50% 0 0 / 46px 46px 0 0;border-top:2px solid rgba(200,170,255,.55);
+  box-shadow:0 -1px 0 rgba(255,255,255,.1), 0 -18px 50px -10px rgba(190,110,255,.45);
   background:
-    radial-gradient(ellipse 30% 55% at 50% 12%, rgba(255,226,190,.16), transparent 70%),
-    radial-gradient(ellipse 45% 80% at 50% 0%, rgba(150,160,255,.3), transparent 70%),
+    radial-gradient(ellipse 30% 55% at 50% 12%, rgba(255,226,250,.22), transparent 70%),
+    radial-gradient(ellipse 22% 50% at 28% 18%, rgba(56,198,234,.28), transparent 70%),
+    radial-gradient(ellipse 22% 50% at 72% 18%, rgba(255,93,158,.26), transparent 70%),
+    radial-gradient(ellipse 18% 40% at 12% 20%, rgba(165,216,58,.18), transparent 70%),
+    radial-gradient(ellipse 18% 40% at 88% 20%, rgba(255,150,54,.18), transparent 70%),
+    radial-gradient(ellipse 45% 80% at 50% 0%, rgba(160,140,255,.4), transparent 70%),
     linear-gradient(rgba(255,255,255,.07), transparent 14%),
-    linear-gradient(var(--floor), var(--floor-2) 70%, #121334)}
-/* the media-player visualization: dim, fading into the floor, and gone while paused */
-#viz{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;transition:opacity 1.2s;
-  -webkit-mask-image:linear-gradient(transparent, #000 18%, #000 62%, transparent 86%);mask-image:linear-gradient(transparent, #000 18%, #000 62%, transparent 86%)}
-.app.live #viz{opacity:.45}
-.app.party #viz{opacity:.25}
-.viz-name{position:absolute;z-index:1;left:var(--gut-l);bottom:calc(var(--deck-h, 0px) + 8px);margin:0;font:18px var(--f-screen);letter-spacing:.06em;
-  color:rgba(220,225,255,.7);opacity:0;transition:opacity .8s;pointer-events:none}
-.viz-name.on{opacity:1}
+    linear-gradient(var(--floor), var(--floor-2) 70%, #120d3c)}
 .lights{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 /* faint dot-matrix backdrop, strongest up top and gone by the floor */
 .lights::before{content:"";position:absolute;inset:0;opacity:.85;

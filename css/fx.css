@@ -34,7 +34,7 @@
 .app:is(.fx-half,.fx-double) .lights i{opacity:.55}
 /* where the shelf reaches the left edge, the pads become a row under the header instead */
 @media (max-width:1300px){
-  .fxpanel{top:calc(var(--top-h, 0px) + 92px);left:50%;transform:translateX(-50%);flex-direction:row;padding:8px 12px 10px;--kw:46px}
+  .fxpanel{top:calc(var(--top-h, 0px) + 116px);left:50%;transform:translateX(-50%);flex-direction:row;padding:8px 12px 10px;--kw:46px}
   .fxpanel .list{flex-direction:row;flex-wrap:wrap;justify-content:center}
 }
 @media (max-height:640px) and (min-width:1301px){ .fxpanel .list{display:grid;grid-template-columns:1fr 1fr} }

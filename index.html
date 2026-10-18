@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/header.css">
 <link rel="stylesheet" href="css/stage.css">
+<link rel="stylesheet" href="css/sky.css">
+<link rel="stylesheet" href="css/venue.css">
 <link rel="stylesheet" href="css/bonus.css">
 <link rel="stylesheet" href="css/parts.css">
 <link rel="stylesheet" href="css/entrance.css">
@@ -41,8 +43,8 @@
   </header>
 
   <main class="stage">
-    <canvas id="viz" aria-hidden="true"></canvas>
-    <p class="viz-name" id="vizName" aria-hidden="true"></p>
+    <div class="sky" id="sky" aria-hidden="true"></div>
+    <div class="venue" id="venue" aria-hidden="true"></div>
     <div class="lights" aria-hidden="true"><i></i><i></i></div>
     <div class="retro-show" id="retroShow" hidden aria-hidden="true">
       <canvas id="partyScene"></canvas>
@@ -54,6 +56,7 @@
       <div class="counter" id="counter" aria-hidden="true"></div>
       <p class="hint" id="hint" aria-live="polite"></p>
     </div>
+    <div class="warp" id="warp" aria-hidden="true"></div>
     <div class="unlock" id="unlock" hidden role="status">
       <div class="rays"></div>
       <svg class="bdisk" viewBox="0 0 24 24" aria-hidden="true"><path class="bd-body" d="M3 3h15l3 3v15H3z"/><rect class="bd-sh" x="7" y="3" width="9" height="6"/><rect class="bd-sl" x="12.5" y="4" width="2" height="4"/><rect class="bd-lb" x="6" y="12.5" width="12" height="8.5" rx=".5"/><path class="bd-ln" d="M8 15h8M8 17.5h6"/></svg>

@@ -69,7 +69,7 @@ Two shows use recordings. Boot Sequence opens with a spoken transmission about a
 
 - **Sequencer:** a look-ahead scheduler queues 16th-note steps about 120 ms ahead on the `AudioContext` clock. Each part's `play(step, time, out, hit)` schedules its notes and visual hits for that step.
 - **Synthesis:** oscillators, filtered noise, 2-operator FM and a formant filter bank for the "singing" voices.
-- **Visuals:** the parts are inline SVG performers with legs. On stage each group dresses as one act: the beats are a hip-hop crew in baggy jeans, the effects a punk band in ripped skinnies, the melody a jazz combo in suit trousers and the voices a choir in robes. Each part adds its own hat, shades, bow tie or chain, which drop on just after it lands. The palette icons stay bare. The performers are animated with the Web Animations API when their scheduled hits come due. The whole band nods on every beat, and empty slots hold a grey, sleeping stand-in. A faint waveform of the master output (from an `AnalyserNode`) sits behind the stage.
+- **Visuals:** the parts are inline SVG performers with legs. On stage each group dresses as one act: the beats are a hip-hop crew in baggy jeans, the effects a punk band in ripped skinnies, the melody a jazz combo in suit trousers and the voices a choir in robes. Each part adds its own hat, shades, bow tie or chain, which drop on just after it lands. The palette icons stay bare. The performers are animated with the Web Animations API when their scheduled hits come due. The whole band nods on every beat, and empty slots hold a grey, sleeping stand-in. The band plays in a neon venue under a starry sky full of comets: a lighting truss whose lamps chase the beat, speaker towers whose woofers pump and EQ meters bounce with the master output (from an `AnalyserNode`), and a skyline on the horizon.
 
 ## Project layout
 
@@ -88,7 +88,7 @@ js/
   audio/              AudioContext + bus (engine.js), Strudel patterns, samples and soundfonts (strudel.js)
   parts/              the 25 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
   bonus/              trios, music, monitor scenes, SVG guests, stage lighting, show timing
-  ui/                 stage slots, palette, header, HUD, performer animation, waveform
+  ui/                 stage slots, palette, header, HUD, performer animation, venue and sky
 ```
 
 To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function, usually `loop(pattern, kinds)` from `js/audio/strudel.js` with a Strudel pattern (one cycle is one bar) and a function naming the performer animation for each event.

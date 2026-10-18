@@ -4,6 +4,7 @@ import { COMBOS, DISK_COLORS } from "./combos.js";
 import { drawScene } from "./scenes.js";
 import { drawAtmosphere, endAtmosphere, startAtmosphere } from "./atmosphere.js";
 import { guestName } from "./guests.js";
+import { endWarp, warp, warpColors } from "./warp.js";
 import { guestEnergy, startBonusAudio, stopBonusAudio } from "./music.js";
 import { INTRO_STEPS, MUSIC_STEPS, sectionAt, SHOW_STEPS } from "./score.js";
 import { app } from "../dom.js";
@@ -29,7 +30,9 @@ function startScene(c, n) {
   if (first) { unlocked.add(c.id); saveBonus(); }
   for (const el of [unlockEl, bonusEl]) el.style.setProperty("--c", DISK_COLORS[idx]);
   $(".u-kicker", unlockEl).textContent = first ? "SECRET FREQUENCY FOUND" : "BACK ON THE AIR";
-  $(".u-name", unlockEl).textContent = c.name;
+  // the title pops in letter by letter
+  let k = 0;
+  $(".u-name", unlockEl).innerHTML = c.name.split(" ").map(w => `<span class="w">${[...w].map(ch => `<span style="--i:${k++}">${ch}</span>`).join("")}</span>`).join(" ");
   $(".u-guests", unlockEl).textContent = c.guests.map(guestName).join(" + ");
   $(".u-countdown span").textContent = "SIGNAL INCOMING";
   $("#bonusTitle").textContent = c.name;
@@ -37,6 +40,7 @@ function startScene(c, n) {
   termCache = ""; term.textContent = "";
   counterCache = "";
   startAtmosphere(c);
+  warpColors(c.colors); warp("w-in");
   app.classList.add("party");
 }
 
@@ -48,6 +52,7 @@ function endScene() {
   slots.forEach(s => s.el.classList.remove("star"));
   diskEls.forEach(el => el.classList.remove("playing"));
   endAtmosphere();
+  endWarp();
 }
 
 export function resetShow() {
@@ -109,6 +114,9 @@ export function updateShow() {
   bonusEl.hidden = !performing;
   if (scene.section !== section.id) {
     scene.section = section.id;
+    if (section.id === "build") warp("w-build");
+    else if (section.id === "drop") warp("w-drop");
+    else if (section.id === "outro") warp("w-out");
     $("#partyMessage").textContent = section.id === "groove" ? scene.c.message : scene.c.cues[section.id] ?? section.label;
     $(".u-countdown span").textContent = section.label;
   }

@@ -1,0 +1,23 @@
+/* The neon night sky behind the stage (js/ui/sky.js): comets with dotted trails and bokeh dots, brighter once the band plays. */
+.sky{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;opacity:.7;transition:opacity 1.2s;
+  -webkit-mask-image:linear-gradient(#000 55%, transparent 88%);mask-image:linear-gradient(#000 55%, transparent 88%)}
+.app.live .sky{opacity:1}
+.app.party .sky{opacity:.55}
+.sky b{position:absolute;margin:calc(var(--s) / -2);width:var(--s);height:var(--s);border-radius:50%;background:var(--c);box-shadow:0 0 calc(var(--s) * 1.6) var(--c);animation:twinkle var(--d) ease-in-out infinite var(--dl)}
+.sky i{position:absolute;width:var(--len);height:20px;margin-top:-10px;transform-origin:100% 50%;opacity:0;
+  background:radial-gradient(circle, #fff 0 1px, transparent 1.5px) 0 100% / 10px 5px repeat-x;
+  -webkit-mask-image:linear-gradient(90deg, transparent, #000 45%);mask-image:linear-gradient(90deg, transparent, #000 45%);
+  animation:comet var(--d) linear infinite var(--dl)}
+/* a soft glowing tail ending in a white-hot head, with a dotted spark trail beneath */
+.sky i::before{content:"";position:absolute;inset:3px 8px 3px 0;border-radius:50% 10px 10px 50%;
+  background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--c) 70%, transparent) 45%, var(--c));filter:blur(3px)}
+.sky i::after{content:"";position:absolute;right:0;top:50%;width:20px;height:20px;margin-top:-10px;border-radius:50%;
+  background:radial-gradient(circle, #fff 35%, var(--c) 75%);box-shadow:0 0 14px 4px var(--c), 0 0 40px 10px color-mix(in srgb, var(--c) 45%, transparent)}
+/* each comet crosses in the first third of its cycle and then waits, so they arrive one at a time */
+@keyframes comet{
+  0%{opacity:0;transform:rotate(var(--a)) translateX(-12vmax) scale(var(--z))}
+  5%{opacity:1}
+  25%{opacity:.9}
+  33%,100%{opacity:0;transform:rotate(var(--a)) translateX(34vmax) scale(var(--z))}}
+@keyframes twinkle{50%{transform:scale(.55);filter:brightness(1.6)}}
+@media (prefers-reduced-motion: reduce){ .sky b{animation:none} }

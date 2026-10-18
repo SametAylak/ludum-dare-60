@@ -18,7 +18,8 @@ import { initOnboard, updateOnboard } from "./ui/onboard.js";
 import { initPads, updatePads } from "./ui/pads.js";
 import { fire, onStep, updateSlotStates } from "./ui/performers.js";
 import { initStage, renderSlot } from "./ui/stage.js";
-import { drawViz, initViz } from "./ui/visualizer.js";
+import { initSky } from "./ui/sky.js";
+import { drawVenue, initVenue } from "./ui/venue.js";
 
 initStage();
 initDeck();
@@ -27,7 +28,8 @@ initHeader();
 initCounter();
 initMixer();
 initHud();
-initViz();
+initSky();
+initVenue();
 initTransport();
 initGaze();
 initRecorder();
@@ -45,7 +47,7 @@ function frame() {
   }
   if (audio.ctx) updatePads(audio.ctx.currentTime);
   updateSlotStates();
-  drawViz();
+  drawVenue();
   updateHud();
   updateRec();
   updateOnboard();
