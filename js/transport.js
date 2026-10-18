@@ -3,6 +3,7 @@ import { audio, ensureAudio } from "./audio/engine.js";
 import { loadSamples, scheduleBonusMusic } from "./bonus/music.js";
 import { resetShow } from "./bonus/show.js";
 import { app, bpmEl, bpmIn, playBtn } from "./dom.js";
+import { fxStep, musicSteps, resetFx, resting } from "./fx.js";
 import { BPM_MAX, BPM_MIN, clock, LOOP } from "./music.js";
 import { byId } from "./parts/index.js";
 import { syncRec } from "./recorder.js";
@@ -13,6 +14,7 @@ export const sq = [];
 export const vq = [];
 export function resetTransport() {
   resetShow();
+  resetFx();
   state.step = 0; state.nextTime = audio.ctx.currentTime + .06; state.curStep = -1;
   sq.length = 0; vq.length = 0;
   slots.forEach(s => { s.start = 0; });
@@ -30,10 +32,11 @@ function scheduleStep(n, t) {
   const bonus = state.bonusMus;
   if (bonus && n >= bonus.start && n < bonus.to && liveCombos.has(bonus.c.id))
     scheduleBonusMusic(bonus.c, n - bonus.start, s, t);
-  for (const sl of slots) {
-    if (!sl.id || n < sl.start || !sl.g) continue;
+  fxStep(n, t);
+  for (const [m, dt] of musicSteps(n)) for (const sl of slots) {
+    if (!sl.id || n < sl.start || !sl.g || resting(byId[sl.id].cat, n)) continue;
     const uid = sl.uid, i = sl.i;
-    byId[sl.id].play(s, t, sl.g, (tt, kinds, dur) => vq.push({ t: tt, i, uid, kinds, dur }));
+    byId[sl.id].play(m % LOOP, t + dt, sl.g, (tt, kinds, dur) => vq.push({ t: tt, i, uid, kinds, dur }));
   }
 }
 export function setRunning(on) {
@@ -43,7 +46,7 @@ export function setRunning(on) {
   if (on) {
     audio.ctx.resume();
     if (!state.transportOn) { state.transportOn = true; resetTransport(); }
-  } else audio.ctx.suspend();
+  } else { resetFx(); audio.ctx.suspend(); }
   syncRec(on);
   playBtn.classList.toggle("on", on);
   playBtn.setAttribute("aria-label", on ? "Pause" : "Play");

@@ -2,7 +2,7 @@
 
 An Incredibox-style music game where old computer parts are the band. Drag a hard drive, floppy drive, modem, CRT monitor or speech chip onto the desk and each one adds its own loop to the mix.
 
-Every band sound is synthesized live with the Web Audio API. The only audio files are the two recorded voices used by some bonus shows, in `audio/`.
+The band plays through [Strudel](https://strudel.cc/): each part is a Strudel mini-notation pattern using its synths, the Dirt-Samples and tidal drum machine banks, and General MIDI soundfonts. Strudel's libraries load from jsDelivr and its samples from GitHub, so the game needs a network connection. The only audio files in the repo are the two recorded voices used by some bonus shows, in `audio/`.
 
 ## Play
 
@@ -30,6 +30,7 @@ It can be deployed to any static host as is.
 | Part volume | Hover a performer and use its slider (0–125%). Each part remembers its level |
 | Record | REC starts recording (and playback). The timer pauses with the mix. Click it again to save the file: WebM/Opus, or M4A in Safari |
 | Tempo | Slider or − / + (80–180 BPM), or the `-` and `=` keys. Above 130 BPM the parts overclock: they glow, shake, sweat and finally smoke |
+| Live FX | The pads on the left of the stage hit the whole mix, in time: `Y` crash, `U` drop (only the beats play for a bar), `I` stutter (hold), `O` tape stop, `P` filter sweep (hold), `H` half time and `J` double time for a bar |
 
 | Group | Parts | Keys |
 | --- | --- | --- |
@@ -37,6 +38,7 @@ It can be deployed to any static host as is.
 | Effects | Modem, CRT Monitor, Cassette, PSU Fan, Teletype | `Q` `W` `E` `R` `T` |
 | Melody | Floppy Drive, PC Speaker, Sound Card, Game Cartridge, Vacuum Tube | `A` `S` `D` `F` `G` |
 | Voices | Speech Chip, Mainframe, Tower PC, Oscilloscope, Joystick | `Z` `X` `C` `V` `B` |
+| Choir | RAM Choir, CD-ROM, Zip Drive, UPS Battery, Server Rack | `6` – `0` |
 
 New parts join on the next bar so everything stays in time. All parts play over the same 4-bar progression (Am, F, C, G), so any combination fits.
 
@@ -83,12 +85,12 @@ js/
   transport.js        look-ahead sequencer, play/pause, tempo
   mixer.js            per-part gain, mute/solo, master and part volume
   recorder.js         records the master output and saves it as an audio file
-  audio/              AudioContext + bus (engine.js), synth voices (synth.js)
-  parts/              the 20 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
+  audio/              AudioContext + bus (engine.js), Strudel patterns, samples and soundfonts (strudel.js)
+  parts/              the 25 parts by category, plus their SVG building blocks (art.js) and stage costumes (outfits.js)
   bonus/              trios, music, monitor scenes, SVG guests, stage lighting, show timing
   ui/                 stage slots, palette, header, HUD, performer animation, waveform
 ```
 
-To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function.
+To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function, usually `loop(pattern, kinds)` from `js/audio/strudel.js` with a Strudel pattern (one cycle is one bar) and a function naming the performer animation for each event.
 
 Run the bonus arrangement checks with `node tests/bonus-score.test.mjs`. They verify the two drops, the gaps before them, both guest phrases, and chord-compatible melodies for all five shows.

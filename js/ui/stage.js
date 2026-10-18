@@ -2,7 +2,7 @@
 import { ensureAudio } from "../audio/engine.js";
 import { applyGains, dropNodes, makeNodes, setPartVol, volOf } from "../mixer.js";
 import { artSvg, emptySvg } from "../parts/art.js";
-import { byId, CATS, PARTS } from "../parts/index.js";
+import { byId, CATS } from "../parts/index.js";
 import { FILL_ORDER, slots, state } from "../state.js";
 import { resetTransport, setRunning } from "../transport.js";
 import { updateKeys } from "./deck.js";
@@ -58,6 +58,7 @@ export function renderSlot(sl, pop) {
   const p = sl.id && byId[sl.id];
   sl.el.classList.toggle("has", !!p);
   sl.el.style.setProperty("--cat", p ? CATS[p.cat].color : "transparent");
+  sl.el.dataset.cat = p ? p.cat : "";
   sl.wrap.innerHTML = p ? artSvg(p) : emptySvg();
   sl.svg = p ? sl.wrap.firstElementChild : null;
   sl.tag.textContent = p ? p.name : "";
@@ -98,10 +99,4 @@ export function togglePart(id) {
   const free = FILL_ORDER.find(i => !slots[i].id);
   if (free === undefined) { state.notice = { text: "ALL 7 SLOTS ARE FULL. REMOVE A PART FIRST.", until: performance.now() + 2600 }; return; }
   place(id, free);
-}
-export function shuffle() {
-  const pick = (cat, k) => PARTS.filter(p => p.cat === cat).sort(() => Math.random() - .5).slice(0, k);
-  const chosen = [...pick("beat", 2), ...pick("fx", 1), ...pick("mel", 2), ...pick("voc", 2)].sort(() => Math.random() - .5);
-  slots.forEach(s => { if (s.id) clearSlot(s); });
-  chosen.forEach((p, i) => place(p.id, i));
 }

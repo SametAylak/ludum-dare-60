@@ -13,7 +13,7 @@ const STEPS = [
   { el: () => $(".tempo"), text: "Change the tempo here, or with the - and = keys. Push past 130 BPM and things overheat", base: () => clock.BPM, done: b => clock.BPM !== b },
   { el: () => $(".vol"), text: "Master volume. Click the speaker or press M to mute everything", base: () => volIn.value, done: b => volIn.value !== b || muteAll.getAttribute("aria-pressed") === "true" },
   { el: () => $("#rec"), text: "REC records your mix. Click it again to save the file" },
-  { el: () => $("#shuffle"), text: "Out of ideas? Shuffle picks a random band for you", base: () => state.uidN, done: b => state.uidN !== b },
+  { el: () => $(".fxpanel"), text: "The Live FX pads hit the whole mix in time. Tap one, or hold Stutter and Sweep" },
   { el: () => $("#clear"), text: "Clear sends everyone off stage so you can start fresh", done: () => !slots.some(s => s.id) },
   { el: () => $("#disks"), text: "Some trios unlock these bonus disks. Five to find!", btn: "Let's play" },
 ];

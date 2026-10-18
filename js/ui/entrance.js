@@ -1,4 +1,5 @@
-// Stage entrances: beats stomp in, effects glitch on like a CRT, melody spins up, voices step into a spotlight.
+// Stage entrances: beats stomp in, effects glitch on like a CRT, melody spins up, voices step into a spotlight,
+// the choir rise in a glow under a settling halo.
 import { $ } from "../util.js";
 
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -47,6 +48,14 @@ const ENTER = {
       { transform: "scale(1.08)", filter: "brightness(1.8)", offset: .6 },
       { transform: "none", filter: "none" }],
     fx: () => `<i class="cone"></i>` + rep(10, i => `<b style="--a:${i * 36 + rnd(-12, 12)}deg;--r:${rnd(55, 95)}px;--dl:${rnd(380, 480)}ms"></b>`),
+  },
+  cho: {
+    dur: 760, origin: "50% 100%",
+    kf: [
+      { transform: "translateY(26px) scale(.92)", filter: "blur(4px) brightness(2.2)", opacity: 0 },
+      { transform: "translateY(-6px) scale(1.03)", filter: "blur(0) brightness(1.6)", opacity: 1, offset: .55 },
+      { transform: "none", filter: "none" }],
+    fx: () => `<i class="halo"></i>` + rep(10, () => `<b style="--x:${rnd(10, 90)}%;--dy:${rnd(70, 130)}px;--dl:${rnd(0, 400)}ms"></b>`),
   },
 };
 export function enter(sl, cat) {

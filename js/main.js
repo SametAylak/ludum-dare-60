@@ -1,5 +1,7 @@
 // Entry point: wires the modules together and runs the frame loop.
 import { audio } from "./audio/engine.js";
+import { loadSounds } from "./audio/strudel.js";
+import { loadFx } from "./fx.js";
 import { loadSamples } from "./bonus/music.js";
 import { applyGains, initMixer } from "./mixer.js";
 import { clock } from "./music.js";
@@ -13,12 +15,14 @@ import { initGaze } from "./ui/gaze.js";
 import { initHeader } from "./ui/header.js";
 import { initHud, updateHud } from "./ui/hud.js";
 import { initOnboard, updateOnboard } from "./ui/onboard.js";
+import { initPads, updatePads } from "./ui/pads.js";
 import { fire, onStep, updateSlotStates } from "./ui/performers.js";
 import { initStage, renderSlot } from "./ui/stage.js";
 import { drawViz, initViz } from "./ui/visualizer.js";
 
 initStage();
 initDeck();
+initPads();
 initHeader();
 initCounter();
 initMixer();
@@ -29,6 +33,8 @@ initGaze();
 initRecorder();
 loadSamples();
 initOnboard();
+loadSounds();
+loadFx();
 
 function frame() {
   requestAnimationFrame(frame);
@@ -37,6 +43,7 @@ function frame() {
     while (sq.length && sq[0].t <= now) { const e = sq.shift(); if (e.n !== state.curStep) { state.curStep = e.n; state.curT = e.t; onStep(e.n); } }
     for (let k = vq.length - 1; k >= 0; k--) if (vq[k].t <= now) fire(vq.splice(k, 1)[0]);
   }
+  if (audio.ctx) updatePads(audio.ctx.currentTime);
   updateSlotStates();
   drawViz();
   updateHud();

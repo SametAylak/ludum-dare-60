@@ -1,6 +1,9 @@
 // Stage costumes: each group dresses as one act, and each part adds its own piece on top.
-// Beats are a hip-hop crew, effects a punk band, melody a jazz combo in suits, voices a choir in robes.
+// Beats are a hip-hop crew, effects a punk band, melody a jazz combo in suits, voices a gospel group in robes,
+// and the choir wear robes with gold stoles under halos.
 
+// A gold halo floating above the head, at y.
+export const halo = (y, rx = 24) => `<ellipse class="trim" cx="60" cy="${y}" rx="${rx}" ry="6"/>`;
 export const bowtie = (x, y, w = 26, h = 13, c = "r") =>
   `<path class="${c}" d="M${x} ${y} Q${x - w * .25} ${y - h * .65} ${x - w / 2} ${y - h / 2} Q${x - w * .42} ${y} ${x - w / 2} ${y + h / 2} Q${x - w * .25} ${y + h * .65} ${x} ${y} Z` +
   ` M${x} ${y} Q${x + w * .25} ${y - h * .65} ${x + w / 2} ${y - h / 2} Q${x + w * .42} ${y} ${x + w / 2} ${y + h / 2} Q${x + w * .25} ${y + h * .65} ${x} ${y} Z"/>` +
@@ -29,4 +32,7 @@ export const WEAR = {
   voc: `<path class="robe" d="M26 110 H94 L101 163 Q60 170 19 163 Z"/>
     <path class="fold" d="M42 128 L37 164 M78 128 L83 164 M60 132 V167"/>
     <path class="trim" d="M19.8 158.5 Q60 165.5 100.2 158.5"/>`,
+  cho: `<path class="robe" d="M26 110 H94 L101 163 Q60 170 19 163 Z"/>
+    <path class="fold" d="M60 132 V167"/>
+    <path class="stole" d="M38 110 H50 L48 166 H39 Z M70 110 H82 L81 166 H72 Z"/>`,
 };

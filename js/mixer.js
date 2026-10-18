@@ -1,5 +1,6 @@
 // Per-part gain nodes, mute/solo and volume (master and per part).
 import { audio } from "./audio/engine.js";
+import { releaseOrbit } from "./audio/strudel.js";
 import { muteAll, volIn } from "./dom.js";
 import { byId } from "./parts/index.js";
 import { slots } from "./state.js";
@@ -26,7 +27,7 @@ export function dropNodes(sl) {
   if (!sl.g) return;
   const g = sl.g, s = sl.s;
   g.gain.setTargetAtTime(0, audio.ctx.currentTime, .03);
-  setTimeout(() => { g.disconnect(); if (s) s.disconnect(); }, 600);
+  setTimeout(() => { releaseOrbit(g); g.disconnect(); if (s) s.disconnect(); }, 600);
   sl.g = sl.s = null;
 }
 export function applyGains() {

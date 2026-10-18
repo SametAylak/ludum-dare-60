@@ -2,9 +2,10 @@
 import { applyGains, makeNodes, masterGain } from "../mixer.js";
 import { clock } from "../music.js";
 import { slots } from "../state.js";
+import { initStrudel } from "./strudel.js";
 
 export const audio = { ctx: null, master: null, analyser: null, delayIn: null, delay: null,
-  bandFilter: null, bandGain: null, fxBus: null, fxLeft: null, fxRight: null };
+  bandFilter: null, bandGain: null, fxBus: null, fxLeft: null, fxRight: null, sweep: null, tape: null, tapeGain: null, hitBus: null };
 export function ensureAudio() {
   if (audio.ctx) return;
   audio.ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -24,7 +25,13 @@ export function ensureAudio() {
   ceiling.curve = curve; ceiling.oversample = "4x";
   // Oversampling can overshoot the curve, so keep headroom after its reconstruction filter.
   const output = audio.ctx.createGain(); output.gain.value = .88;
-  audio.master.connect(comp); comp.connect(shaperInput); shaperInput.connect(ceiling);
+  // Live FX on the whole mix (js/fx.js): a sweepable low-pass, then a delay line whose growing delay winds the tape down.
+  audio.sweep = audio.ctx.createBiquadFilter(); audio.sweep.type = "lowpass"; audio.sweep.frequency.value = 20000; audio.sweep.Q.value = .5;
+  audio.tape = audio.ctx.createDelay(4); audio.tape.delayTime.value = 0;
+  audio.tapeGain = audio.ctx.createGain();
+  audio.hitBus = audio.ctx.createGain(); audio.hitBus.connect(audio.master);
+  audio.master.connect(audio.sweep); audio.sweep.connect(audio.tape); audio.tape.connect(audio.tapeGain); audio.tapeGain.connect(comp);
+  comp.connect(shaperInput); shaperInput.connect(ceiling);
   ceiling.connect(output); output.connect(audio.analyser); audio.analyser.connect(audio.ctx.destination);
   audio.delayIn = audio.ctx.createGain();
   audio.delay = audio.ctx.createDelay(2); audio.delay.delayTime.value = clock.SPB * 3;
@@ -38,6 +45,7 @@ export function ensureAudio() {
   const fxHighpass = audio.ctx.createBiquadFilter(); fxHighpass.type = "highpass"; fxHighpass.frequency.value = 700;
   const fs = audio.ctx.createGain(); fs.gain.value = .18;
   audio.fxBus.connect(fxHighpass); fxHighpass.connect(fs); fs.connect(audio.delayIn);
+  initStrudel(audio.ctx);
   slots.forEach(s => { if (s.id) makeNodes(s); });
   applyGains();
 }

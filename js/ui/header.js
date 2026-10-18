@@ -5,7 +5,7 @@ import { clock } from "../music.js";
 import { PARTS } from "../parts/index.js";
 import { slots, state } from "../state.js";
 import { setBpm, setRunning } from "../transport.js";
-import { clearSlot, shuffle, togglePart } from "./stage.js";
+import { clearSlot, togglePart } from "./stage.js";
 import { $ } from "../util.js";
 
 export function initHeader() {
@@ -18,7 +18,6 @@ export function initHeader() {
   bpmIn.addEventListener("input", () => setBpm(+bpmIn.value));
   $("#bpmDown").addEventListener("click", () => setBpm(clock.BPM - 5));
   $("#bpmUp").addEventListener("click", () => setBpm(clock.BPM + 5));
-  $("#shuffle").addEventListener("click", shuffle);
   $("#clear").addEventListener("click", () => slots.forEach(s => { if (s.id) clearSlot(s); }));
   addEventListener("keydown", e => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;

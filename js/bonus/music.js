@@ -1,7 +1,7 @@
 // The guests take over for a build, a drop, a breakdown and a bigger second drop.
 import { audio, loadSample } from "../audio/engine.js";
-import { fm, kick, noise, pulseWave, tone, voice } from "../audio/synth.js";
-import { CHORDS, clock, mtof } from "../music.js";
+import { glide, preload, sd } from "../audio/strudel.js";
+import { CHORDS, clock } from "../music.js";
 import { COMBOS } from "./combos.js";
 import { guestNote, sectionAt } from "./score.js";
 
@@ -18,7 +18,11 @@ const hook = { url: new URL("../../audio/needed-you-hook.wav", import.meta.url),
 const SPEECH_GAIN = .8;
 const speech = { url: new URL("../../audio/extreme-radiation.wav", import.meta.url), buffer: null, loading: null, src: null, due: false };
 
+// The drum machine hits the show's rhythm section uses.
+const KIT = [..."bd cp hh oh sd".split(" ").map(s => ({ s, bank: "RolandTR909" })), { s: "hh", bank: "RolandTR808" }, { s: "mt", bank: "RolandTR808" }];
+
 export function loadSamples() {
+  preload(KIT);
   for (const [name, sample] of [["hook", hook], ["speech", speech]])
     if (COMBOS.some(c => c.sample === name)) loadSample(sample);
 }
@@ -84,84 +88,81 @@ export function guestEnergy(now) {
 
 const INSTRUMENTS = {
   telegraph(d, t, note) {
-    const f = mtof(note.midi), hold = clock.SPB * note.length;
-    tone(d, t, { wave: pulseWave(.25), f, vol: .14 * note.velocity, hold, r: .045, lp: 3600 });
-    fm(d, t, { f: f * 2, ratio: 2, index: .7, vol: .035 * note.velocity, r: .11 });
-    noise(d, t, { f: 2600, Q: 3, vol: .025 * note.velocity, r: .014 });
+    const { midi, velocity: v } = note;
+    sd(d, t, { s: "pulse", pw: .25, note: midi, cutoff: 3600, sustain: 1, release: .045, gain: .32 * v }, clock.SPB * note.length);
+    sd(d, t, { s: "sine", note: midi + 12, fmh: 2, fmi: .7, decay: .11, sustain: 0, gain: .09 * v }, .11);
+    sd(d, t, { s: "white", bandf: 2600, bandq: 3, decay: .014, sustain: 0, gain: .07 * v }, .014);
   },
   gramophone(d, t, note) {
-    const f = mtof(note.midi), hold = clock.SPB * note.length;
-    for (const detune of [-8, 8]) tone(d, t, { type: "sawtooth", f: f * .97, f2: f, glide: .035,
-      detune, vol: .11 * note.velocity, a: .012, hold, r: .12, lp: 2100, q: 1.8 });
-    tone(d, t, { type: "triangle", f: f * 2, vol: .06 * note.velocity, hold: hold * .65, r: .13 });
-    if (note.accent) noise(d, t, { f: 4200, vol: .035, r: .06 });
+    const { midi, velocity: v } = note, hold = clock.SPB * note.length;
+    sd(d, t, { s: "supersaw", note: midi, unison: 2, detune: .16, ...glide(midi - .5, midi, .035), cutoff: 2100, resonance: 1.8,
+      attack: .012, sustain: 1, release: .12, gain: .5 * v }, hold);
+    sd(d, t, { s: "triangle", note: midi + 12, sustain: 1, release: .13, gain: .14 * v }, hold * .65);
+    if (note.accent) sd(d, t, { s: "crackle", density: .4, decay: .06, sustain: 0, gain: .22 }, .06);
   },
   radio(d, t, note) {
-    voice(d, t, { f: mtof(note.midi), vowel: note.accent ? "a" : "o", vol: .2 * note.velocity,
-      a: .015, hold: clock.SPB * note.length, r: .1, scoop: note.accent ? .82 : 1.08, vib: .009 });
-    fm(d, t, { f: mtof(note.midi + 12), ratio: 1, index: 1.5, vol: .035 * note.velocity, r: .22 });
+    const { midi, velocity: v } = note;
+    sd(d, t, { s: "sawtooth", note: midi, vowel: note.accent ? "a" : "o", ...glide(midi + (note.accent ? -3.4 : 1.3), midi, .07),
+      vib: 5.2, vibmod: .15, attack: .015, sustain: 1, release: .1, gain: .47 * v }, clock.SPB * note.length);
+    sd(d, t, { s: "sine", note: midi + 12, fmi: 1.5, decay: .22, sustain: 0, gain: .09 * v }, .22);
   },
   phone(d, t, note) {
-    const f = mtof(note.midi);
-    fm(d, t, { f, ratio: 1, index: 3.5, vol: .22 * note.velocity, hold: clock.SPB * note.length * .4, r: .22 });
-    tone(d, t, { type: "triangle", f: f / 2, vol: .065 * note.velocity, hold: clock.SPB * .4, r: .13 });
-    fm(d, t + clock.SPB * .75, { f, ratio: 1, index: 1.6, vol: .04 * note.velocity, r: .17 });
+    const { midi, velocity: v } = note;
+    sd(d, t, { s: "sine", note: midi, fmi: 3.5, fmdecay: .3, fmsustain: .15, sustain: 1, release: .22, gain: .5 * v }, clock.SPB * note.length * .4);
+    sd(d, t, { s: "triangle", note: midi - 12, sustain: 1, release: .13, gain: .16 * v }, clock.SPB * .4);
+    sd(d, t + clock.SPB * .75, { s: "sine", note: midi, fmi: 1.6, decay: .17, sustain: 0, gain: .09 * v }, .17);
   },
 };
 
-function clap(t, volume) {
-  for (const offset of [0, .012, .024]) noise(audio.fxBus, t + offset, { f: 1550, Q: .7, vol: volume, r: offset ? .065 : .025 });
-  noise(audio.fxBus, t, { type: "highpass", f: 5200, vol: volume * .4, r: .1 });
-}
+const drum = (t, s, bank, v = {}) => sd(audio.fxBus, t, { s, bank, ...v });
 
 function impact(t, root, peak) {
-  kick(audio.fxBus, t, peak ? .66 : .6);
-  noise(audio.fxBus, t, { type: "highpass", f: 6100, f2: 1800, vol: .14, r: clock.SPB * 5 });
-  tone(audio.fxBus, t, { f: mtof(root + 12), f2: mtof(root - 12), glide: .22, vol: .22, r: .38 });
+  drum(t, "bd", "RolandTR909", { gain: peak ? .48 : .43 });
+  sd(audio.fxBus, t, { s: "white", hcutoff: 1800, hpenv: 1.76, hpdecay: clock.SPB * 5, hpsustain: 0, decay: clock.SPB * 5, sustain: 0, gain: .32 }, clock.SPB * 5);
+  sd(audio.fxBus, t, { s: "sine", note: root - 12, ...glide(root + 12, root - 12, .22), decay: .38, sustain: 0, gain: .54 }, .38);
 }
 
 function build(position, songStep, t) {
   const step = position & 15, ch = CHORDS[(songStep >> 4) & 3];
   const intensity = position >= 108 ? .8 + (position - 108) * .05 : (position - 16) / 16;
   if (position === 16 || position === 108) {
-    const duration = clock.SPB * (position === 16 ? 13 : 3.5);
-    noise(audio.fxBus, t, { f: 650, f2: 6500, Q: .6, vol: .12, a: duration * .85, r: duration * .15 });
-    tone(audio.fxBus, t, { type: "sawtooth", f: mtof(ch.n[0]), f2: mtof(ch.n[0] + 24),
-      glide: duration, vol: .035, a: duration * .8, r: duration * .2, lp: 2400 });
+    const duration = clock.SPB * (position === 16 ? 13 : 3.5), n = ch.n[0];
+    sd(audio.fxBus, t, { s: "white", bandf: 650, bandq: .6, bpenv: 3.3, bpattack: duration, bpsustain: 1,
+      attack: duration * .85, sustain: 1, release: duration * .15, gain: .29 }, duration * .85);
+    sd(audio.fxBus, t, { s: "sawtooth", note: n + 24, ...glide(n, n + 24, duration), cutoff: 2400,
+      attack: duration * .8, sustain: 1, release: duration * .2, gain: .09 }, duration * .8);
   }
   if (step % 2 === 0 || intensity > .6) {
-    noise(audio.fxBus, t, { f: 1600 + intensity * 1800, vol: .035 + intensity * .06, r: .055 });
-    tone(audio.fxBus, t, { type: "triangle", f: 190 + intensity * 160, vol: .04, r: .045 });
+    drum(t, "hh", "RolandTR909", { speed: .8 + intensity * .5, gain: .14 + intensity * .25 });
+    drum(t, "sd", "RolandTR909", { speed: 1 + intensity * .3, gain: .06 + intensity * .09 });
   }
-  if (intensity > .8) noise(audio.fxBus, t + clock.SPB * .5, { f: 3800, vol: .04, r: .025 });
+  if (intensity > .8) drum(t + clock.SPB * .5, "hh", "RolandTR909", { speed: 1.3, gain: .18 });
 }
 
 function rhythm(combo, position, songStep, t) {
   const b = position & 15, ch = CHORDS[(songStep >> 4) & 3];
   const peak = position >= 112, downbeat = position === 32 || position === 112;
   if (downbeat) impact(t, ch.root, peak);
-  else if (b % 4 === 0) kick(audio.fxBus, t, .46);
-  if (b === 4 || b === 12) clap(t, .07);
-  if (b % 2 === 0) noise(audio.fxBus, t, { type: "highpass", f: 7300, vol: b % 4 === 2 ? .075 : .035, r: b % 4 === 2 ? .1 : .025 });
-  if (peak && b % 2) noise(audio.fxBus, t, { type: "highpass", f: 8500, vol: .024, r: .018 });
+  else if (b % 4 === 0) drum(t, "bd", "RolandTR909", { gain: .33 });
+  if (b === 4 || b === 12) drum(t, "cp", "RolandTR909", { gain: .29 });
+  if (b % 2 === 0) drum(t, b % 4 === 2 ? "oh" : "hh", "RolandTR909", { gain: b % 4 === 2 ? .22 : .18, release: .08 });
+  if (peak && b % 2) drum(t, "hh", "RolandTR808", { gain: .11 });
   if (BASS[b] !== undefined) {
-    const f = mtof(ch.root + BASS[b]), hold = clock.SPB * (b === 0 || b === 8 ? 1.3 : .65);
-    tone(audio.fxBus, t, { type: "sawtooth", f, vol: .15, hold, r: .075, lp: peak ? 1100 : 750, q: 1.4 });
-    tone(audio.fxBus, t, { f: f / 2, vol: .2, hold, r: .09 });
+    const note = ch.root + BASS[b], hold = clock.SPB * (b === 0 || b === 8 ? 1.3 : .65);
+    sd(audio.fxBus, t, { s: "sawtooth", note, cutoff: peak ? 1100 : 750, resonance: 1.4, sustain: 1, release: .075, gain: .36 }, hold);
+    sd(audio.fxBus, t, { s: "sine", note: note - 12, sustain: 1, release: .09, gain: .47 }, hold);
   }
-  if (b === 2 || b === 10) for (const n of ch.n) {
-    const d = b === 2 ? audio.fxRight : audio.fxLeft;
-    fm(d, t, { f: mtof(n + 12), ratio: 1, index: 1.6, vol: .032, hold: clock.SPB * .45, r: .12 });
-  }
+  if (b === 2 || b === 10) for (const n of ch.n)
+    sd(b === 2 ? audio.fxRight : audio.fxLeft, t, { s: "sine", note: n + 12, fmi: 1.6, sustain: 1, release: .12, gain: .07 }, clock.SPB * .45);
   if (position === 32 || position === 112) for (const side of [0, 1]) {
-    voice(side ? audio.fxRight : audio.fxLeft, t + clock.SPB * (side ? 2 : 0), {
-      f: mtof(ch.n[side] + (combo.id === "main" ? 12 : 0)), vowel: side ? "a" : "o", vol: .1,
-      hold: clock.SPB, r: .13, scoop: .8, vib: .015 });
+    const note = ch.n[side] + (combo.id === "main" ? 12 : 0);
+    sd(side ? audio.fxRight : audio.fxLeft, t + clock.SPB * (side ? 2 : 0), { s: "sawtooth", note, vowel: side ? "a" : "o",
+      ...glide(note - 3.4, note, .07), vib: 5.2, vibmod: .25, sustain: 1, release: .13, gain: .24 }, clock.SPB);
     cues.push({ side, t: t + clock.SPB * (side ? 2 : 0), strength: 1 });
   }
   if ((position >= 92 && position < 96 || position >= 156) && b % 2 === 0) {
-    noise(audio.fxBus, t, { f: 2100, vol: .075, r: .07 });
-    tone(audio.fxBus, t, { f: 180 - (b - 12) * 20, f2: 65, glide: .08, vol: .12, r: .1 });
+    drum(t, "sd", "RolandTR909", { gain: .25 });
+    drum(t, "mt", "RolandTR808", { speed: 1 + (12 - b) * .08, gain: .36 });
   }
 }
 

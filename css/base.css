@@ -8,7 +8,7 @@
   --screen:#06170e; --phos:#5cf58e; --amber:#ffb12b; --red:#ff4b3a;
   --text:#f4f2ff; --muted:#a6a9db;
   --ghost:#5b5e9c; --ghost-2:#474a86; --ghost-ln:#34366c;
-  --c-beat:#38c6ea; --c-fx:#a5d83a; --c-mel:#ff9636; --c-voc:#ff5d9e;
+  --c-beat:#38c6ea; --c-fx:#a5d83a; --c-mel:#ff9636; --c-voc:#ff5d9e; --c-cho:#a07cff;
   --f-display:"Fredoka", "Trebuchet MS", system-ui, sans-serif;
   --f-screen:"VT323", "Courier New", monospace;
   --gut-l:max(16px, env(safe-area-inset-left, 0px)); --gut-r:max(16px, env(safe-area-inset-right, 0px));
