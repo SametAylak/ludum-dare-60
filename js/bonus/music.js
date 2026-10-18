@@ -1,5 +1,5 @@
 // The guests take over for a build, a drop, a breakdown and a bigger second drop.
-import { audio, loadSample } from "../audio/engine.js";
+import { audio, loadPack } from "../audio/engine.js";
 import { glide, preload, sd } from "../audio/strudel.js";
 import { CHORDS, clock } from "../music.js";
 import { COMBOS } from "./combos.js";
@@ -16,18 +16,19 @@ let boot = false;
 // "hook": an 8-bar vocal hook recorded at 125 BPM covers the drop through the finale.
 // It plays as one crossfaded grain per 16th step, so it follows any tempo at its own pitch.
 const HOOK_STEP = 60 / 125 / 4, HOOK_FROM = 32, HOOK_TO = 160, HOOK_FADE = .012;
-const hook = { url: new URL("../../audio/needed-you-hook.wav", import.meta.url), buffer: null, loading: null, out: null, on: false };
+const hook = { buffer: null, out: null, on: false };
 // "speech": a spoken transmission comes in with the show and talks over the intro.
 const SPEECH_GAIN = .8;
-const speech = { url: new URL("../../audio/extreme-radiation.wav", import.meta.url), buffer: null, loading: null, src: null, due: false };
+const speech = { buffer: null, src: null, due: false };
+// Both recordings ship processed and packed in one file, in this order (tools/pack-voices.mjs).
+const voices = { url: new URL("../../audio/voices.bin", import.meta.url), loading: null };
 
 // The drum machine hits the show's rhythm section uses.
 const KIT = [..."bd cp hh oh sd".split(" ").map(s => ({ s, bank: "RolandTR909" })), { s: "hh", bank: "RolandTR808" }, { s: "mt", bank: "RolandTR808" }];
 
 export function loadSamples() {
   preload(KIT);
-  for (const [name, sample] of [["hook", hook], ["speech", speech]])
-    if (COMBOS.some(c => c.sample === name)) loadSample(sample);
+  if (COMBOS.some(c => c.sample)) loadPack(voices, [hook, speech]);
 }
 
 function hookGrain(combo, position, t) {

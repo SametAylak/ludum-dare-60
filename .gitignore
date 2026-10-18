@@ -2,3 +2,4 @@
 node_modules
 .claude
 audio/*.wav
+audio/voices.bin

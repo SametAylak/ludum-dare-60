@@ -52,12 +52,21 @@ export function ensureAudio() {
   loadSamples();
 }
 
-// Download and decode a recorded sample at page load. An offline context decodes without a click,
+// Download and decode the recorded voices at page load. An offline context decodes without a click,
 // so a show that opens the moment PLAY is pressed already has its audio. A failed load is retried on the next call.
+// They come packed (tools/pack-voices.mjs): a count and the WAV lengths, then the WAVs XORed with KEY, in `samples` order.
+const KEY = new TextEncoder().encode("beigebox");
 let decoder = null;
-export function loadSample(sample) {
-  if (sample.loading) return;
+export function loadPack(pack, samples) {
+  if (pack.loading) return;
   decoder ??= new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(2, 1, 48000);
-  sample.loading = fetch(sample.url).then(r => r.arrayBuffer()).then(b => decoder.decodeAudioData(b))
-    .then(buffer => { sample.buffer = buffer; }).catch(() => { sample.loading = null; });
+  pack.loading = fetch(pack.url).then(r => { if (!r.ok) throw r.status; return r.arrayBuffer(); }).then(b => {
+    const v = new DataView(b), n = v.getUint32(0, true), bytes = new Uint8Array(b, 4 + 4 * n);
+    bytes.forEach((x, i) => bytes[i] = x ^ KEY[i % KEY.length]);
+    let at = 0;
+    return Promise.all(samples.slice(0, n).map((sample, i) => {
+      const wav = bytes.slice(at, at += v.getUint32(4 + 4 * i, true));
+      return decoder.decodeAudioData(wav.buffer).then(buffer => { sample.buffer = buffer; });
+    }));
+  }).catch(() => { pack.loading = null; });
 }

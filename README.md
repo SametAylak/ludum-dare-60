@@ -69,14 +69,14 @@ Two shows use recordings. Boot Sequence opens with a spoken transmission about a
 
 ### Recordings
 
-The recordings are SampleFocus samples. Their license lets the game use them but not redistribute the files on their own, so they're kept out of the repo (`audio/*.wav` is in `.gitignore`). Download them from SampleFocus and save them as:
+The recordings are SampleFocus samples. Their license lets the game use them, but not redistribute the sound on its own, in substantially the same form, or in a readily extractable format. So the downloads stay out of the repo (`audio/*.wav` is in `.gitignore`), and the game never ships them: `pnpm voices` (`tools/pack-voices.mjs`, needs `ffmpeg`) gives each a lo-fi treatment (mono, 22 kHz, band-limited, lightly bitcrushed; the speech also gets a short radio echo) and packs both into one masked file, `audio/voices.bin`, which is also gitignored. That file is the only one the game loads. Download the recordings from SampleFocus and save them as:
 
 | File | Show | Sample |
 | --- | --- | --- |
 | `audio/extreme-radiation.wav` | Boot Sequence | the spoken transmission about an extreme amount of radiation (12 s) |
 | `audio/needed-you-hook.wav` | Dial-up Nights | the "needed you" female house vocal hook, 125 BPM, D minor (17.3 s) |
 
-Without them the game still runs, and those two shows play without the voice. Deploy the files alongside the code.
+Then run `pnpm voices` (`pnpm build` runs it too). Without `audio/voices.bin` the game still runs, and those two shows play without the voice.
 
 ## How it works
 
@@ -88,8 +88,9 @@ Without them the game still runs, and those two shows play without the voice. De
 
 ```
 index.html            markup only
-audio/                recorded voices used by the bonus shows (WAV, not in the repo)
+audio/                recorded voices for the bonus shows, packed into voices.bin (not in the repo)
 samples/              Boot Sequence's drum kit and hits (Sonic Pi, CC0)
+tools/                pack-voices.mjs: processes and packs the recordings into audio/voices.bin
 css/                  base, header, stage, bonus, parts, overclock, deck, responsive
 js/
   main.js             entry point: init + frame loop
@@ -116,7 +117,7 @@ Run the bonus arrangement checks with `pnpm test`. They verify the two drops, th
 - [Dirt-Samples](https://github.com/tidalcycles/Dirt-Samples) from TidalCycles, and [tidal-drum-machines](https://github.com/ritchse/tidal-drum-machines) through [dough-samples](https://github.com/felixroos/dough-samples). Both are loaded from GitHub at runtime.
 - General MIDI soundfonts from [webaudiofontdata](https://github.com/surikov/webaudiofontdata) by Sergey Surikov, built from the FluidR3 (MIT, Frank Wen), JCLive, Aspirin and Chaos soundfonts. They are loaded at runtime.
 - Boot Sequence's drum kit in `samples/` comes from [Sonic Pi](https://github.com/sonic-pi-net/sonic-pi/tree/dev/etc/samples) (CC0).
-- The two recordings in `audio/` come from [SampleFocus](https://samplefocus.com/), under its Standard License. They are not part of the repo or covered by its license.
+- The two recordings in `audio/` come from [SampleFocus](https://samplefocus.com/), under its Standard License. The game plays processed versions of them. They are not part of the repo or covered by its license.
 - The fonts are [Fredoka](https://fonts.google.com/specimen/Fredoka) and [VT323](https://fonts.google.com/specimen/VT323) from Google Fonts (SIL Open Font License 1.1).
 
 ## License
