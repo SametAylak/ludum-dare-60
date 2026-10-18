@@ -16,7 +16,11 @@ pnpm dev
 
 `pnpm dev` runs Vite, which reloads the page when you save a file. Any static server works too, for example `python3 -m http.server 8000`.
 
-It can be deployed to any static host as is.
+## Deploy
+
+`pnpm build` packs the recorded voices (see [Recordings](#recordings)) and builds the game into `dist/` with relative paths, so it runs from any folder of any static host. Upload that, not the repo: Boot Sequence's score imports Strudel by package name, which only works through Vite.
+
+`pnpm pages` builds and publishes `dist/` as the `gh-pages` branch for GitHub Pages (Settings → Pages → Deploy from a branch → `gh-pages`, root), at https://sametaylak.github.io/ludum-dare-60/. It builds locally rather than in CI because the recordings aren't in the repo, and stops if `audio/voices.bin` is missing. For itch.io, zip the contents of `dist/` with `index.html` at the top.
 
 ## Controls
 
@@ -90,7 +94,7 @@ Then run `pnpm voices` (`pnpm build` runs it too). Without `audio/voices.bin` th
 index.html            markup only
 audio/                recorded voices for the bonus shows, packed into voices.bin (not in the repo)
 samples/              Boot Sequence's drum kit and hits (Sonic Pi, CC0)
-tools/                pack-voices.mjs: processes and packs the recordings into audio/voices.bin
+tools/                pack-voices.mjs packs the recordings into audio/voices.bin; deploy-pages.sh publishes to GitHub Pages
 css/                  base, header, stage, bonus, parts, overclock, deck, responsive
 js/
   main.js             entry point: init + frame loop

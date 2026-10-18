@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `pnpm install` then `pnpm dev` — serves the game with Vite at http://localhost:5173 (hot reload). Any static server works (`python3 -m http.server 8000`); `file://` does not, because the code is ES modules.
 - `pnpm test` — runs `tests/bonus-score.test.mjs` and `tests/boot-score.test.mjs` with Node's built-in `node:test`. Run one test with `node --import ./tests/strudel-node.mjs --test --test-name-pattern="<regex>" tests/<file>`; the `--import` hook is needed whenever a test loads Strudel.
-- `pnpm build` packs the voices and runs `vite build` into `dist/`, which is what gets deployed (the Boot Sequence score's bare `@strudel/*` imports need Vite). There is no bundler config, linter or formatter.
+- `pnpm build` packs the voices and runs `vite build --base ./` into `dist/`, which is what gets deployed (the Boot Sequence score's bare `@strudel/*` imports need Vite). `pnpm pages` builds and pushes `dist/` to the `gh-pages` branch (`tools/deploy-pages.sh`; local, since the voices aren't in the repo). There is no bundler config, linter or formatter.
 
 ## What this is
 
