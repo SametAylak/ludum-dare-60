@@ -117,12 +117,16 @@ Run the bonus arrangement checks with `pnpm test`. They verify the two drops, th
 
 ## Credits
 
-- [Strudel](https://strudel.cc/) (`superdough`, `@strudel/core`, `@strudel/mini`) by Felix Roos and contributors, AGPL-3.0. It plays every part and Boot Sequence's score.
-- [Dirt-Samples](https://github.com/tidalcycles/Dirt-Samples) from TidalCycles, and [tidal-drum-machines](https://github.com/ritchse/tidal-drum-machines) through [dough-samples](https://github.com/felixroos/dough-samples). Both are loaded from GitHub at runtime.
-- General MIDI soundfonts from [webaudiofontdata](https://github.com/surikov/webaudiofontdata) by Sergey Surikov, built from the FluidR3 (MIT, Frank Wen), JCLive, Aspirin and Chaos soundfonts. They are loaded at runtime.
-- Boot Sequence's drum kit in `samples/` comes from [Sonic Pi](https://github.com/sonic-pi-net/sonic-pi/tree/dev/etc/samples) (CC0).
+Each license below was checked against its source. Where a source states no license, that's said too.
+
+- [Strudel](https://strudel.cc/) (`superdough`, `@strudel/core`, `@strudel/mini`) by Alex McLean, Felix Roos and contributors, AGPL-3.0-or-later ([source](https://codeberg.org/uzu/strudel)). It plays every part and Boot Sequence's score.
+- Boot Sequence's drum kit in `samples/` comes from [Sonic Pi](https://github.com/sonic-pi-net/sonic-pi), whose bundled samples are CC0 1.0 (Sonic Pi's `LICENSE.md`).
+- General MIDI instruments: [WebAudioFont data](https://github.com/surikov/webaudiofontdata) by Srgy Surkv (MIT), loaded at runtime. They were converted from the FluidR3 GM soundfont (MIT, copyright 2000–2002, 2008 Frank Wen, 2008 Toby Smithe) and from the Aspirin, JCLive and Chaos soundfonts, whose license is not stated by their source.
+- [Dirt-Samples](https://github.com/tidalcycles/Dirt-Samples) from TidalCycles and [tidal-drum-machines](https://github.com/ritchse/tidal-drum-machines) (through [dough-samples](https://github.com/felixroos/dough-samples)), loaded from GitHub at runtime. Neither states a license.
 - The two recordings in `audio/` come from [SampleFocus](https://samplefocus.com/), under its Standard License. The game plays processed versions of them. They are not part of the repo or covered by its license.
-- The fonts are [Fredoka](https://fonts.google.com/specimen/Fredoka) and [VT323](https://fonts.google.com/specimen/VT323) from Google Fonts (SIL Open Font License 1.1).
+- Fonts: [Fredoka](https://fonts.google.com/specimen/Fredoka) (copyright 2016 The Fredoka Project Authors) and [VT323](https://fonts.google.com/specimen/VT323) (copyright 2011 The VT323 Project Authors), SIL Open Font License 1.1, served by Google Fonts.
+
+The game shows the license notice and these credits behind the ⓘ button in the header.
 
 ## License
 

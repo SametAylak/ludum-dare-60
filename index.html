@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="css/onboard.css">
 <link rel="stylesheet" href="css/fx.css">
 <link rel="stylesheet" href="css/sets.css">
+<link rel="stylesheet" href="css/about.css">
 <link rel="stylesheet" href="css/responsive.css">
 
 <div class="app">
@@ -37,6 +38,7 @@
     </div>
     <div class="disks" id="disks" aria-label="Bonus discoveries"></div>
     <div class="ctl">
+      <button id="aboutBtn" class="rb" type="button" aria-label="Credits and license" title="Credits and license"><svg viewBox="0 0 24 24"><circle class="st" cx="12" cy="12" r="9"/><path class="st" d="M12 11v6M12 7.5v.01"/></svg></button>
       <button id="rec" class="recb" type="button" aria-pressed="false" aria-label="Record the mix" title="Record the mix, click again to save"><i class="dot"></i><span id="recTime">REC</span></button>
       <button id="clear" class="rb" type="button" aria-label="Clear all parts" title="Clear"><svg viewBox="0 0 24 24"><path class="st" d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M3 3v7h7z"/></svg></button>
       <button id="play" class="rb big" type="button" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 4.5v15l12-7.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24"><path d="M6.5 5h4v14h-4zM13.5 5h4v14h-4z"/></svg></button>
@@ -77,5 +79,23 @@
 
   <footer class="deck" id="deck" aria-label="Parts"></footer>
 </div>
+
+<dialog class="about" id="about" aria-labelledby="aboutTitle">
+  <div class="about-in">
+    <button class="tb about-x" type="button" aria-label="Close"><svg viewBox="0 0 24 24"><path class="st" d="m6 6 12 12M18 6 6 18"/></svg></button>
+    <h2 id="aboutTitle">Beigebox</h2>
+    <p>A Ludum Dare 60 game. Copyright (C) 2026 the Beigebox contributors.</p>
+    <p>Beigebox is free software: you can redistribute it and/or modify it under the terms of the <a href="https://github.com/SametAylak/ludum-dare-60/blob/main/LICENSE" target="_blank" rel="noopener">GNU Affero General Public License v3.0</a> or (at your option) any later version. It comes with absolutely no warranty. <a href="https://github.com/SametAylak/ludum-dare-60" target="_blank" rel="noopener">Source code on GitHub</a>.</p>
+    <h3>Credits</h3>
+    <ul>
+      <li><a href="https://strudel.cc/" target="_blank" rel="noopener">Strudel</a> (superdough, @strudel/core, @strudel/mini) by Alex McLean, Felix Roos and contributors, AGPL-3.0-or-later. <a href="https://codeberg.org/uzu/strudel" target="_blank" rel="noopener">Source</a>.</li>
+      <li>Boot Sequence's drum kit: samples from <a href="https://github.com/sonic-pi-net/sonic-pi" target="_blank" rel="noopener">Sonic Pi</a>, CC0 1.0.</li>
+      <li>Instruments: <a href="https://github.com/surikov/webaudiofontdata" target="_blank" rel="noopener">WebAudioFont data</a> by Srgy Surkv (MIT), converted from the FluidR3 GM soundfont (MIT, copyright 2000–2002, 2008 Frank Wen, 2008 Toby Smithe) and the Aspirin, JCLive and Chaos soundfonts, whose license is not stated by their source.</li>
+      <li>Samples from <a href="https://github.com/tidalcycles/Dirt-Samples" target="_blank" rel="noopener">Dirt-Samples</a> (TidalCycles) and <a href="https://github.com/ritchse/tidal-drum-machines" target="_blank" rel="noopener">tidal-drum-machines</a>; no license is stated by their source.</li>
+      <li>Two recorded voices from <a href="https://samplefocus.com/" target="_blank" rel="noopener">SampleFocus</a>, under its Standard License, processed for the game.</li>
+      <li>Fonts: Fredoka (copyright 2016 The Fredoka Project Authors) and VT323 (copyright 2011 The VT323 Project Authors), SIL Open Font License 1.1.</li>
+    </ul>
+  </div>
+</dialog>
 
 <script type="module" src="js/main.js"></script>

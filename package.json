@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "voices": "node tools/pack-voices.mjs",
-    "build": "node tools/pack-voices.mjs && vite build --base ./",
+    "build": "node tools/pack-voices.mjs && vite build --base ./ && cp LICENSE dist/",
     "pages": "sh tools/deploy-pages.sh",
     "preview": "vite preview",
     "test": "node --import ./tests/strudel-node.mjs --test tests/bonus-score.test.mjs tests/boot-score.test.mjs"
