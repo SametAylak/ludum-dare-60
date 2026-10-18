@@ -1,0 +1,69 @@
+<!doctype html>
+<script type="module" crossorigin src="./assets/index-D5N7ooWS.js"></script>
+<link rel="stylesheet" crossorigin href="./assets/index-HjyXw7z2.css">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Beigebox</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=VT323&display=swap">
+
+<div class="app">
+  <header class="top">
+    <div class="mix">
+      <div class="tempo" role="group" aria-label="Tempo">
+        <button id="bpmDown" class="tb" type="button" aria-label="Slower" title="Slower ( - )"><svg viewBox="0 0 24 24"><path class="st" d="M5 12h14"/></svg></button>
+        <input id="bpmIn" type="range" min="80" max="180" step="1" value="110" aria-label="BPM">
+        <div class="readout"><svg class="ocb" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c1 4 6 6.5 6 12.5a6 6 0 0 1-12 0c0-3 1.8-5.2 3-7 .2 2 1 3.2 2.2 3.4C11 8 11 5 12 2z"/></svg><span id="bpm">110</span>BPM</div>
+        <button id="bpmUp" class="tb" type="button" aria-label="Faster" title="Faster ( = )"><svg viewBox="0 0 24 24"><path class="st" d="M5 12h14M12 5v14"/></svg></button>
+      </div>
+      <div class="vol" role="group" aria-label="Master volume">
+        <button id="muteAll" class="tb" type="button" aria-pressed="false" aria-label="Mute everything" title="Mute everything ( M )"><svg class="i-on" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z"/><path class="st" d="M16 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg><svg class="i-off" viewBox="0 0 24 24"><path d="M3 9h4l5-4v14l-5-4H3z"/><path class="st" d="m16 9 5 6m0-6-5 6"/></svg></button>
+        <input id="volIn" class="rng" type="range" min="0" max="100" step="1" value="80" aria-label="Master volume">
+      </div>
+    </div>
+    <div class="disks" id="disks" aria-label="Bonus discoveries"></div>
+    <div class="ctl">
+      <button id="rec" class="recb" type="button" aria-pressed="false" aria-label="Record the mix" title="Record the mix, click again to save"><i class="dot"></i><span id="recTime">REC</span></button>
+      <button id="clear" class="rb" type="button" aria-label="Clear all parts" title="Clear"><svg viewBox="0 0 24 24"><path class="st" d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M3 3v7h7z"/></svg></button>
+      <button id="play" class="rb big" type="button" aria-label="Play"><svg class="i-play" viewBox="0 0 24 24"><path d="M8 4.5v15l12-7.5z"/></svg><svg class="i-pause" viewBox="0 0 24 24"><path d="M6.5 5h4v14h-4zM13.5 5h4v14h-4z"/></svg></button>
+    </div>
+  </header>
+
+  <main class="stage">
+    <div class="sky" id="sky" aria-hidden="true"></div>
+    <div class="venue" id="venue" aria-hidden="true"></div>
+    <div class="lights" aria-hidden="true"><i></i><i></i></div>
+    <div class="retro-show" id="retroShow" hidden aria-hidden="true">
+      <canvas id="partyScene"></canvas>
+      <div class="guest guest-left" id="guestLeft"></div>
+      <div class="guest guest-right" id="guestRight"></div>
+      <div class="party-marquee"><span>LIVE FROM THE ANALOG UNIVERSE</span><b id="partyMessage"></b></div>
+    </div>
+    <div class="hud">
+      <div class="counter" id="counter" aria-hidden="true"></div>
+      <p class="hint" id="hint" aria-live="polite"></p>
+    </div>
+    <div class="warp" id="warp" aria-hidden="true"></div>
+    <div class="unlock" id="unlock" hidden role="status">
+      <div class="rays"></div>
+      <svg class="bdisk" viewBox="0 0 24 24" aria-hidden="true"><path class="bd-body" d="M3 3h15l3 3v15H3z"/><rect class="bd-sh" x="7" y="3" width="9" height="6"/><rect class="bd-sl" x="12.5" y="4" width="2" height="4"/><rect class="bd-lb" x="6" y="12.5" width="12" height="8.5" rx=".5"/><path class="bd-ln" d="M8 15h8M8 17.5h6"/></svg>
+      <p class="u-kicker"></p>
+      <h2 class="u-name"></h2>
+      <p class="u-guests"></p>
+      <div class="u-countdown"><span>INCOMING TRANSMISSION</span><i></i><i></i><i></i><i></i></div>
+    </div>
+    <div class="bonus" id="bonus" hidden>
+      <div class="bonus-topline"><span class="bonus-live">ON AIR</span><span id="bonusCounter"></span></div>
+      <div class="bonus-broadcast"><div class="screen"><canvas id="bscene" width="320" height="180"></canvas></div>
+        <div class="bonus-copy"><h2 id="bonusTitle"></h2><pre id="term"></pre></div></div>
+      <div class="bonus-timeline"><i id="bonusProgress"></i></div>
+    </div>
+    <div class="shelf" id="shelf"></div>
+  </main>
+
+  <footer class="deck" id="deck" aria-label="Parts"></footer>
+</div>
+
