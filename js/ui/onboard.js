@@ -2,6 +2,7 @@
 import { muteAll, volIn } from "../dom.js";
 import { clock } from "../music.js";
 import { slots, state } from "../state.js";
+import { setLog } from "./sets.js";
 import { $ } from "../util.js";
 
 const KEY = "beigebox.intro";
@@ -14,6 +15,8 @@ const STEPS = [
   { el: () => $(".vol"), text: "Master volume. Click the speaker or press M to mute everything", base: () => volIn.value, done: b => volIn.value !== b || muteAll.getAttribute("aria-pressed") === "true" },
   { el: () => $("#rec"), text: "REC records your mix. Click it again to save the file" },
   { el: () => $(".fxpanel"), text: "The Live FX pads hit the whole mix in time. Tap one, or hold Stutter and Sweep" },
+  { el: () => $(".setpanel .tape"), text: "Like this lineup? Tap a cassette to store it in that set", base: () => setLog.stored, done: b => setLog.stored !== b },
+  { el: () => $(".setpanel .set.has"), text: "Tap a stored set to bring its lineup back anytime. Sets are kept in this browser", base: () => setLog.loaded, done: b => setLog.loaded !== b },
   { el: () => $("#clear"), text: "Clear sends everyone off stage so you can start fresh", done: () => !slots.some(s => s.id) },
   { el: () => $("#disks"), text: "Some trios unlock these bonus disks. Five to find!", btn: "Let's play" },
 ];

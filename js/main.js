@@ -17,6 +17,7 @@ import { initHud, updateHud } from "./ui/hud.js";
 import { initOnboard, updateOnboard } from "./ui/onboard.js";
 import { initPads, updatePads } from "./ui/pads.js";
 import { fire, onStep, updateSlotStates } from "./ui/performers.js";
+import { initSets, updateSets } from "./ui/sets.js";
 import { initStage, renderSlot } from "./ui/stage.js";
 import { initSky } from "./ui/sky.js";
 import { drawVenue, initVenue } from "./ui/venue.js";
@@ -24,6 +25,7 @@ import { drawVenue, initVenue } from "./ui/venue.js";
 initStage();
 initDeck();
 initPads();
+initSets();
 initHeader();
 initCounter();
 initMixer();
@@ -46,6 +48,7 @@ function frame() {
     for (let k = vq.length - 1; k >= 0; k--) if (vq[k].t <= now) fire(vq.splice(k, 1)[0]);
   }
   if (audio.ctx) updatePads(audio.ctx.currentTime);
+  updateSets();
   updateSlotStates();
   drawVenue();
   updateHud();

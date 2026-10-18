@@ -1,0 +1,46 @@
+/* ---------- stored sets (js/ui/sets.js): the right-hand twin of the LIVE FX column ---------- */
+.setpanel{position:absolute;z-index:4;right:var(--gut-r);top:calc(var(--top-h, 0px) + (100% - var(--top-h, 0px) - var(--deck-h, 0px)) / 2);transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 10px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.1);
+  background:rgba(21,22,58,.18);-webkit-backdrop-filter:blur(6px) saturate(1.3);backdrop-filter:blur(6px) saturate(1.3);--cat:#f2f0ff;--kw:66px}
+.setpanel h2{margin:0;font-weight:600;font-size:11px;letter-spacing:.22em;color:var(--cat)}
+.setpanel .list{display:flex;flex-direction:column;gap:9px}
+.set-w{position:relative}
+.set{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;width:calc(var(--kw) * 1.12);height:calc(var(--kw) * .7);padding:0 4px;
+  border:2px dashed rgba(242,240,255,.35);border-radius:12px;cursor:pointer;user-select:none;-webkit-user-select:none;background:rgba(255,255,255,.04);color:var(--cat);
+  font:700 calc(var(--kw) * .2)/1 var(--f-display);transition:transform .08s, box-shadow .08s, filter .15s}
+.set.has{border:none;color:var(--sky-2);background:radial-gradient(circle at 50% 22%, rgba(255,255,255,.7), transparent 70%), var(--cat);
+  box-shadow:0 4px 0 rgba(0,0,0,.45), inset 0 -4px 0 rgba(0,0,0,.14)}
+.set:hover{filter:brightness(1.08)}
+.set:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.45)}
+.set.on{box-shadow:0 4px 0 rgba(0,0,0,.45), 0 0 0 3px var(--phos), 0 0 16px var(--phos)}
+.set .dots{display:flex;gap:2px}
+.set .dots i{width:calc(var(--kw) * .1);height:calc(var(--kw) * .1);border-radius:50%;background:rgba(42,44,106,.22)}
+.set:not(.has) .dots i{background:rgba(242,240,255,.18)}
+.set .dots i[style]{background:var(--c);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+.set .dots i.m{opacity:.35}
+/* the cassette badge in the corner stores the stage into its set: a little beige tape like the band's own, reels turn on hover and while it records */
+.set-w .tape{position:absolute;right:-8px;bottom:-7px;width:31px;height:22px;padding:0;border:none;background:none;cursor:pointer;
+  filter:drop-shadow(0 2px 0 rgba(0,0,0,.45));transition:transform .08s}
+.set-w .tape svg{display:block;width:100%;height:100%;overflow:visible}
+.tape .bd{fill:var(--beige);stroke:var(--ink);stroke-width:1.6}
+.tape .lb{fill:var(--amber)}
+.tape .wn{fill:var(--ink)}
+.tape .rl circle{fill:var(--beige-hi)}
+.tape .rl path{fill:none;stroke:var(--ink);stroke-width:1.1;stroke-linecap:round}
+.tape .bt{fill:var(--beige-lo);stroke:var(--ink);stroke-width:1.4;stroke-linejoin:round}
+.tape .sc{fill:var(--beige-lo)}
+.set-w .tape:hover{transform:translateY(-1px) rotate(-4deg)}
+.set-w .tape:active{transform:translateY(2px);filter:drop-shadow(0 0 0 rgba(0,0,0,.45))}
+@keyframes tape-spin{to{rotate:360deg}}
+@keyframes tape-rec{0%,100%{fill:var(--amber)}30%,70%{fill:var(--red)}}
+.tape:hover .rl{animation:tape-spin 1.2s linear infinite}
+.tape.rec .rl{animation:tape-spin .35s linear 2}
+.tape.rec .lb{animation:tape-rec .7s}
+/* below the shelf's full width, the sets become a row under the FX pads */
+@media (max-width:1300px){
+  .setpanel{top:calc(var(--top-h, 0px) + 186px);right:auto;left:50%;transform:translateX(-50%);flex-direction:row;padding:8px 12px 10px;--kw:46px}
+  .setpanel .list{flex-direction:row;flex-wrap:wrap;justify-content:center}
+}
+@media (max-width:900px){ .setpanel{top:calc(var(--top-h, 0px) + 162px)} }
+@media (max-height:640px) and (min-width:1301px){ .setpanel .list{display:grid;grid-template-columns:1fr 1fr} }
+@media (prefers-reduced-motion: reduce){ .tape .rl{animation:none !important} }
