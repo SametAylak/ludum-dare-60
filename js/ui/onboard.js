@@ -1,24 +1,12 @@
-// First-run coach marks: a handful of tips that each wait for the player to try the thing, shown once.
-import { muteAll, volIn } from "../dom.js";
-import { clock } from "../music.js";
+// First-run coach marks: three tips that each wait for the player to try the thing, shown once.
 import { slots, state } from "../state.js";
-import { setLog } from "./sets.js";
 import { $ } from "../util.js";
 
 const KEY = "beigebox.intro";
 const STEPS = [
   { el: () => $("#play"), text: "Welcome to Beigebox! Press play or Space to start the band", done: () => state.running },
-  { el: () => $("#deck"), text: "Click a part, drag it onto a performer, or press its key", base: () => state.uidN, done: b => state.uidN !== b },
-  { el: () => (slots.find(s => s.id) || {}).char, text: "Click a performer to mute it, and again to bring it back", done: () => slots.some(s => s.muted) },
-  { el: () => (slots.find(s => s.id) || {}).soloBtn, text: "Solo a part to hear it alone, and click again to undo. The slider above sets its own volume", done: () => slots.some(s => s.solo) },
-  { el: () => $(".tempo"), text: "Change the tempo here, or with the - and = keys. Push past 130 BPM and things overheat", base: () => clock.BPM, done: b => clock.BPM !== b },
-  { el: () => $(".vol"), text: "Master volume. Click the speaker or press M to mute everything", base: () => volIn.value, done: b => volIn.value !== b || muteAll.getAttribute("aria-pressed") === "true" },
-  { el: () => $("#rec"), text: "REC records your mix. Click it again to save the file" },
-  { el: () => $(".fxpanel"), text: "The Live FX pads hit the whole mix in time. Tap one, or hold Stutter and Sweep" },
-  { el: () => $(".setpanel .tape"), text: "Like this lineup? Tap a cassette to store it in that set", base: () => setLog.stored, done: b => setLog.stored !== b },
-  { el: () => $(".setpanel .set.has"), text: "Tap a stored set to bring its lineup back anytime. Sets are kept in this browser", base: () => setLog.loaded, done: b => setLog.loaded !== b },
-  { el: () => $("#clear"), text: "Clear sends everyone off stage so you can start fresh", done: () => !slots.some(s => s.id) },
-  { el: () => $("#disks"), text: "Some trios unlock these bonus disks. Five to find!", btn: "Let's play" },
+  { el: () => $("#deck"), text: "Click a part or press its key to add it to the band", base: () => state.uidN, done: b => state.uidN !== b },
+  { el: () => (slots.find(s => s.id) || slots[3]).el, text: "Parts take the next free spot on stage, up to seven. Drag a part onto a performer to swap it, or click it again to send it off", btn: "Let's play" },
 ];
 let tip, i = -1, base = 0, target = null, wait = 0;
 const seen = () => { try { return !!localStorage.getItem(KEY); } catch (e) { return true; } };

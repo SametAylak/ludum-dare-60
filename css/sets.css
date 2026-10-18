@@ -2,6 +2,10 @@
 .setpanel{position:absolute;z-index:4;right:var(--gut-r);top:calc(var(--top-h, 0px) + (100% - var(--top-h, 0px) - var(--deck-h, 0px)) / 2);transform:translateY(-50%);
   display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 10px 14px;border-radius:18px;border:1px solid rgba(255,255,255,.1);
   background:rgba(21,22,58,.18);-webkit-backdrop-filter:blur(6px) saturate(1.3);backdrop-filter:blur(6px) saturate(1.3);--cat:#f2f0ff;--kw:66px}
+.setpanel .hider{right:100%;border-right:none;border-radius:10px 0 0 10px}
+.setpanel .hider svg{rotate:180deg}
+.setpanel.hid{translate:calc(100% + var(--gut-r)) 0}
+.setpanel.hid .hider svg{rotate:0deg}
 .setpanel h2{margin:0;font-weight:600;font-size:11px;letter-spacing:.22em;color:var(--cat)}
 .setpanel .list{display:flex;flex-direction:column;gap:9px}
 .set-w{position:relative}
@@ -40,7 +44,11 @@
 @media (max-width:1300px){
   .setpanel{top:calc(var(--top-h, 0px) + 186px);right:auto;left:50%;transform:translateX(-50%);flex-direction:row;padding:8px 12px 10px;--kw:46px}
   .setpanel .list{flex-direction:row;flex-wrap:wrap;justify-content:center}
+  .setpanel.hid{translate:none}
+  .setpanel .hider svg{rotate:0deg}
+  .setpanel.hid .hider svg{rotate:180deg}
 }
-@media (max-width:900px){ .setpanel{top:calc(var(--top-h, 0px) + 162px)} }
+/* small screens: a chip on the right of the lane under the header (see fx.css) */
+@media (max-width:900px), (max-height:520px){ .app .setpanel{right:var(--gut-r);left:auto} }
 @media (max-height:640px) and (min-width:1301px){ .setpanel .list{display:grid;grid-template-columns:1fr 1fr} }
 @media (prefers-reduced-motion: reduce){ .tape .rl{animation:none !important} }

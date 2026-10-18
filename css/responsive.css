@@ -5,18 +5,12 @@
   .disks{grid-column:1 / -1;grid-row:1;justify-self:center}
   .mix{grid-column:1;grid-row:2} .ctl{grid-column:2;grid-row:2}
 }
-@media (max-width:760px){
+@media (max-width:760px) and (min-height:521px){
   .shelf{grid-template-columns:repeat(8, minmax(0,1fr));row-gap:6px}
   .slot{grid-column:span 2}
   .slot:nth-child(5){grid-column:2 / span 2}
 }
 @media (max-width:640px){
-  .deck{--kw:min(58px, calc((100vw - 72px) / 5))}
-  .top{grid-template-columns:auto}
-  .mix,.ctl{grid-column:1;grid-row:auto;justify-self:center}
-  .rb{width:38px;height:38px}
-  .rb.big{width:46px;height:46px}
-  .recb{height:38px;min-width:76px;padding:0 12px 0 10px}
   .hud{grid-template-columns:1fr}
   .counter,.hint{grid-column:1;grid-row:auto;justify-self:center}
   .counter{height:42px;gap:10px;padding:0 14px}
@@ -24,6 +18,41 @@
   .counter .bar i{width:7px;height:11px} .counter .bar i:first-child{height:17px}
   .counter .pos{font-size:18px}
   #term{font-size:16px}
+}
+/* phones (and short landscape screens): one slim header row under the disks, sliders left to the device, and the palette as a sticky strip that scrolls sideways */
+@media (max-width:640px), (max-height:520px){
+  .top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 8px;padding:8px var(--gut-r) 8px var(--gut-l)}
+  .disks{order:-1;flex-basis:100%;justify-content:center;gap:4px}
+  .disks .bonus-disk{zoom:.75}
+  .mix{flex-direction:row;gap:6px}
+  #bpmIn,#volIn{display:none}
+  .tempo{gap:6px;padding:4px 6px} .vol{padding:4px}
+  .readout{font-size:0;gap:0} #bpm{font-size:20px}
+  .ctl{gap:8px}
+  .rb{width:38px;height:38px}
+  .rb.big{width:46px;height:46px}
+  .recb{height:38px;min-width:38px;padding:0 13px}
+  .recb:not(.on) #recTime{display:none}
+  .deck{position:sticky;bottom:0;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;gap:0 18px;padding:8px var(--gut-r) 12px var(--gut-l);--kw:48px}
+  .deck::-webkit-scrollbar{display:none}
+  .group{flex:none;gap:6px}
+  .keys{gap:7px}
+  .key{touch-action:pan-x}
+  /* the slots are too narrow for three buttons: tapping the performer mutes and tapping its key removes, so only solo stays */
+  @media (hover:none){ .tools :is([data-a="mute"],[data-a="del"]){display:none} }
+}
+/* portrait phones: the credits button tucks into the disks row's corner, a lane under the header for the LIVE FX and SETS chips, and two rows of band that fit above the strip */
+@media (max-width:640px) and (min-height:521px){
+  #aboutBtn{position:absolute;top:9px;right:var(--gut-r);width:30px;height:30px}
+  #aboutBtn svg{width:16px;height:16px}
+  .hud{padding-top:50px}
+  .shelf{width:min(100%, calc((100svh - var(--top-h, 0px) - var(--deck-h, 0px) - 260px) * 1.3))}
+}
+/* short landscape screens: disks inline, and the band sized to the room left between header, HUD and strip */
+@media (max-height:520px){
+  .disks{order:0;flex-basis:auto}
+  .stage{min-height:0}
+  .shelf{width:min(100%, calc((100svh - var(--top-h, 0px) - var(--deck-h, 0px) - 140px) * 4.5))}
 }
 @media (prefers-reduced-motion: reduce){
   .slot .art .eyes,.slot.on .art .spin,.slot.on .art .glow,.slot.on .art .lp,.slot .fig.empty .idle,.app .lights i,.slot .art-wrap{animation:none !important}

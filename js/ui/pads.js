@@ -2,7 +2,7 @@
 import { app } from "../dom.js";
 import { FX, fq, press, release } from "../fx.js";
 import { state } from "../state.js";
-import { $, reduce } from "../util.js";
+import { $, hider, reduce } from "../util.js";
 
 const CLS = ["fx-drop", "fx-stutter", "fx-tape", "fx-sweep", "fx-half", "fx-double"];
 const pads = {};
@@ -33,6 +33,7 @@ export function initPads() {
     b.addEventListener("click", e => { if (e.detail === 0) on(f.id); });   // keyboard activation only
     $(".list", g).appendChild(b);
   }
+  hider(g, "Live FX", "beigebox.hide.fx");
   app.appendChild(g);
   addEventListener("keydown", e => {
     if (e.metaKey || e.ctrlKey || e.altKey || e.repeat) return;
