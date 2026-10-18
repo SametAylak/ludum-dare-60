@@ -98,3 +98,16 @@ js/
 To add a part, append an entry to the matching file in `js/parts/`. It needs `id`, `cat`, `key`, `name`, `gain`, an `art()` SVG, an optional `outfit` (`{ back, front }` SVG drawn behind and over the body) and a `play(step, time, out, hit)` function, usually `loop(pattern, kinds)` from `js/audio/strudel.js` with a Strudel pattern (one cycle is one bar) and a function naming the performer animation for each event.
 
 Run the bonus arrangement checks with `pnpm test`. They verify the two drops, the gaps before them, both guest phrases, and chord-compatible melodies for all five shows, plus Boot Sequence's own arrangement.
+
+## Credits
+
+- [Strudel](https://strudel.cc/) (`superdough`, `@strudel/core`, `@strudel/mini`) by Felix Roos and contributors, AGPL-3.0. It plays every part and Boot Sequence's score.
+- [Dirt-Samples](https://github.com/tidalcycles/Dirt-Samples) from TidalCycles, and [tidal-drum-machines](https://github.com/ritchse/tidal-drum-machines) through [dough-samples](https://github.com/felixroos/dough-samples). Both are loaded from GitHub at runtime.
+- General MIDI soundfonts from [webaudiofontdata](https://github.com/surikov/webaudiofontdata) by Sergey Surikov, built from the FluidR3 (MIT, Frank Wen), JCLive, Aspirin and Chaos soundfonts. They are loaded at runtime.
+- Boot Sequence's drum kit in `samples/` comes from [Sonic Pi](https://github.com/sonic-pi-net/sonic-pi/tree/dev/etc/samples) (CC0).
+- The two recordings in `audio/` come from [SampleFocus](https://samplefocus.com/), under its Standard License.
+- The fonts are [Fredoka](https://fonts.google.com/specimen/Fredoka) and [VT323](https://fonts.google.com/specimen/VT323) from Google Fonts (SIL Open Font License 1.1).
+
+## License
+
+Beigebox is free software under the [GNU Affero General Public License v3.0](LICENSE) or later, the same license as Strudel. The third-party sounds and fonts listed above keep their own licenses.
